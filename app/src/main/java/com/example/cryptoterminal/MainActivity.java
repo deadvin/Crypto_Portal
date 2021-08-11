@@ -1,8 +1,10 @@
 package com.example.cryptoterminal;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 
@@ -27,16 +29,17 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
 
-        tabs.setSelectedTabIndicatorColor(Color.parseColor("#3a70b6"));
+
+        //========     SET TABS TEXT COLOR
+
+        tabs.setSelectedTabIndicatorColor( Color.parseColor("#0A75FF"));
         tabs.setSelectedTabIndicatorHeight((int) (4 * getResources().getDisplayMetrics().density));
-        tabs.setTabTextColors(Color.parseColor("#727272"), Color.parseColor("#3a70b6"));
+        tabs.setTabTextColors(Color.parseColor("#727272"), Color.parseColor("#0A75FF"));
 
-//        tabs.addTab(tabs.newTab().setIcon(R.drawable.alert));
-//        tabs.addTab(tabs.newTab().setIcon(R.drawable.settings));
-
+        //========     SET TABS ICONS AND SIZE
 
         tabs.getTabAt(3).setIcon(R.drawable.alert);
-        tabs.getTabAt(4).setIcon(R.drawable.setting_sel);
+        tabs.getTabAt(4).setIcon(R.drawable.settings);
 
         LinearLayout layout = ((LinearLayout) ((LinearLayout) tabs.getChildAt(0)).getChildAt(3));
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) layout.getLayoutParams();
@@ -47,6 +50,41 @@ public class MainActivity extends AppCompatActivity {
         layoutParams = (LinearLayout.LayoutParams) layout.getLayoutParams();
         layoutParams.weight = 0.5f;
         layout.setLayoutParams(layoutParams);
+
+        //========     SET TABS ICONS  COLOR
+
+        int tabIconColor = ContextCompat.getColor(MainActivity.this, R.color.deselected);
+        tabs.getTabAt(3).getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+        tabs.getTabAt(4).getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+
+        tabs.addOnTabSelectedListener(
+                new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        super.onTabSelected(tab);
+
+                        if (tab.getIcon() != null){
+                            int tabIconColor = ContextCompat.getColor(MainActivity.this, R.color.selected);
+                            tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+                        super.onTabUnselected(tab);
+                        if (tab.getIcon() != null){
+                            int tabIconColor = ContextCompat.getColor(MainActivity.this, R.color.deselected);
+                            tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+                        }
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+                        super.onTabReselected(tab);
+                    }
+                }
+        );
 
 
 

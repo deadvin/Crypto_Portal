@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100">
+
+    <LinearLayout
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100"
+        android:layout_weight="33.3">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0dp"
+            android:layout_height="23dp"
+            android:layout_weight="40"
+            android:fontFamily="@font/cc"
+            android:gravity="center"
+            android:text="TextView2"
+            android:textColor="#9876aa"
+            app:fontFamily="@font/cc" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_height="23dp"
+            android:textColor="#9876aa"
+            android:layout_weight="25"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:fontFamily="@font/cc"
+            app:fontFamily="@font/cc"
+            android:text="TextView3" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:textColor="#9876aa"
+            android:layout_height="23dp"
+            android:layout_weight="25"
+            android:layout_width="0dp"
+            android:fontFamily="@font/cc"
+            app:fontFamily="@font/cc"
+            android:gravity="center"
+            android:text="TextView3" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_marginTop="4dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_weight="10"
+            app:srcCompat="@drawable/open" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_height="1dp"
+        android:background="#3c3c44"/>
+
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="TextView1"
+            android:textAlignment="center"
+            android:fontFamily="@font/cc"
+            app:fontFamily="@font/cc"
+            android:layout_marginBottom="6dp"
+            />
+
+
+</LinearLayout>

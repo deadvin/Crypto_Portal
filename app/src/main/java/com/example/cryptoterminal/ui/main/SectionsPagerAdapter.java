@@ -31,7 +31,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                  fragment = new twitter();
                  break;
             case 1:
-                fragment = new twitter();
+                fragment = new alerts();
                 break;
             case 2:
                 fragment = new alerts();
