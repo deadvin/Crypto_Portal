@@ -31,9 +31,9 @@ public class PostAdapter extends ArrayAdapter<post> {
 
     private static class ViewHolder {
         TextView text;
-        TextView time;
         TextView source;
-        TextView followers;
+//        TextView time;
+//        TextView followers;
         ImageView open;
     }
 
@@ -72,8 +72,8 @@ public class PostAdapter extends ArrayAdapter<post> {
             holder= new ViewHolder();
             holder.text =  convertView.findViewById(R.id.textView1);
             holder.source =  convertView.findViewById(R.id.textView2);
-            holder.followers =  convertView.findViewById(R.id.textView3);
-            holder.time =  convertView.findViewById(R.id.textView4);
+//            holder.followers =  convertView.findViewById(R.id.textView3);
+//            holder.time =  convertView.findViewById(R.id.textView4);
             holder.open =  convertView.findViewById(R.id.imageView);
 
 
@@ -139,10 +139,10 @@ public class PostAdapter extends ArrayAdapter<post> {
         }
 
 
-        holder.time.setText(hours + ":" + min + " ago");
-        holder.source.setText(post.getSource());
+//        holder.time.setText(hours + ":" + min + " ago");
+        holder.source.setText(post.getSource() + "  "+ " \u2022" + "  " + fol + "  " + "\u2022"+ "  " + hours + ":" + min + " ago");
         holder.text.setText(post.getText());
-        holder.followers.setText(fol);
+//        holder.followers.setText(fol);
 
 
 
