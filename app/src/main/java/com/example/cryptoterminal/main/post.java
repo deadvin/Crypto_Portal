@@ -9,14 +9,17 @@ public class post {
     private String time;
     private int seen;
     private String followers;
+    private String likes;
+    private String retweet;
 
-    public post(String text, String source, int seen, String time, String link, String followers) {
+    public post(String text, String source, int seen, String time, String link, String likes, String retweet) {
         this.text = text;
         this.link = link;
         this.source = source;
         this.time = time;
         this.seen = seen;
-        this.followers = followers;
+        this.likes = likes;
+        this.retweet = retweet;
     }
 
     public String getText() {
@@ -39,8 +42,12 @@ public class post {
         return seen;
     }
 
-    public String getfollow() {
-        return followers;
+    public String get_likes() {
+        return likes;
+    }
+
+    public String get_retweets() {
+        return retweet;
     }
 
 

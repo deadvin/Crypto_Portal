@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Crypto Terminal</string>
-    <string name="tab_text_1">Stream</string>
-    <string name="tab_text_2">Price</string>
-    <string name="tab_text_3">Trend</string>
+    <string name="tab_text_1">Tweets</string>
+    <string name="tab_text_2">Divs</string>
+    <string name="tab_text_3">Funds</string>
     <string name="tab_text_4"></string>
     <string name="tab_text_5"></string>
 

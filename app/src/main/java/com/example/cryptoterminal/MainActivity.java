@@ -3,11 +3,16 @@ package com.example.cryptoterminal;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.example.cryptoterminal.ui.main.SectionsPagerAdapter;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +38,15 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
+        //========     SERVICES
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( MainActivity.this,  new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String updatedToken = instanceIdResult.getToken();
+                Log.e("Updated Token",updatedToken);
+            }
+        });
 
 
         //========     SET TABS TEXT COLOR
@@ -64,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onTabSelected(TabLayout.Tab tab) {
                         super.onTabSelected(tab);
 
+
+                        // Here're your details. You can update.
+
+
                         if (tab.getIcon() != null){
                             int tabIconColor = ContextCompat.getColor(MainActivity.this, R.color.selected);
                             tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
@@ -85,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+
 
 
 

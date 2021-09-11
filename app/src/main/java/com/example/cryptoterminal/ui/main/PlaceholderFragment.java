@@ -48,9 +48,9 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_twitter, container, false);
+        View root = inflater.inflate(R.layout.fragment_alerts, container, false);
 
 
-        return root;
+       return root;
     }
 }

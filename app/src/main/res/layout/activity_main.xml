@@ -22,6 +22,14 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+<!--    <androidx.viewpager2.widget.ViewPager2-->
+<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:id="@+id/view_pager"-->
+<!--        android:orientation="vertical" />-->
+
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"

@@ -18,6 +18,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 
 public class PostAdapter extends ArrayAdapter<post> {
@@ -32,8 +34,7 @@ public class PostAdapter extends ArrayAdapter<post> {
     private static class ViewHolder {
         TextView text;
         TextView source;
-//        TextView time;
-//        TextView followers;
+        TextView likes;
         ImageView open;
     }
 
@@ -41,7 +42,6 @@ public class PostAdapter extends ArrayAdapter<post> {
         super(context, resource, objects);
         this.mContext = context;
         mResource = resource;
-
 
     }
 
@@ -53,14 +53,13 @@ public class PostAdapter extends ArrayAdapter<post> {
         String source = getItem(position).getSource();
         String time = getItem(position).gettime();
         String link = getItem(position).getLink();
+        String likes = getItem(position).get_likes();
+        String retweets = getItem(position).get_retweets();
         int seen = getItem(position).getseen();
-        String followers = getItem(position).getfollow();
 
 
-        //Create the person object with the information
-        post post = new post(text,source,seen,time,link,followers);
+        post post = new post(text,source,seen,time,link,likes,retweets);
 
-        //create the view result for showing the animation
         final View result;
 
         //ViewHolder object
@@ -72,8 +71,7 @@ public class PostAdapter extends ArrayAdapter<post> {
             holder= new ViewHolder();
             holder.text =  convertView.findViewById(R.id.textView1);
             holder.source =  convertView.findViewById(R.id.textView2);
-//            holder.followers =  convertView.findViewById(R.id.textView3);
-//            holder.time =  convertView.findViewById(R.id.textView4);
+            holder.likes =  convertView.findViewById(R.id.textView3);
             holder.open =  convertView.findViewById(R.id.imageView);
 
 
@@ -115,6 +113,7 @@ public class PostAdapter extends ArrayAdapter<post> {
         // ==============  TIME
 
         try {
+             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
              d = sdf.parse(time);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -122,6 +121,8 @@ public class PostAdapter extends ArrayAdapter<post> {
 
         Date today = new Date();
         long diff =  today.getTime() - d.getTime();
+
+
         int hours = (int) (diff / (1000 * 60 * 60));
         int minutes = (int) (diff / (1000 * 60)  % 60);
         String min = ""+ minutes;
@@ -133,17 +134,14 @@ public class PostAdapter extends ArrayAdapter<post> {
         }else {
             fol = post.getseen() + "K";
         }
-
         if(minutes < 10){
               min = "0" + minutes;
         }
 
 
-//        holder.time.setText(hours + ":" + min + " ago");
         holder.source.setText(post.getSource() + "  "+ " \u2022" + "  " + fol + "  " + "\u2022"+ "  " + hours + ":" + min + " ago");
         holder.text.setText(post.getText());
-//        holder.followers.setText(fol);
-
+        holder.likes.setText(" \u2764 " + post.get_likes() + " \uD83D\uDD01 "+ post.get_retweets());
 
 
         return convertView;
