@@ -6,22 +6,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.cryptoterminal.R;
-import com.example.cryptoterminal.main.SymbolAdapter;
-import com.example.cryptoterminal.main.get_div;
-import com.example.cryptoterminal.main.symbol;
+import com.example.cryptoterminal.main.EventAdapter;
+import com.example.cryptoterminal.main.event;
+import com.example.cryptoterminal.main.get_events;
+import com.example.cryptoterminal.main.video;
+import com.example.cryptoterminal.main.videoAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,19 +28,18 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class div extends Fragment {
+public class event_fragment extends Fragment {
 
-    Button btn1;
-    ArrayList<symbol> symlist;
+
+    ArrayList<event> vidlist;
     ListView mListView;
-    SymbolAdapter adapter;
+    EventAdapter adapter;
     OkHttpClient okHttpClient;
     Retrofit retrofit;
     private int mInterval = 5000;
     private Handler mHandler;
-    boolean running = false;
-    get_div api_interface;
-    Call<List<symbol>> call;
+    get_events api_interface;
+    Call<List<event>> call;
     RelativeLayout loading;
 
 
@@ -49,7 +47,7 @@ public class div extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        symlist = new ArrayList<>();
+        vidlist = new ArrayList<>();
         mHandler = new Handler();
 
         okHttpClient = new OkHttpClient.Builder()
@@ -59,24 +57,22 @@ public class div extends Fragment {
                 .build();
 
         retrofit = new Retrofit.Builder()
-                //.baseUrl("http://daniel.onecreative.eu:5000/")
                 .baseUrl("http://34.142.9.8:5000/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
 
-        api_interface = retrofit.create(get_div.class);
+        api_interface = retrofit.create(get_events.class);
 
-        
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_div, container, false);
+        View view =  inflater.inflate(R.layout.fragment_events, container, false);
 
         loading = view.findViewById(R.id.loadingPanel);
         mListView =  view.findViewById(R.id.listView);
-        call = api_interface.getsymbols();
+        call = api_interface.getevents();
         call();
 
         return view;
@@ -86,37 +82,31 @@ public class div extends Fragment {
 
     public void call(){
 
+        if(adapter != null) {
+            adapter.clear();
+        }
+        vidlist.clear();
+        loading.setVisibility(View.VISIBLE);
 
-//        loading.setVisibility(View.VISIBLE);
-
-        call.enqueue(new Callback<List<symbol>>() {
+        call.enqueue(new Callback<List<event>>() {
             @Override
-            public void onResponse(Call<List<symbol>> call, Response<List<symbol>> response) {
-//                loading.setVisibility(View.GONE);
+            public void onResponse(Call<List<event>> call, Response<List<event>> response) {
+                loading.setVisibility(View.GONE);
                 if (!response.isSuccessful()) {
 
-                    Log.e("kur","Code: " + response.code());
                     return;
                 }
                 try {
-                    List<symbol> symbols = response.body();
-
-                    if(adapter != null) {
-                        adapter.clear();
-                    }
-                    symlist.clear();
-
-
-                    symlist.addAll(symbols);
+                    List<event> videos = response.body();
+                    vidlist.addAll(videos);
                 }catch (Exception e){ }
 
-
-                Collections.reverse(symlist);
-                adapter = new SymbolAdapter(getActivity(), R.layout.symbol_layout, symlist);
+                Collections.reverse(vidlist);
+                adapter = new EventAdapter(getActivity(), R.layout.event_layout, vidlist);
                 mListView.setAdapter(adapter);
             }
             @Override
-            public void onFailure(Call<List<symbol>> call, Throwable t) {
+            public void onFailure(Call<List<event>> call, Throwable t) {
               Log.e("see",t.getMessage());
             }
         });
@@ -127,8 +117,8 @@ public class div extends Fragment {
         @Override
         public void run() {
 
-            Log.e("see", "dif refreshed");
-            call = api_interface.getsymbols();
+            Log.e("see", "wprk work");
+            call = api_interface.getevents();
             call();
             mHandler.postDelayed(mStatusChecker, mInterval);
         }
@@ -148,12 +138,10 @@ public class div extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            mStatusChecker.run();
-
+            Log.e("see", "see");
         }else {
-            if (mHandler != null) {
-                mHandler.removeCallbacks(mStatusChecker);
-            }
+            Log.e("see", "dont see");
         }
+
     }
 }

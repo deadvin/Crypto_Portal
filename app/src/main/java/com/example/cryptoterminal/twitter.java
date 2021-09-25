@@ -340,7 +340,7 @@ public class twitter extends Fragment {
         });
 
 
-//        btn1.performClick();
+        btn1.performClick();
 
         if(!running) {
 
@@ -373,6 +373,7 @@ public class twitter extends Fragment {
                 loading.setVisibility(View.GONE);
                 if (!response.isSuccessful()) {
                     btn1.setText("Code: " + response.code());
+
                     return;
                 }
                 try {
@@ -388,6 +389,9 @@ public class twitter extends Fragment {
             @Override
             public void onFailure(Call<List<post>> call, Throwable t) {
                 btn1.setText(t.getMessage());
+                Log.e("kur",t.getMessage());
+
+
             }
         });
     }
@@ -395,7 +399,7 @@ public class twitter extends Fragment {
     public void reset_colour() {
         for (int i = 0; i < 3; i++) {
             btn_list[i].setBackgroundColor(Color.parseColor("#3b3b3b"));
-           btn_list[i].setTextColor(Color.parseColor("#989898"));
+           btn_list[i].setTextColor(Color.parseColor("#FFFAFA"));
         }
     }
 

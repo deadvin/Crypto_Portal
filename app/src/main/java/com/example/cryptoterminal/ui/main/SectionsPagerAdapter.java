@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import com.example.cryptoterminal.R;
 import com.example.cryptoterminal.alerts;
 import com.example.cryptoterminal.div;
+import com.example.cryptoterminal.media;
 import com.example.cryptoterminal.settings;
 import com.example.cryptoterminal.twitter;
 import com.example.cryptoterminal.youtube;
@@ -38,16 +39,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 break;
             case 1:
                 fragment = new div();
-
                 break;
             case 2:
-                fragment = new youtube();
+                fragment = new media();
                 break;
             case 3:
                 fragment = new alerts();
                 break;
             case 4:
-                fragment = new settings();
+                fragment = new youtube();
                 break;
             default:
                 return null;

@@ -12,13 +12,6 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
 
-
-
-
-
-
-
-
     </style>
 
     <style name="Theme.CryptoTerminal.NoActionBar">
@@ -33,4 +26,11 @@
     <style name="Theme.CryptoTerminal.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
         <item name="android:textColorPrimary">@color/deselected</item>
    </style>
+
+
+
+    <style name="SpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/blue_outline</item>
+    </style>
+
 </resources>

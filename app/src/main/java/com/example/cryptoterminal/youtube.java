@@ -97,6 +97,7 @@ public class youtube extends Fragment {
             @Override
             public void onResponse(Call<List<video>> call, Response<List<video>> response) {
                 loading.setVisibility(View.GONE);
+                Log.e("see","donee");
                 if (!response.isSuccessful()) {
 
                     return;

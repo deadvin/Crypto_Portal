@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+
 import com.example.cryptoterminal.R;
 
 import java.text.ParseException;
@@ -19,37 +21,43 @@ import java.util.Date;
 import java.util.TimeZone;
 
 
-public class videoAdapter extends ArrayAdapter<video> {
+public class EventAdapter extends ArrayAdapter<event> {
+
 
     Context mContext;
     private int mResource;
+    private int lastPosition = -1;
     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
     Date d;
 
     private static class ViewHolder {
-        TextView name;
         TextView text;
         TextView time;
+        TextView name;
         ImageView open;
     }
 
-    public videoAdapter(Context context, int resource, ArrayList<video> objects) {
+    public EventAdapter(Context context, int resource, ArrayList<event> objects) {
         super(context, resource, objects);
         this.mContext = context;
         mResource = resource;
+
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         //get the persons information
+
+        String sym = getItem(position).getSym();
         String name = getItem(position).getName();
-        String text = getItem(position).getText();
+        String date = getItem(position).getDate();
         String link = getItem(position).getLink();
         String time = getItem(position).getTime();
-        int  seen = getItem(position).getAlarm();
+        String text = getItem(position).getText();
+        int seen = getItem(position).getseen();
 
-        video video = new video(name,text,link,time,seen);
+        event event = new event(sym,name,date,text,time,link,seen);
 
         final View result;
 
@@ -57,20 +65,21 @@ public class videoAdapter extends ArrayAdapter<video> {
         ViewHolder holder;
 
         if(convertView == null){
+
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(mResource, parent, false);
             holder= new ViewHolder();
-            holder.name =  convertView.findViewById(R.id.textView2);
             holder.text =  convertView.findViewById(R.id.textView1);
+            holder.time =  convertView.findViewById(R.id.textView3);
+            holder.name =  convertView.findViewById(R.id.textView2);
             holder.open =  convertView.findViewById(R.id.imageView);
-
 
 
             holder.open.setOnClickListener( new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    String hhh = video.getLink();
+                    String hhh = event.getLink();
 
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(hhh));
                     mContext.startActivity(browserIntent);
@@ -78,18 +87,21 @@ public class videoAdapter extends ArrayAdapter<video> {
                 }
             });
 
+
             result = convertView;
 
             convertView.setTag(holder);
-        } else{
+        }
+        else{
             holder = (ViewHolder) convertView.getTag();
             result = convertView;
         }
 
+        // ==============  TIME
 
         try {
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-            d = sdf.parse(time);
+             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+             d = sdf.parse(time);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -103,13 +115,17 @@ public class videoAdapter extends ArrayAdapter<video> {
         String min = ""+ minutes;
 
         if(minutes < 10){
-            min = "0" + minutes;
+              min = "0" + minutes;
         }
 
 
 
-        holder.name.setText(video.getName() + " \u2022 "  +  hours + ":" + min + " ago");
-        holder.text.setText(video.getText());
+        holder.name.setText(event.getSym().toUpperCase() + " \u2022 " +  event.getName() + " \u2022 " + event.getDate());
+        holder.text.setText(event.getText());
+        holder.time.setText(hours + ":" + min + " ago");
+
+
+
 
 
         return convertView;

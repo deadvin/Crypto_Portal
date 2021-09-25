@@ -31,11 +31,12 @@
             android:id="@+id/imageView"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="5dp"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_marginTop="2dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_gravity="right"
-            app:srcCompat="@drawable/open" />
+            android:src="@drawable/open"
+            />
 
     </RelativeLayout>
 

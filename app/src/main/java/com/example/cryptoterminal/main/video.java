@@ -8,16 +8,16 @@ public class video {
     private String text;
     private String link;
     private String time;
-    private int alarm;
+    private int seen;
 
 
 
-    public video(String name, String text, String link,String time, int alarm) {
+    public video(String name, String text, String link,String time, int seen) {
         this.name = name;
         this.text = text;
         this.link = link;
         this.time = time;
-        this.alarm = alarm;
+        this.seen = seen;
     }
 
     public String getName() {
@@ -37,7 +37,7 @@ public class video {
     }
 
     public int getAlarm() {
-        return alarm;
+        return seen;
     }
 
 

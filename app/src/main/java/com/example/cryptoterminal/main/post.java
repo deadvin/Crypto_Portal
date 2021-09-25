@@ -7,27 +7,39 @@ public class post {
     private String link;
     private String source;
     private String time;
-    private int seen;
+    private int fow;
     private String followers;
     private String likes;
     private String retweet;
 
-    public post(String text, String source, int seen, String time, String link, String likes, String retweet) {
+    public post(String text, String source, int fow, String time, String link, String likes, String retweet) {
         this.text = text;
         this.link = link;
         this.source = source;
         this.time = time;
-        this.seen = seen;
+        this.fow = fow;
         this.likes = likes;
         this.retweet = retweet;
     }
 
     public String getText() {
-        return text;
+
+        if(text != null && !text .isEmpty()) {
+
+            return text;
+        }else {
+            return " ";
+        }
+
     }
 
     public String getLink() {
-        return link;
+        if(link != null && !link .isEmpty()) {
+
+            return link;
+        }else {
+            return " ";
+        }
     }
 
     public String getSource() {
@@ -38,8 +50,8 @@ public class post {
         return time;
     }
 
-    public int getseen() {
-        return seen;
+    public int getfow() {
+        return fow;
     }
 
     public String get_likes() {

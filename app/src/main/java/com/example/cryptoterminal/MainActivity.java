@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabs.setSelectedTabIndicatorColor( Color.parseColor("#0A75FF"));
         tabs.setSelectedTabIndicatorHeight((int) (4 * getResources().getDisplayMetrics().density));
-        tabs.setTabTextColors(Color.parseColor("#727272"), Color.parseColor("#0A75FF"));
+        tabs.setTabTextColors(Color.parseColor("#FFFAFA"), Color.parseColor("#0A75FF"));
 
         //========     SET TABS ICONS AND SIZE
 
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         //========     SET TABS ICONS  COLOR
 
-        int tabIconColor = ContextCompat.getColor(MainActivity.this, R.color.deselected);
+        int tabIconColor = ContextCompat.getColor(MainActivity.this, R.color.white);
         tabs.getTabAt(3).getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
         tabs.getTabAt(4).getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
 
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onTabUnselected(TabLayout.Tab tab) {
                         super.onTabUnselected(tab);
                         if (tab.getIcon() != null){
-                            int tabIconColor = ContextCompat.getColor(MainActivity.this, R.color.deselected);
+                            int tabIconColor = ContextCompat.getColor(MainActivity.this, R.color.white);
                             tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
                         }
                     }

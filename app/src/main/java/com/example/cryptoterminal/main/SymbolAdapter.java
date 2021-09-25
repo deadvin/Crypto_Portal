@@ -21,8 +21,6 @@ public class SymbolAdapter extends ArrayAdapter<symbol> {
         TextView val1;
         TextView val2;
         TextView val3;
-        TextView val4;
-        TextView val5;
 
     }
 
@@ -40,11 +38,9 @@ public class SymbolAdapter extends ArrayAdapter<symbol> {
         String val1 = getItem(position).getVal1();
         String val2 = getItem(position).getVal2();
         String val3 = getItem(position).getVal3();
-        String val4 = getItem(position).getVal4();
-        String val5 = getItem(position).getVal5();
-        int  alarm = getItem(position).getAlarm();
+        int  seen = getItem(position).getAlarm();
 
-        symbol symbol = new symbol(name,val1,val2,val3,val4,val5,alarm);
+        symbol symbol = new symbol(name,val1,val2,val3,seen);
 
         final View result;
 
@@ -59,8 +55,6 @@ public class SymbolAdapter extends ArrayAdapter<symbol> {
             holder.val1 =  convertView.findViewById(R.id.textView1);
             holder.val2 =  convertView.findViewById(R.id.textView2);
             holder.val3 =  convertView.findViewById(R.id.textView3);
-            holder.val4 =  convertView.findViewById(R.id.textView4);
-            holder.val5 =  convertView.findViewById(R.id.textView5);
 //
 //            holder.open.setOnClickListener( new View.OnClickListener() {
 //
@@ -86,8 +80,6 @@ public class SymbolAdapter extends ArrayAdapter<symbol> {
         holder.val1.setText(symbol.getVal1());
         holder.val2.setText(symbol.getVal2());
         holder.val3.setText(symbol.getVal3());
-        holder.val4.setText(symbol.getVal4());
-        holder.val5.setText(symbol.getVal5());
 
 
         return convertView;
