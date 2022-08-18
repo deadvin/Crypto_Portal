@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/gray_background"
+    tools:context=".settings">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/shadow" />
+
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:fadingEdge="vertical"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="20dp"
+        android:layout_marginTop="-35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ln1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
+            >
+
+
+            <TextView
+                android:id="@+id/textView00"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="NOTIFICATION LINKS"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:fontFamily="@font/cc"
+                app:fontFamily="@font/cc"
+                android:padding="10dp"
+                android:background="@color/gray"
+                android:textColor="@color/white"
+                />
+
+            <CheckBox
+                android:id="@+id/checkBox1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open Links In Crypto Portal"
+                android:layout_gravity="center"
+                android:layoutDirection="rtl"
+               />
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open Links In(Youtube/Twitter/Browser)"
+                android:layout_gravity="center"
+                android:layoutDirection="rtl"
+                />
+
+            <LinearLayout
+            android:id="@+id/ln2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="30dp"
+            android:background="@color/gray"
+            android:padding="10dp"
+            android:gravity="center"
+            >
+
+        <TextView
+        android:id="@+id/textView0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="ALERTS"
+        android:gravity="right"
+        android:fontFamily="@font/cc"
+        app:fontFamily="@font/cc"
+        android:textColor="@color/white"
+        />
+           <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               android:scaleX="1.25"
+               android:scaleY="1.25"
+               android:layout_gravity="left"
+                android:textOn="ON"
+                android:textOff="OFF"
+               android:layout_marginLeft="20dp"
+                android:theme="@style/SCBSwitch"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_marginTop="33dp"
+        android:weightSum="10"
+        >
+
+        <TextView
+            android:id="@+id/textView01"
+            android:text="NAME"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:textStyle="bold"
+            android:textColor="@color/dark"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/textView02"
+            android:text="SOUND"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:textStyle="bold"
+            android:textColor="@color/dark"
+            android:gravity="right"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/textView03"
+            android:text="ON/OFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textStyle="bold"
+            android:textColor="@color/dark"
+            android:gravity="right"
+            android:layout_centerVertical="true"
+            />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:visibility="gone"
+        android:weightSum="10"
+        >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:text="TWEETS ABOVE 2M"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5.5"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            />
+
+        <Spinner
+            android:id="@+id/spinner1"
+            style="@style/SpinnerTheme"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_weight="2.5"
+            android:popupBackground="@color/white"
+            android:spinnerMode="dropdown" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:layout_weight="2"
+            android:textOn="ON"
+            android:textOff="OFF"
+            android:theme="@style/SCBSwitch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:weightSum="10"
+        android:visibility="gone"
+            >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:text="TWEETS ABOVE 10M"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.5"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                />
+
+            <Spinner
+                style="@style/SpinnerTheme"
+                android:id="@+id/spinner2"
+                android:layout_marginTop="3dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:spinnerMode="dropdown"
+                android:popupBackground="@color/white"
+                />
+
+        <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="100dp"
+                android:layout_weight="2"
+                android:textOn="ON"
+                android:textOff="OFF"
+                android:theme="@style/SCBSwitch"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+
+        </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:weightSum="10"
+            >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:text="BRAKING NEWS"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.5"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                />
+
+            <Spinner
+                style="@style/SpinnerTheme"
+                android:id="@+id/spinner3"
+                android:layout_marginTop="3dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:spinnerMode="dropdown"
+                android:popupBackground="@color/white"
+                />
+
+        <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="100dp"
+                android:layout_weight="2"
+                android:textOn="ON"
+                android:textOff="OFF"
+                android:theme="@style/SCBSwitch"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+
+        </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:weightSum="10"
+            >
+
+            <TextView
+                android:id="@+id/textView4"
+                android:text="ALTCOIN ACCOUNTS"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5.5"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                />
+
+            <Spinner
+                style="@style/SpinnerTheme"
+                android:id="@+id/spinner4"
+                android:layout_marginTop="3dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2.5"
+                android:spinnerMode="dropdown"
+                android:popupBackground="@color/white"
+                />
+
+        <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="100dp"
+                android:layout_weight="2"
+                android:textOn="ON"
+                android:textOff="OFF"
+                android:theme="@style/SCBSwitch"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+        </LinearLayout>
+
+<!---->
+            <TextView
+                android:id="@+id/textView28"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="CONTACT INFORMATION"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:fontFamily="@font/cc"
+                app:fontFamily="@font/cc"
+                android:padding="10dp"
+                android:background="@color/gray"
+                android:textColor="@color/white"
+                />
+
+            <TextView
+                android:id="@+id/textView233"
+                android:text="If you want to contact us, have an idea how to improve the app, found bug, or
+cooperation proposal, you can use one of the methods bellow:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:padding="10dp"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/cc"
+                android:gravity="center"
+                app:fontFamily="@font/cc"
+                android:textColor="@color/dark"
+                />
+
+            <TextView
+                android:id="@+id/textView243"
+                android:text="
+Email :  daniel.lubenov9@gmail.com \n
+\n
+Phone number : +359 888 072130 \n
+\n
+Contact Form :
+"
+                android:autoLink="web"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/cc"
+                android:gravity="center"
+                app:fontFamily="@font/cc"
+                android:textColor="@color/dark"
+                />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:id="@+id/et1"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/dark"
+                android:hint="Email"
+                android:maxLength="30"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="150dp"
+                android:id="@+id/et2"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/dark"
+                android:gravity="top"
+                android:hint="Your Message"
+                android:fitsSystemWindows="true"
+                android:breakStrategy="balanced"
+                android:inputType="textMultiLine"
+                android:maxLength="300"
+                android:singleLine="false"
+                android:padding="5dp" />
+
+            <Button
+                android:id="@+id/btn_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:paddingRight="30dp"
+                android:paddingLeft="30dp"
+                android:backgroundTint="@color/dark"
+                android:textColor="@color/white"
+                android:text="Submit" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="ABOUT CRYPRO PORTAL"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:fontFamily="@font/cc"
+                app:fontFamily="@font/cc"
+                android:padding="10dp"
+                android:background="@color/gray"
+                android:textColor="@color/white"
+                />
+
+   <TextView
+                android:id="@+id/textView23"
+                android:text="ala bala 100 batala"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="40dp"
+                android:padding="10dp"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/cc"
+                android:gravity="left"
+                app:fontFamily="@font/cc"
+                android:textColor="@color/dark"
+                />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

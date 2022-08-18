@@ -9,35 +9,28 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        app:tabGravity="fill"
         android:theme="@style/Theme.CryptoTerminal.AppBarOverlay">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
+            app:tabGravity="fill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
+            app:tabTextAppearance="@style/MineCustomTabText"
             />
-
-
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--    <androidx.viewpager2.widget.ViewPager2-->
-<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:id="@+id/view_pager"-->
-<!--        android:orientation="vertical" />-->
 
 
-    <androidx.viewpager.widget.ViewPager
+
+    <com.upperhand.cryptoterminal.ui.main.NonSwipeableViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/deselected"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-
-
-    </androidx.viewpager.widget.ViewPager>
+    </com.upperhand.cryptoterminal.ui.main.NonSwipeableViewPager>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

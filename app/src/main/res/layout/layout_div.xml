@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    android:padding="0dp"
+    android:gravity="center"
+    android:background="@drawable/border_thin"
+
+    >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:padding="0dp"
+        android:paddingEnd="30dp"
+        >
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+           />
+
+        <TextView
+            android:id="@+id/name_full"
+            android:layout_width="wrap_content"
+            android:maxWidth="140dp"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:fontFamily="@font/cc"
+            android:layout_marginStart="8dp"
+            app:fontFamily="@font/cc"
+            android:textAllCaps="true"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="10dp"
+            android:autoSizeMaxTextSize="14dp"
+            android:autoSizeStepGranularity="1dp"
+            android:text="AAAVE" />
+
+        <TextView
+            android:id="@+id/name_alt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textSize="10dp"
+            android:background="@drawable/round_shape"
+            android:textColor="@color/white"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/cc"
+            app:fontFamily="@font/cc"
+            android:padding="4dp"
+            android:layout_marginTop="-1dp"
+            android:text="AAAVE" />
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="25dp"
+            app:srcCompat="@drawable/dollar" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textStyle="bold"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:textSize="14dp"
+            android:fontFamily="@font/cc"
+            android:layout_marginStart="4dp"
+            app:fontFamily="@font/cc"
+            android:textAllCaps="true"
+            android:text=" " />
+
+
+    </LinearLayout>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    </com.github.mikephil.charting.charts.LineChart>
+
+</LinearLayout>

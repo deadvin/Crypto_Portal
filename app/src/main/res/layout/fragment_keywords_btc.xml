@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/layout_border"
+    tools:context=".fragment_media">
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:fadingEdge="vertical"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ln1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
+            >
+
+    <TextView
+        android:id="@+id/textView00"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="POPULARITY"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:fontFamily="@font/cc"
+        app:fontFamily="@font/cc"
+        android:padding="10dp"
+        android:background="@color/gray"
+        android:textColor="@color/white"
+        />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart1"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        >
+    </com.github.mikephil.charting.charts.LineChart>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:text="Numbers of Crypto keywords match in every tweet."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
+        android:layout_marginBottom="20dp"
+        android:padding="10dp"
+        android:layout_centerVertical="true"
+        android:fontFamily="@font/cc"
+        android:gravity="center"
+        android:textSize="12dp"
+        app:fontFamily="@font/cc"
+        android:textColor="@color/dark"
+        />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        >
+    </com.github.mikephil.charting.charts.LineChart>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:text="Scaled by number of followers of author."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-15dp"
+        android:layout_marginBottom="20dp"
+        android:padding="10dp"
+        android:layout_centerVertical="true"
+        android:fontFamily="@font/cc"
+        android:gravity="center"
+        android:textSize="12dp"
+        app:fontFamily="@font/cc"
+        android:textColor="@color/dark"
+        />
+        <TextView
+                android:id="@+id/textView01"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"
+                android:text="SENTIMENT"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:fontFamily="@font/cc"
+                app:fontFamily="@font/cc"
+                android:padding="10dp"
+                android:background="@color/gray"
+                android:textColor="@color/white" />
+
+        <ImageView
+        android:id="@+id/imageView"
+        android:layout_below="@+id/chart1"
+        android:layout_width="match_parent"
+        android:paddingRight="30dp"
+        android:paddingEnd="30dp"
+        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
+        android:layout_height="300dp"
+        />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark"
+        android:orientation="horizontal"
+        android:padding="0dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:weightSum="1">
+
+        <ImageButton
+            android:id="@+id/button12"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            app:tint="@color/white"
+            android:src="@drawable/book"
+            />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginBottom="44dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/shadow_r" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/shadow_r" />
+</RelativeLayout>

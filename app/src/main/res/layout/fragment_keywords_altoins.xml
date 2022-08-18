@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/layout_border"
+    tools:context=".fragment_twitter">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:scaleType="centerCrop"
+        android:transformPivotY="120dp"
+        app:srcCompat="@drawable/shadow" />
+
+
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel_altcoins"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
+
+
+    <ListView
+        android:id="@+id/listView"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/adView"
+        android:padding="0dp"
+        android:divider="@color/gray_light"
+        android:dividerHeight="0.8dp"
+        />
+
+    <com.google.android.gms.ads.AdView
+        android:visibility="gone"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/linearLayout2"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-1582921325835661/4374148333">
+    </com.google.android.gms.ads.AdView>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark"
+        android:orientation="horizontal"
+        android:padding="0dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:weightSum="5">
+
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@color/dark"
+            android:fontFamily="@font/cc"
+            android:text="FLAT"
+            android:padding="0dp"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/dark"
+            app:fontFamily="@font/cc" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="0dp"
+            android:padding="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@color/dark"
+            android:fontFamily="@font/cc"
+            android:text="SCALE"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/dark"
+            app:fontFamily="@font/cc"
+
+            />
+
+
+        <ImageButton
+            android:id="@+id/button12"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            app:tint="@color/white"
+            android:src="@drawable/book"
+            />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginBottom="44dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/shadow_r" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/shadow_r" />
+
+</RelativeLayout>

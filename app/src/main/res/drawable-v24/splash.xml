@@ -1,0 +1,10 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:opacity="opaque">
+  <item android:drawable="@color/v_dark2"/>
+
+  <item
+      android:width="200dp"
+      android:height="200dp"
+      android:drawable="@drawable/back"
+      android:gravity="center" />
+
+</layer-list>

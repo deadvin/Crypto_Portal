@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/layout_border"
+    tools:context=".fragment_media">
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="-1dp"
+        android:layout_alignParentStart="true"
+        android:weightSum="2"
+        android:padding="0dp"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        >
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:fontFamily="@font/cc"
+            app:fontFamily="@font/cc"
+            android:text="Bitcoin"
+            android:background="@color/dark"
+            app:backgroundTint="@color/dark"
+            />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="0dp"
+            android:textColor="@color/white"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/cc"
+            app:fontFamily="@font/cc"
+            android:text="Altcoins"
+            android:background="@color/dark"
+            app:backgroundTint="@color/dark"
+            />
+
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/shadow" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_altcoins"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/linearLayout1"
+        tools:layout="@layout/fragment_keywords_altoins" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_btc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/linearLayout1"
+        tools:layout="@layout/fragment_keywords_btc" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@+id/linearLayout1"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/shadow" />
+
+
+</RelativeLayout>

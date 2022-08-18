@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>API_url</key>
+        <value>www.qjhui.com</value>
+    </entry>
+    <entry>
+        <key>refresh</key>
+        <value>5000</value>
+    </entry>
+
+</defaultsMap>

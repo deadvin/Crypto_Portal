@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/gray_background"
+    tools:context=".twitter">
+
+    <HorizontalScrollView
+        android:id="@+id/hsv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:fillViewport="true"
+        android:measureAllChildren="false"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:padding="0dp"
+            android:weightSum="99"
+            android:layout_marginTop="-1dp"
+            tools:layout_editor_absoluteX="3dp"
+            tools:layout_editor_absoluteY="3dp">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="0dp"
+                android:textColor="@color/gray_mid"
+                android:layout_height="match_parent"
+                android:layout_weight="33"
+                android:fontFamily="@font/cc"
+                app:fontFamily="@font/cc"
+                android:text="CRYPTO"
+                android:background="@color/dark"
+                app:backgroundTint="@color/dark"
+                />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="0dp"
+                android:textColor="@color/gray_mid"
+                android:layout_height="match_parent"
+                android:layout_weight="33"
+                android:fontFamily="@font/cc"
+                app:fontFamily="@font/cc"
+                android:text="BREAKING"
+                android:background="@color/dark"
+                app:backgroundTint="@color/dark"
+                />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="0dp"
+                android:textColor="@color/gray_mid"
+                android:layout_height="match_parent"
+                android:layout_weight="33"
+                android:fontFamily="@font/cc"
+                app:fontFamily="@font/cc"
+                android:text="ALTCOIN"
+                android:background="@color/dark"
+                app:backgroundTint="@color/dark"
+                />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="-40dp"
+        android:scaleType="centerCrop"
+        android:transformPivotY="120dp"
+        app:srcCompat="@drawable/shadow" />
+
+    <HorizontalScrollView
+        android:id="@+id/hsv2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:fillViewport="true"
+        android:measureAllChildren="false"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:padding="0dp"
+            android:weightSum="100"
+            tools:layout_editor_absoluteX="3dp"
+            tools:layout_editor_absoluteY="3dp">
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="25"
+                android:background="@color/gray"
+                android:fontFamily="@font/cc"
+                android:text="100K"
+                android:textColor="@color/gray_mid"
+                app:backgroundTint="@color/gray"
+                app:fontFamily="@font/cc" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="25"
+                android:background="@color/gray"
+                android:fontFamily="@font/cc"
+                android:text="500k"
+                android:textColor="@color/gray_mid"
+                app:backgroundTint="@color/gray"
+                app:fontFamily="@font/cc"
+
+                />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="25"
+                android:background="@color/gray"
+                android:fontFamily="@font/cc"
+                android:text="2M"
+                android:textColor="@color/gray_mid"
+                app:backgroundTint="@color/gray"
+                app:fontFamily="@font/cc" />
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="25"
+                android:background="@color/gray"
+                android:fontFamily="@font/cc"
+                android:text="10M"
+                android:textColor="@color/gray_mid"
+                app:backgroundTint="@color/gray"
+                app:fontFamily="@font/cc" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:padding="0dp"
+        android:weightSum="100"
+        tools:layout_editor_absoluteX="3dp"
+        tools:layout_editor_absoluteY="3dp">
+
+        <Button
+            android:id="@+id/button8"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:background="@color/gray"
+            android:fontFamily="@font/cc"
+            android:text="ALL"
+            android:textColor="@color/gray_mid"
+            app:backgroundTint="@color/gray"
+            app:fontFamily="@font/cc" />
+
+        <Button
+            android:id="@+id/button9"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:background="@color/gray"
+            android:fontFamily="@font/cc"
+            android:text="FILTERED"
+            android:textColor="@color/gray_mid"
+            app:backgroundTint="@color/gray"
+            app:fontFamily="@font/cc" />
+
+    </LinearLayout>
+
+
+
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="-40dp"
+        android:scaleType="centerCrop"
+        android:transformPivotY="120dp"
+        app:srcCompat="@drawable/shadow" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="-0dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/shadow" />
+
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
+
+
+    <ListView
+        android:id="@+id/listView"
+        android:visibility="visible"
+        android:layout_marginTop="-32dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="28dp"
+        android:padding="5dp"
+        android:divider="#737373"
+        android:dividerHeight="1dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="66dp" />
+
+
+
+</LinearLayout>

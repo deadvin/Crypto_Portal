@@ -1,11 +1,77 @@
 <resources>
-    <string name="app_name">Crypto Terminal</string>
+    <string name="app_name">Crypto Portal</string>
     <string name="tab_text_1">Tweets</string>
     <string name="tab_text_2">Price</string>
-    <string name="tab_text_3">Media</string>
-    <string name="tab_text_4"></string>
+    <string name="tab_text_3">Words</string>
+    <string name="tab_text_4">Media</string>
     <string name="tab_text_5"></string>
 
+
+
+    <string name="url">https://restapiforapp.herokuapp.com/</string>
+
+
+    <string name="info_all">
+        "\u2022" Realtime filtered stream of crypto tweets from accounts with more than 100 thousand followers. \n \n
+    </string>
+
+    <string name="info_alts">
+        "\u2022" Tracking the official accounts of the top cryptocurrencies. \n \n
+        "\u2022" Engagement deviation score.. \n \n
+        "\u2022" Filter for new pinned tweet, keywords match or exceptional engagement.\n \n
+    </string>
+
+    <string name="info_keywords_altcoins">
+        "\u2022" Tracking the number of mentioning certain altcoin keywords in every tweet. \n \n
+        "\u2022" Each candle represent 15 min real time data compared to 500 period moving average. \n \n
+        "\u2022" Scale option: scale with the number of author followers. \n \n
+    </string>
+
+    <string name="info_keywords_bitcoin">
+        "\u2022" Tracking the number of mentioning crypto keywords in every tweet. \n \n
+        "\u2022" Scale option: scale with number of author followers. \n \n
+    </string>
+
+    <string name="info_breaking">
+        "\u2022" Channel for breaking news. Political and business announcements from aggregated reporter lists. \n \n
+        "\u2022" Display all news or just crypto oriented.
+    </string>
+
+    <string name="info_news">
+        "\u2022" News aggregator for the most crypto articles on the web. \n \n
+        "\u2022" Top stories for the latest hours.
+    </string>
+
+    <string name="info_vid">
+        "\u2022" List of the most recent videos from the top crypto youtube channels.
+</string>
+
+    <string name="info_events">
+        "\u2022" Upcoming events for the top altcoins.
+    </string>
+
+    <string name="resume">
+
+        Crypto Portal is an app for enthusiasts or traders, who want to be up to date
+        with the latest events, trends or news around bitcoin. The application scans all sources of crypto news:
+social media, video channels, breaking news channels, altcoin events and web articles, all in real time.
+
+
+In Crypto Portal you can find : \n \n
+   "\u2022" List of the upcoming altcoin events. \n
+   "\u2022" Keyword trends for altcoins and bitcoin. \n
+   "\u2022" Greed and fear index. \n
+   "\u2022" Aggregated channel for breaking news or announcements. \n
+   "\u2022" Constant stream of all tweets, containing crypto keywords, filtered by number of followers. \n
+   "\u2022" Monitor the social media accounts of the top cryptocurrencies for announcements or partnerships. \n
+   "\u2022" Live list of the latest, top crypto videos. \n
+   "\u2022" Top crypto web articles from the last hours. \n
+   "\u2022" Price deviation from whole crypto sector. \n
+   "\u2022" Engagement deviation for tweets from altcoin accounts. \n
+   "\u2022" Alarms so you never miss an important event. \n
+
+
+</string>
 
     <string-array name="spinner">
         <item>Small</item>
@@ -14,5 +80,14 @@
         <item>None</item>
         <item>Default</item>
     </string-array>
+    <string name="title_activity_loading_screen">loading_screen</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
 </resources>

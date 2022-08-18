@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    >
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/alert_back"
+    android:layout_marginTop="100dp"
+>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            app:srcCompat="@drawable/line" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:layout_below="@+id/imageView3"
+            android:layout_marginTop="10dp"
+            android:id="@+id/ln1"
+            android:weightSum="3"
+            >
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:text="Above 1 million followers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/switch2"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_weight="1"
+                    android:textOn="ON"
+                    android:textOff="OFF"
+                    android:theme="@style/SCBSwitch"
+                    tools:ignore="UseSwitchCompatOrMaterialXml"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:id="@+id/ln3"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:layout_below="@+id/ln1"
+            android:layout_marginTop="50dp"
+            android:weightSum="3"
+            >
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:text="Above 10 million followers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switch2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/switch2"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_weight="1"
+                    android:textOn="ON"
+                    android:textOff="OFF"
+                    android:theme="@style/SCBSwitch"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+        </LinearLayout>
+
+
+
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ln3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
+            android:backgroundTint="@color/dark"
+            android:textColor="@color/white"
+            android:text="Close" />
+
+
+
+
+
+</RelativeLayout>
+
+        <ImageView
+            android:id="@+id/cmp_user_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/circle"
+            />
+
+        <ImageView
+            android:id="@+id/cmp_user_img2"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="101dp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/cover"
+
+            />
+
+        <ImageView
+            android:id="@+id/cmp_user_img3"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:padding="25dp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/alert"
+            app:tint="@color/gray"
+            />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="120dp"
+            android:fontFamily="@font/cc"
+            app:fontFamily="@font/cc"
+            android:textColor="@color/dark"
+            android:textSize="20dp"
+            android:text="\u2022 \u2022 \u2022      ALERTS      \u2022 \u2022 \u2022" />
+
+</RelativeLayout>

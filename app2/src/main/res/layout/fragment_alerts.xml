@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/gray_background"
+    android:padding="10dp"
+    tools:context=".twitter">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:weightSum="10"
+        android:layout_marginTop="50dp"
+        >
+
+        <TextView
+            android:id="@+id/textView4"
+            android:text="Day Alerts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            />
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/switch2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100dp"
+            android:layout_weight="3"
+            android:textOn="ON"
+            android:textOff="OFF"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <Spinner  style="@style/SpinnerTheme"
+            android:id="@+id/spinner1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/white"
+            />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:weightSum="10"
+        >
+
+        <TextView
+            android:id="@+id/textView5"
+            android:text="Night Alerts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            />
+
+        <Switch
+            android:id="@+id/switch2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/switch2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100dp"
+            android:layout_weight="2"
+            android:textOn="ON"
+            android:textOff="OFF"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+        <Spinner  style="@style/SpinnerTheme"
+            android:id="@+id/spinner2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/white"
+            />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:weightSum="10"
+        >
+
+        <TextView
+            android:id="@+id/textView6"
+            android:text="Price Alerts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            />
+
+        <Switch
+            android:id="@+id/switch3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/switch2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100dp"
+            android:layout_weight="2"
+            android:textOn="ON"
+            android:textOff="OFF"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <Spinner  style="@style/SpinnerTheme"
+            android:id="@+id/spinner3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/white"
+            />
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:weightSum="10"
+        >
+
+        <TextView
+            android:id="@+id/textView7"
+            android:text="Event Alerts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            />
+
+        <Switch
+            android:id="@+id/switch4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/switch2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100dp"
+            android:layout_weight="3"
+            android:textOn="ON"
+            android:textOff="OFF"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+        <Spinner  style="@style/SpinnerTheme"
+            android:id="@+id/spinner4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/white"
+            />
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:weightSum="10"
+        >
+
+        <TextView
+            android:id="@+id/textView8"
+            android:text="Sym Alerts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            />
+
+        <Switch
+            android:id="@+id/switch5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/switch2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100dp"
+            android:layout_weight="5"
+            android:textOn="ON"
+            android:textOff="OFF"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <Spinner  style="@style/SpinnerTheme"
+            android:id="@+id/spinner5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/white"
+            />
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:weightSum="10"
+        >
+
+        <TextView
+            android:id="@+id/textView9"
+            android:text="Sym_f Alerts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            />
+
+        <Switch
+            android:id="@+id/switch6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/switch2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100dp"
+            android:layout_weight="5"
+            android:textOn="ON"
+            android:textOff="OFF"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <Spinner  style="@style/SpinnerTheme"
+            android:id="@+id/spinner6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/white"
+            />
+
+
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
