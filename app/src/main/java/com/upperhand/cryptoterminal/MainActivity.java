@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
         context = this;
 
-
         viewPager.setOnTouchListener(new View.OnTouchListener()
         {
             @Override
@@ -84,9 +83,10 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager.beginFakeDrag();
 
+
         //============= SET APP ID
 
-        SharedPreferences.Editor editor = null;
+//        SharedPreferences.Editor editor = null;
         preferences = MainActivity.this.getSharedPreferences("id", Context.MODE_PRIVATE);
         int id = preferences.getInt("id", 0);
 
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putInt("id",  new Random().nextInt(1000000000) );
             editor.apply();
         }
+
 
         //=============   REMOTE CONFIG
 
@@ -132,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         //========     SET TABS TEXT COLOR
 
         tabs.setSelectedTabIndicatorColor( Color.parseColor("#0A75FF"));
@@ -160,9 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
                         super.onTabSelected(tab);
-                        Log.e("asd",tab.getPosition() +  " ");
                         selected = tab.getPosition();
-
                         if (tab.getIcon() != null){
                             int tabIconColor = ContextCompat.getColor(MainActivity.this, R.color.selected);
                             tab.getIcon().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.v_dark));
 
 
-//        ======================   MAKE SP RESFRESH FALSE
+//        ====================== SHARED PREFERENCES FALSE
 
         for (int i = 0; i < refresh_sp_list.length - 1; i++) {
             editor = context.getSharedPreferences(refresh_sp_list[i], MODE_PRIVATE).edit();
@@ -204,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-
                 mStatusChecker.run();
             }
         }, 5000);
@@ -250,7 +249,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-
 
         if(timer != null) {
             timer.cancel();

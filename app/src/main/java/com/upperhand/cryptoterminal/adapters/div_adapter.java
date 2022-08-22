@@ -90,7 +90,7 @@ public class div_adapter extends ArrayAdapter<div>  {
 
         switch (mode) {
             case "1 MIN":
-                //region ! MINUTE
+                //region 1 MIN
                 visible_elements = 15;
                 interval_size = 0.4f;
 
@@ -148,7 +148,6 @@ public class div_adapter extends ArrayAdapter<div>  {
                 }
                 Collections.reverse(list);
 
-
                 //endregion
                 break;
             case "15 MIN":
@@ -183,11 +182,11 @@ public class div_adapter extends ArrayAdapter<div>  {
                 }
                 for (int i = 0; i < count; i++) {
                     if (half) {
-                        half = !half;
+                        half = false;
                         list.add(hours + ":00");
                         hours -= 1;
                     } else {
-                        half = !half;
+                        half = true;
                         list.add(hours + ":30");
                     }
                     if (hours < 0) {
@@ -223,8 +222,6 @@ public class div_adapter extends ArrayAdapter<div>  {
                     }
                 }
                 Collections.reverse(list);
-
-
 
                 //endregion
                 break;
@@ -262,8 +259,6 @@ public class div_adapter extends ArrayAdapter<div>  {
                     }
                 }
                 Collections.reverse(list);
-
-
 
                 //endregion
                 break;
@@ -456,7 +451,6 @@ public class div_adapter extends ArrayAdapter<div>  {
             public void onChartTranslate(MotionEvent me, float dX, float dY) {
             }
         });
-
 
 
 //        ================  SET TOP HOURS
