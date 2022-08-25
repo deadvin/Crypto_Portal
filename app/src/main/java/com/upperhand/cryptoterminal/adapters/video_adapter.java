@@ -43,7 +43,7 @@ public class video_adapter extends ArrayAdapter<video> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //get the persons information
+
         String name = getItem(position).getName();
         String text = getItem(position).getText();
         String link = getItem(position).getLink();
@@ -77,8 +77,7 @@ public class video_adapter extends ArrayAdapter<video> {
             @Override
             public void onClick(View v) {
 
-                String hhh = video.getLink();
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(hhh));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(video.getLink()));
                 mContext.startActivity(browserIntent);
             }
         });

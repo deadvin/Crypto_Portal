@@ -8,7 +8,6 @@
     android:padding="0dp"
     android:gravity="center"
     android:background="@drawable/border_thin"
-
     >
 
     <LinearLayout

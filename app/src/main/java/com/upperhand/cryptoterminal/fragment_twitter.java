@@ -277,7 +277,6 @@ public class fragment_twitter extends Fragment {
                 linearLayout.setVisibility(View.VISIBLE);
                 btn9.setText("filter");
 
-
                 btn1.setTextColor(Color.parseColor("#FFFFFF"));
                 btn3.setTextColor(Color.parseColor("#0A75FF"));
                 btn8.setTextColor(Color.parseColor("#0A75FF"));
@@ -829,7 +828,7 @@ public class fragment_twitter extends Fragment {
         Gson gson = new Gson();
         String json = gson.toJson(list);
 
-        switch (selected) {
+        switch (selected) {  //              CHANGE ALL  WITH SELECTER ===============================================================
             case "100":
                 editor = context.getSharedPreferences("100", MODE_PRIVATE).edit();
                 editor.putString("100", json);
