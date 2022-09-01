@@ -20,8 +20,9 @@ import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.upperhand.cryptoterminal.adapters.event_adapter;
+import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
 import com.upperhand.cryptoterminal.objects.event;
-import com.upperhand.cryptoterminal.interfaces.get_data;
+import com.upperhand.cryptoterminal.interfaces.GetData;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -44,15 +45,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class fragment_events extends Fragment {
+public class FragmentEvents extends Fragment {
 
 
     ArrayList<event> vidlist;
     ListView mListView;
     event_adapter adapter;
-    OkHttpClient okHttpClient;
-    Retrofit retrofit;
-    get_data api_interface;
     Call<List<event>> call;
     RelativeLayout loading;
     SharedPreferences.Editor editor;
@@ -70,56 +68,6 @@ public class fragment_events extends Fragment {
         vidlist = new ArrayList<>();
         context = this.getActivity();
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        api_url =getString(R.string.url);
-
-        //=========================   RETROFIT
-
-        try {
-
-            final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[0];
-                }
-            } };
-
-            final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts,
-                    new java.security.SecureRandom());
-
-            final SSLSocketFactory sslSocketFactory = sslContext
-                    .getSocketFactory();
-
-            okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(1, TimeUnit.MINUTES)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .sslSocketFactory(sslSocketFactory)
-                    .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-                    .build();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(api_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        api_interface = retrofit.create(get_data.class);
 
     }
 
@@ -135,7 +83,7 @@ public class fragment_events extends Fragment {
         if(vidlist.isEmpty()){
             mListView.setVisibility(View.INVISIBLE);
             loading.setVisibility(View.VISIBLE);
-            call = api_interface.get_events();
+            call = RetrofitSingleton.get().getData().get_events();
             call();
         }else{
             adapter = new event_adapter(context, R.layout.layout_event, vidlist);
@@ -277,7 +225,7 @@ public class fragment_events extends Fragment {
         context = this.getActivity();
 
         if(vidlist.isEmpty()){
-            call = api_interface.get_events();
+            call = RetrofitSingleton.get().getData().get_events();
             call();
         }
 

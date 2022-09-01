@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:background="@color/gray_background"
     android:padding="10dp"
-    tools:context=".fragment_twitter">
+    tools:context=".FragmentTwitter">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_one"

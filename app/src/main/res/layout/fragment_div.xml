@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/layout_border"
-    tools:context=".fragment_prices">
+    tools:context=".FragmentPrices">
 
     <RelativeLayout
         android:id="@+id/loadingPanel_altcoins"

@@ -21,30 +21,22 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.upperhand.cryptoterminal.interfaces.get_data;
+import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
 import com.upperhand.cryptoterminal.objects.word;
 import com.upperhand.cryptoterminal.adapters.wordsAdapter;
 import java.lang.reflect.Type;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class keywords_altcoins extends Fragment {
+public class FragmentAltcoinWords extends Fragment {
 
 
     Button btn_flat;
@@ -52,10 +44,7 @@ public class keywords_altcoins extends Fragment {
     ArrayList<word> list_words;
     ListView mListView;
     wordsAdapter adapter;
-    OkHttpClient okHttpClient;
-    Retrofit retrofit;
     boolean scale_vol;
-    get_data api_interface;
     Call<List<word>> call;
     RelativeLayout loading;
     Context context;
@@ -76,55 +65,6 @@ public class keywords_altcoins extends Fragment {
         api_url = getString(R.string.url);
         list_words = new ArrayList<>();
 
-
-        //   =============   RETROFIT INTERFACES
-
-
-        try {
-
-            final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[0];
-                }
-            } };
-
-            final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts,
-                    new java.security.SecureRandom());
-
-            final SSLSocketFactory sslSocketFactory = sslContext
-                    .getSocketFactory();
-
-            okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(1, TimeUnit.MINUTES)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .sslSocketFactory(sslSocketFactory)
-                    .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-                    .build();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(api_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        api_interface  = retrofit.create(get_data.class);
     }
 
     @Override
@@ -152,7 +92,7 @@ public class keywords_altcoins extends Fragment {
                 if(list_words.isEmpty() || is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = api_interface.get_trend();
+                    call = RetrofitSingleton.get().getData().get_trend();
                     call();
 
                 }else{
@@ -175,7 +115,7 @@ public class keywords_altcoins extends Fragment {
                 if(list_words.isEmpty() || is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = api_interface.get_trend();
+                    call = RetrofitSingleton.get().getData().get_trend();
                     call();
 
                 }else{
@@ -329,7 +269,7 @@ public class keywords_altcoins extends Fragment {
         if(is_refresh()){
             loading.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.INVISIBLE);
-            call = api_interface.get_trend();
+            call = RetrofitSingleton.get().getData().get_trend();
             call();
         }
         super.onResume();

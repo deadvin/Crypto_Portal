@@ -22,16 +22,13 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.upperhand.cryptoterminal.adapters.breaking_adapter;
 import com.upperhand.cryptoterminal.adapters.div_adapter;
 
-import com.upperhand.cryptoterminal.interfaces.get_data;
+import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
+import com.upperhand.cryptoterminal.interfaces.GetData;
 import com.upperhand.cryptoterminal.objects.div;
 import com.upperhand.cryptoterminal.objects.last_price;
 
-import java.lang.reflect.Type;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,10 +49,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static android.content.Context.MODE_PRIVATE;
 
-
-public  class fragment_prices extends Fragment {
+public  class FragmentPrices extends Fragment {
 
     //region VARS
 
@@ -67,11 +62,6 @@ public  class fragment_prices extends Fragment {
     ArrayList<last_price> list_last_prices;
     ListView mListView;
     div_adapter adapter;
-    OkHttpClient okHttpClient;
-    Retrofit retrofit;
-    Retrofit retrofit_last_price;
-    get_data api_interface;
-    get_data api_interface_last_price;
     Call<List<div>> call;
     Call<List<last_price>> call_last_price;
     RelativeLayout loading;
@@ -105,7 +95,7 @@ public  class fragment_prices extends Fragment {
         api_url = getString(R.string.url);
         String s = "[\"WAVESUSDT\",\"TFUELUSDT\",\"ZECUSDT\",\"NEOUSDT\",\"HBARUSDT\",\"LINKUSDT\",\"HOTUSDT\",\"AGLDUSDT\",\"APEUSDT\",\"FLOWUSDT\",\"FTTUSDT\",\"BATUSDT\",\"AUDIOUSDT\",\"ADAUSDT\",\"SOLUSDT\",\"DOGEUSDT\",\"MATICUSDT\",\"LUNAUSDT\",\"DOTUSDT\",\"INJUSDT\",\"AVAXUSDT\",\"EOSUSDT\",\"THETAUSDT\",\"IOTAUSDT\",\"CHZUSDT\",\"ONEUSDT\",\"KSMUSDT\",\"NEARUSDT\",\"XTZUSDT\",\"ALGOUSDT\",\"EGLDUSDT\",\"ARUSDT\",\"AXSUSDT\",\"XRPUSDT\",\"FILUSDT\",\"VETUSDT\",\"UNIUSDT\",\"CAKEUSDT\",\"ICPUSDT\",\"ETCUSDT\",\"ZILUSDT\",\"XLMUSDT\",\"XMRUSDT\",\"SANDUSDT\",\"RVNUSDT\",\"MANAUSDT\",\"LTCUSDT\",\"GALAUSDT\",\"BNBUSDT\",\"AAVEUSDT\",\"ANKRUSDT\",\"1INCHUSDT\",\"COTIUSDT\",\"ENJUSDT\",\"ATOMUSDT\",\"ETHUSDT\",\"FTMUSDT\"]";
         api_binance_url = "https://api.binance.com/api/v3/ticker/price?symbols=" + s;
-        api_binance_base_url = "https://api.binance.com/api/v3/ticker/" ;
+
         list_div_1m = new ArrayList<>();
         list_div_15m = new ArrayList<>();
         list_div_1h = new ArrayList<>();
@@ -116,60 +106,6 @@ public  class fragment_prices extends Fragment {
         name_selected = false;
         adapter = new div_adapter(context, R.layout.layout_div,active_list, list_last_prices);
 
-//==========================   RETROFIT INTERFACES
-
-        try {
-
-            final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[0];
-                }
-            } };
-
-            final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts,
-                    new java.security.SecureRandom());
-
-            final SSLSocketFactory sslSocketFactory = sslContext
-                    .getSocketFactory();
-
-            okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(1, TimeUnit.MINUTES)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .sslSocketFactory(sslSocketFactory)
-                    .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-                    .build();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(api_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        retrofit_last_price = new Retrofit.Builder()
-                .baseUrl(api_binance_base_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        api_interface  = retrofit.create(get_data.class);
-        api_interface_last_price  = retrofit_last_price.create(get_data.class);
     }
 
     @Override
@@ -273,7 +209,7 @@ public  class fragment_prices extends Fragment {
 
     public void call_price(boolean notify){
 
-        call_last_price = api_interface_last_price.get_last_price(api_binance_url);
+        call_last_price = RetrofitSingleton.get().getDataPrices().get_last_price(api_binance_url);
 
         call_last_price.enqueue(new Callback<List<last_price>>() {
             @Override
@@ -312,7 +248,7 @@ public  class fragment_prices extends Fragment {
                     adapter.notifyDataSetChanged();
                     return;
                 }
-                call = api_interface.get_div_1m();
+                call = RetrofitSingleton.get().getData().get_div_1m();
                 break;
             case "15 MIN":
                 if(!list_div_15m.isEmpty() && !is_refresh){
@@ -323,7 +259,7 @@ public  class fragment_prices extends Fragment {
                     adapter.notifyDataSetChanged();
                     return;
                 }
-                call = api_interface.get_div_15m();
+                call = RetrofitSingleton.get().getData().get_div_15m();
                 break;
             case "1 HOUR":
                 if(!list_div_1h.isEmpty() && !is_refresh){
@@ -334,7 +270,7 @@ public  class fragment_prices extends Fragment {
                     adapter.notifyDataSetChanged();
                     return;
                 }
-                call = api_interface.get_div_1h();
+                call = RetrofitSingleton.get().getData().get_div_1h();
                 break;
             case "1 DAY":
                 if(!list_div_1d.isEmpty() && !is_refresh){
@@ -345,7 +281,7 @@ public  class fragment_prices extends Fragment {
                     adapter.notifyDataSetChanged();
                     return;
                 }
-                call = api_interface.get_div_1d();
+                call = RetrofitSingleton.get().getData().get_div_1d();
                 break;
         }
 

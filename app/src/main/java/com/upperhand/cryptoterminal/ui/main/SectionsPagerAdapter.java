@@ -3,7 +3,6 @@ package com.upperhand.cryptoterminal.ui.main;
 import android.content.Context;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -11,19 +10,21 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.upperhand.cryptoterminal.R;
-import com.upperhand.cryptoterminal.fragment_prices;
-import com.upperhand.cryptoterminal.fragment_words;
-import com.upperhand.cryptoterminal.fragment_media;
-import com.upperhand.cryptoterminal.settings;
-import com.upperhand.cryptoterminal.fragment_twitter;
+import com.upperhand.cryptoterminal.FragmentPrices;
+import com.upperhand.cryptoterminal.FragmentWords;
+import com.upperhand.cryptoterminal.FragmentMedia;
+import com.upperhand.cryptoterminal.Settings;
+import com.upperhand.cryptoterminal.FragmentTwitter;
+
+import org.jetbrains.annotations.NotNull;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    private fragment_twitter fragment_twitter;
-    private fragment_prices fragment_prices;
-    private fragment_prices fragment_words;
-    private fragment_prices fragment_media;
-    private fragment_prices settings;
+    private FragmentTwitter FragmentTwitter;
+    private FragmentPrices FragmentPrices;
+    private FragmentPrices fragment_words;
+    private FragmentPrices fragment_media;
+    private FragmentPrices settings;
 
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1,  R.string.tab_text_2,R.string.tab_text_3, R.string.tab_text_4, R.string.tab_text_5};
@@ -37,20 +38,21 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     }
 
 
+    @NotNull
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                return new fragment_twitter();
+                return new FragmentTwitter();
             case 1:
-                return new fragment_prices();
+                return new FragmentPrices();
             case 2:
-                return new fragment_words();
+                return new FragmentWords();
             case 3:
-                return new fragment_media();
+                return new FragmentMedia();
             case 4:
-                return new settings();
+                return new Settings();
             default:
                 return null;
         }
@@ -62,16 +64,17 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         return mContext.getResources().getString(TAB_TITLES[position]);
     }
 
+    @NotNull
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(@NotNull ViewGroup container, int position) {
         Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
         // save the appropriate reference depending on position
         switch (position) {
             case 0:
-                fragment_twitter = (fragment_twitter) createdFragment;
+                FragmentTwitter = (FragmentTwitter) createdFragment;
                 break;
             case 1:
-                fragment_prices = (fragment_prices) createdFragment;
+                FragmentPrices = (FragmentPrices) createdFragment;
                 break;
         }
         return createdFragment;
@@ -80,13 +83,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     public void refresh(boolean big){
 
-        fragment_prices.refresh(big);
+        FragmentPrices.refresh(big);
     }
-
 
 
     @Override
     public int getCount() {
         return 5;
     }
+
+
 }

@@ -21,7 +21,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.upperhand.cryptoterminal.interfaces.get_data;
+import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
+import com.upperhand.cryptoterminal.interfaces.GetData;
 import com.upperhand.cryptoterminal.objects.video;
 import com.upperhand.cryptoterminal.adapters.video_adapter;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -46,18 +47,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class fragment_news extends Fragment {
+public class FragmentNews extends Fragment {
 
 
     ArrayList<video> list_all;
     ArrayList<video> list_top;
     ListView mListView;
     video_adapter adapter;
-    OkHttpClient okHttpClient;
-    Retrofit retrofit;
     Call<List<video>> call;
     RelativeLayout loading;
-    get_data api_interface;
     Button btn_all;
     Button btn_top;
     boolean all;
@@ -81,59 +79,9 @@ public class fragment_news extends Fragment {
 
         context = this.getActivity();
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        api_url = getString(R.string.url);
 
         preferences = context.getSharedPreferences("news", Context.MODE_PRIVATE);
         alerts = preferences.getBoolean("news", false);
-
-        //===============================   RETROFIT
-
-        try {
-
-            final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[0];
-                }
-            } };
-
-            final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts,
-                    new java.security.SecureRandom());
-
-            final SSLSocketFactory sslSocketFactory = sslContext
-                    .getSocketFactory();
-
-            okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(1, TimeUnit.MINUTES)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .sslSocketFactory(sslSocketFactory)
-                    .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-                    .build();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(api_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        api_interface = retrofit.create(get_data.class);
 
     }
 
@@ -162,7 +110,7 @@ public class fragment_news extends Fragment {
                 if(list_all.isEmpty() || is_refresh()){
                     mListView.setVisibility(View.INVISIBLE);
                     loading.setVisibility(View.VISIBLE);
-                    call = api_interface.get_news();
+                    call = RetrofitSingleton.get().getData().get_news();
                     call(list_all);
                 }else{
                     adapter = new video_adapter(context, R.layout.layout_video, list_all);
@@ -183,7 +131,7 @@ public class fragment_news extends Fragment {
                 if(list_top.isEmpty() || is_refresh()){
                     mListView.setVisibility(View.INVISIBLE);
                     loading.setVisibility(View.VISIBLE);
-                    call = api_interface.get_news_f();
+                    call = RetrofitSingleton.get().getData().get_news_f();
                     call(list_top);
                 }else{
                     adapter = new video_adapter(context, R.layout.layout_video, list_top);

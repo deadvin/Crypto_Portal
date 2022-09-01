@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.upperhand.cryptoterminal.interfaces.post_data;
+import com.upperhand.cryptoterminal.interfaces.PostData;
 
 import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +37,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class contact extends Fragment {
+public class Contacts extends Fragment {
 
 
 
@@ -49,7 +49,7 @@ public class contact extends Fragment {
     FirebaseRemoteConfig mFirebaseRemoteConfig;
     Retrofit retrofit;
     String api_url;
-    post_data post_interface;
+    PostData post_interface;
     SharedPreferences.Editor editor;
     SharedPreferences preferences;
 
@@ -131,7 +131,7 @@ public class contact extends Fragment {
                             Toast.LENGTH_LONG).show();
                 }else {
 
-                    post_interface = retrofit.create(post_data.class);
+                    post_interface = retrofit.create(PostData.class);
 
                     preferences = context.getSharedPreferences("id", Context.MODE_PRIVATE);
                     int id = preferences.getInt("id", 0);

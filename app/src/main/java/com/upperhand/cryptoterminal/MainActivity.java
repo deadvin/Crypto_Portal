@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
+
 import androidx.viewpager.widget.ViewPager;
 
 import com.upperhand.cryptoterminal.ui.main.SectionsPagerAdapter;

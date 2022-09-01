@@ -20,7 +20,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.upperhand.cryptoterminal.interfaces.get_data;
+import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
+import com.upperhand.cryptoterminal.interfaces.GetData;
 import com.upperhand.cryptoterminal.objects.video;
 import com.upperhand.cryptoterminal.adapters.video_adapter;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,15 +46,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class fragment_videos extends Fragment {
+public class FragmentVideo extends Fragment {
 
 
     ArrayList<video> symlist;
     ListView mListView;
     video_adapter adapter;
-    OkHttpClient okHttpClient;
-    Retrofit retrofit;
-    get_data api_interface;
+
     Call<List<video>> call;
     RelativeLayout loading;
 
@@ -72,57 +71,8 @@ public class fragment_videos extends Fragment {
 
         context = this.getActivity();
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        api_url = getString(R.string.url);
         symlist = new ArrayList<>();
 
-        //============================  RETROFIT
-
-        try {
-
-            final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[0];
-                }
-            } };
-
-            final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts,
-                    new java.security.SecureRandom());
-
-            final SSLSocketFactory sslSocketFactory = sslContext
-                    .getSocketFactory();
-
-            okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(1, TimeUnit.MINUTES)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .sslSocketFactory(sslSocketFactory)
-                    .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-                    .build();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(api_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        api_interface = retrofit.create(get_data.class);
 
         
     }
@@ -137,7 +87,7 @@ public class fragment_videos extends Fragment {
         mListView =  view.findViewById(R.id.listView);
         loading.setVisibility(View.VISIBLE);
 
-        call = api_interface.get_video();
+        call = RetrofitSingleton.get().getData().get_video();
         call();
 
         alert.setOnClickListener( new View.OnClickListener() {    //     FILTERED
@@ -265,7 +215,7 @@ public class fragment_videos extends Fragment {
         if(is_refresh()){
             mListView.setVisibility(View.INVISIBLE);
             loading.setVisibility(View.VISIBLE);
-            call = api_interface.get_video();
+            call = RetrofitSingleton.get().getData().get_video();
             call();
         }
 

@@ -30,7 +30,8 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.upperhand.cryptoterminal.interfaces.get_data;
+import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
+
 import com.upperhand.cryptoterminal.objects.word;
 
 import java.io.InputStream;
@@ -55,13 +56,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class keywords_bitcoin extends Fragment {
+public class FragmentBitcoinWords extends Fragment {
 
     ArrayList<Integer> list_trends_flat;
     ArrayList<Integer> list_trends_vol;
-    OkHttpClient okHttpClient;
-    Retrofit retrofit;
-    get_data api_interface;
     Call<List<word>> call;
     Context context;
     ImageButton info;
@@ -85,55 +83,6 @@ public class keywords_bitcoin extends Fragment {
         list_trends_flat = new ArrayList<>();
         list_trends_vol = new ArrayList<>();
 
-        //   =============   RETROFIT INTERFACES
-
-
-        try {
-
-            final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[0];
-                }
-            } };
-
-            final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts,
-                    new java.security.SecureRandom());
-
-            final SSLSocketFactory sslSocketFactory = sslContext
-                    .getSocketFactory();
-
-            okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(1, TimeUnit.MINUTES)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .sslSocketFactory(sslSocketFactory)
-                    .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-                    .build();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(api_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        api_interface  = retrofit.create(get_data.class);
 
     }
 
@@ -148,7 +97,7 @@ public class keywords_bitcoin extends Fragment {
 
         thread_greed_fear.start();
 
-        call = api_interface.get_trend_btc();
+        call = RetrofitSingleton.get().getData().get_trend_btc();
         call();
 
         info.setOnClickListener( new View.OnClickListener() {
@@ -450,7 +399,7 @@ public class keywords_bitcoin extends Fragment {
         Log.e("asd", " on resumee ");
         if(is_refresh()){
             Log.e("asd", " refresh bitkon trend");
-            call = api_interface.get_trend_btc();
+            call = RetrofitSingleton.get().getData().get_trend_btc();
             call();
         }
 

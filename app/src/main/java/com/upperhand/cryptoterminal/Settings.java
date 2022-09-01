@@ -19,28 +19,21 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.fragment.app.Fragment;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.upperhand.cryptoterminal.interfaces.post_data;
-
-import java.util.concurrent.TimeUnit;
-
+import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class settings extends Fragment {
+public class Settings extends Fragment {
 
 
     androidx.appcompat.widget.SwitchCompat switch_all;
@@ -61,13 +54,13 @@ public class settings extends Fragment {
     int alts_s;
     SharedPreferences.Editor editor;
     SharedPreferences preferences;
-    post_data post_interface;
+
     Context context;
     TextView text;
-    OkHttpClient okHttpClient;
+
     FirebaseRemoteConfig mFirebaseRemoteConfig;
-    Retrofit retrofit;
-    String api_url;
+
+
     LinearLayout ln1;
 
     @Override
@@ -85,20 +78,6 @@ public class settings extends Fragment {
         alts_s = preferences.getInt("alts_s", 1);
 
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        api_url = mFirebaseRemoteConfig.getString("url");
-        Log.e("see",api_url );
-
-        okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(20, TimeUnit.SECONDS)
-                .build();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(api_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
 
     }
 
@@ -294,8 +273,6 @@ public class settings extends Fragment {
                             Toast.LENGTH_LONG).show();
                 }else {
 
-                    post_interface = retrofit.create(post_data.class);
-
                     preferences = context.getSharedPreferences("id", Context.MODE_PRIVATE);
                     int id = preferences.getInt("id", 0);
                     String body = message.getText().toString();
@@ -308,7 +285,7 @@ public class settings extends Fragment {
                             .addFormDataPart("mail", mail)
                             .build();
 
-                    Call<RequestBody> call = post_interface.form(requestBody);
+                    Call<RequestBody> call = RetrofitSingleton.get().postData().form(requestBody);
 
 
                     call.enqueue(new Callback<RequestBody>() {

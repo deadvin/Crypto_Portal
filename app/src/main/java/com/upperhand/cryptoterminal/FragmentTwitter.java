@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -22,47 +21,28 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
-
 import com.google.gson.reflect.TypeToken;
 import com.upperhand.cryptoterminal.adapters.tweet_adapter;
 import com.upperhand.cryptoterminal.adapters.breaking_adapter;
-import com.upperhand.cryptoterminal.interfaces.get_data;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
+import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.upperhand.cryptoterminal.interfaces.post_data;
-import com.upperhand.cryptoterminal.objects.div;
 import com.upperhand.cryptoterminal.objects.tweet;
-
 import java.lang.reflect.Type;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class fragment_twitter extends Fragment {
+public class FragmentTwitter extends Fragment {
 
     //region VARS
     Button btn1;
@@ -91,15 +71,11 @@ public class fragment_twitter extends Fragment {
     ListView mListView;
     tweet_adapter adapter;
     breaking_adapter breaking_adapter;
-    OkHttpClient okHttpClient;
-    Retrofit retrofit;
     LinearLayout hsv;
     LinearLayout hsv2;
     LinearLayout linearLayout;
     boolean two_tabs;
     String selected = "";
-    get_data get_interface;
-    post_data post_interface;
     Call<List<tweet>> call;
     Call<String> call2;
     RelativeLayout loading;
@@ -134,55 +110,7 @@ public class fragment_twitter extends Fragment {
         list_sym_f = new ArrayList<>();
         list_rep = new ArrayList<>();
         list_rep_f = new ArrayList<>();
-
-        //   ===================   RETROFIT INSTANCE   ===================
-
-        try {
-
-            final TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] chain,
-                        String authType) throws CertificateException {
-                }
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[0];
-                }
-            } };
-
-            final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts,
-                    new java.security.SecureRandom());
-
-            final SSLSocketFactory sslSocketFactory = sslContext
-                    .getSocketFactory();
-
-            okHttpClient = new OkHttpClient.Builder()
-                    .connectTimeout(1, TimeUnit.MINUTES)
-                    .readTimeout(20, TimeUnit.SECONDS)
-                    .writeTimeout(20, TimeUnit.SECONDS)
-                    .sslSocketFactory(sslSocketFactory)
-                    .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER)
-                    .build();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(api_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
-                .build();
-
-        get_interface = retrofit.create(get_data.class);
-        post_interface  = retrofit.create(post_data.class);
+        
     }
 
     @Override
@@ -259,7 +187,8 @@ public class fragment_twitter extends Fragment {
                 if(list_all_1.isEmpty() || is_refresh()){
                     mListView.setVisibility(View.INVISIBLE);
                     loading.setVisibility(View.VISIBLE);
-                    call = get_interface.get_1();
+
+                    call = RetrofitSingleton.get().getData().get_1();
                     call(list_all_1);
                 }else{
                     adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_1);
@@ -287,7 +216,7 @@ public class fragment_twitter extends Fragment {
                 if(list_sym.isEmpty() || is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_sym();
+                    call = RetrofitSingleton.get().getData().get_sym();
                     call(list_sym);
                 }else{
                     adapter = new tweet_adapter(context, R.layout.layout_tweet,list_sym);
@@ -316,7 +245,7 @@ public class fragment_twitter extends Fragment {
                 if(list_rep_f.isEmpty() || is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_rep_f();
+                    call = RetrofitSingleton.get().getData().get_rep_f();
                     call(list_rep_f);
                 }else{
                     breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking,list_rep_f);
@@ -338,7 +267,7 @@ public class fragment_twitter extends Fragment {
                 if(list_all_100.isEmpty() || is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_100();
+                    call = RetrofitSingleton.get().getData().get_100();
                     call(list_all_100);
                 }else{
                     adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_100);
@@ -359,7 +288,7 @@ public class fragment_twitter extends Fragment {
                 if(list_all_500.isEmpty() || is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_500();
+                    call = RetrofitSingleton.get().getData().get_500();
                     call(list_all_500);
                 }else{
                     adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_500);
@@ -380,7 +309,7 @@ public class fragment_twitter extends Fragment {
                 if(list_all_1.isEmpty() || is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_1();
+                    call = RetrofitSingleton.get().getData().get_1();
                     call(list_all_1);
                 }else{
                     adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_1);
@@ -401,7 +330,7 @@ public class fragment_twitter extends Fragment {
                 if(list_all_10.isEmpty() || is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_10();
+                    call = RetrofitSingleton.get().getData().get_10();
                     call(list_all_10);
 
                 }else{
@@ -424,7 +353,7 @@ public class fragment_twitter extends Fragment {
                     if(list_sym.isEmpty() || is_refresh()){
                         loading.setVisibility(View.VISIBLE);
                         mListView.setVisibility(View.INVISIBLE);
-                        call = get_interface.get_sym();
+                        call = RetrofitSingleton.get().getData().get_sym();
                         call(list_sym);
 
                     }else{
@@ -436,7 +365,7 @@ public class fragment_twitter extends Fragment {
                     if(list_rep.isEmpty() || is_refresh()){
                         loading.setVisibility(View.VISIBLE);
                         mListView.setVisibility(View.INVISIBLE);
-                        call = get_interface.get_rep();
+                        call = RetrofitSingleton.get().getData().get_rep();
                         call(list_rep);
                     }else{
                         breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking,list_rep);
@@ -460,7 +389,7 @@ public class fragment_twitter extends Fragment {
                     if (list_sym_f.isEmpty() || is_refresh()) {
                         loading.setVisibility(View.VISIBLE);
                         mListView.setVisibility(View.INVISIBLE);
-                        call = get_interface.get_sym_f();
+                        call = RetrofitSingleton.get().getData().get_sym_f();
                         call(list_sym_f);
                     } else {
                         adapter = new tweet_adapter(context, R.layout.layout_tweet, list_sym_f);
@@ -471,7 +400,7 @@ public class fragment_twitter extends Fragment {
                     if(list_rep_f.isEmpty() || is_refresh()){
                         loading.setVisibility(View.VISIBLE);
                         mListView.setVisibility(View.INVISIBLE);
-                        call = get_interface.get_rep_f();
+                        call = RetrofitSingleton.get().getData().get_rep_f();
                         call(list_rep_f);
                     }else{
                         breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking,list_rep_f);
@@ -961,7 +890,7 @@ public class fragment_twitter extends Fragment {
                 if(is_refresh()){
                     mListView.setVisibility(View.INVISIBLE);
                     loading.setVisibility(View.VISIBLE);
-                    call = get_interface.get_100();
+                    call = RetrofitSingleton.get().getData().get_100();
                     call(list_all_100);
                 }else{
                     adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_100);
@@ -972,7 +901,7 @@ public class fragment_twitter extends Fragment {
                 if(is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_500();
+                    call = RetrofitSingleton.get().getData().get_500();
                     call(list_all_500);
                 }else{
                     adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_500);
@@ -983,7 +912,7 @@ public class fragment_twitter extends Fragment {
                 if(is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_1();
+                    call = RetrofitSingleton.get().getData().get_1();
                     call(list_all_1);
                 }else{
                     adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_1);
@@ -994,7 +923,7 @@ public class fragment_twitter extends Fragment {
                 if(is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_10();
+                    call = RetrofitSingleton.get().getData().get_10();
                     call(list_all_10);
 
                 }else{
@@ -1006,7 +935,7 @@ public class fragment_twitter extends Fragment {
                 if(is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_sym();
+                    call = RetrofitSingleton.get().getData().get_sym();
                     call(list_sym);
                 }else{
                     adapter = new tweet_adapter(context, R.layout.layout_tweet,list_sym);
@@ -1017,7 +946,7 @@ public class fragment_twitter extends Fragment {
                 if (is_refresh()) {
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_sym_f();
+                    call = RetrofitSingleton.get().getData().get_sym_f();
                     call(list_sym_f);
                 } else {
                     adapter = new tweet_adapter(context, R.layout.layout_tweet, list_sym_f);
@@ -1028,7 +957,7 @@ public class fragment_twitter extends Fragment {
                 if(is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_rep();
+                    call = RetrofitSingleton.get().getData().get_rep();
                     call(list_rep);
                 }else{
                     breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking,list_rep);
@@ -1039,7 +968,7 @@ public class fragment_twitter extends Fragment {
                 if(is_refresh()){
                     loading.setVisibility(View.VISIBLE);
                     mListView.setVisibility(View.INVISIBLE);
-                    call = get_interface.get_rep_f();
+                    call = RetrofitSingleton.get().getData().get_rep_f();
                     call(list_rep_f);
                 }else{
                     breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking,list_rep_f);

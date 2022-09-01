@@ -6,7 +6,7 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/gray_background"
-    tools:context=".settings">
+    tools:context=".Settings">
 
     <ImageView
         android:id="@+id/imageView"

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/layout_border"
-    tools:context=".fragment_media">
+    tools:context=".FragmentMedia">
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -70,25 +70,11 @@
         app:srcCompat="@drawable/shadow" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_two"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/linearLayout1"
         tools:layout="@layout/fragment_video" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_one"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayout1"
-        tools:layout="@layout/fragment_events" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_three"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayout1"
-        tools:layout="@layout/fragment_news" />
 
     <ImageView
         android:id="@+id/imageView2"

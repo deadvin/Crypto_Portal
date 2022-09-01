@@ -14,13 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import static android.content.Context.MODE_PRIVATE;
 
+public class FragmentWords extends Fragment {
 
-public class fragment_words extends Fragment {
-
-    keywords_altcoins keywords_altcoins;
-    keywords_bitcoin keywords_bitcoin;
+    FragmentAltcoinWords FragmentAltcoinWords;
+    FragmentBitcoinWords FragmentBitcoinWords;
     Button btn1;
     Button btn2;
     FragmentTransaction transaction;
@@ -42,8 +40,8 @@ public class fragment_words extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_keywords, container, false);
 
-        keywords_altcoins = new keywords_altcoins();
-        keywords_bitcoin = new keywords_bitcoin();
+        FragmentAltcoinWords = new FragmentAltcoinWords();
+        FragmentBitcoinWords = new FragmentBitcoinWords();
 
         btn1 = view.findViewById(R.id.button1);
         btn2 = view.findViewById(R.id.button2);
@@ -51,13 +49,13 @@ public class fragment_words extends Fragment {
         fragmentManager = getActivity().getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
 
-        transaction.add(R.id.fragment_altcoins, keywords_altcoins);
-        transaction.add(R.id.fragment_altcoins, keywords_bitcoin);
+        transaction.add(R.id.fragment_altcoins, FragmentAltcoinWords);
+        transaction.add(R.id.fragment_altcoins, FragmentBitcoinWords);
 
         btn1.setTextColor(Color.parseColor("#FFFFFF"));
         btn2.setTextColor(Color.parseColor("#0A75FF"));
-        transaction.show(keywords_altcoins);
-        transaction.hide(keywords_bitcoin);
+        transaction.show(FragmentAltcoinWords);
+        transaction.hide(FragmentBitcoinWords);
         transaction.commit();
 
 
@@ -69,8 +67,8 @@ public class fragment_words extends Fragment {
                 btn1.setTextColor(Color.parseColor("#0A75FF"));
                 btn2.setTextColor(Color.parseColor("#FFFFFF"));
                 transaction = fragmentManager.beginTransaction();
-                transaction.show(keywords_bitcoin);
-                transaction.hide(keywords_altcoins);
+                transaction.show(FragmentBitcoinWords);
+                transaction.hide(FragmentAltcoinWords);
                 transaction.commit();
             }
         });
@@ -83,8 +81,8 @@ public class fragment_words extends Fragment {
                 btn1.setTextColor(Color.parseColor("#FFFFFF"));
                 btn2.setTextColor(Color.parseColor("#0A75FF"));
                 transaction = fragmentManager.beginTransaction();
-                transaction.show(keywords_altcoins);
-                transaction.hide(keywords_bitcoin);
+                transaction.show(FragmentAltcoinWords);
+                transaction.hide(FragmentBitcoinWords);
                 transaction.commit();
             }
         });

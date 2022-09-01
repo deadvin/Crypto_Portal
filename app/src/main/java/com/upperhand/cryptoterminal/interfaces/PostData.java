@@ -5,7 +5,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
-public interface post_data {
+public interface PostData {
     @POST("hide_1")
     Call<String> postlink_1(@Body String body);
 

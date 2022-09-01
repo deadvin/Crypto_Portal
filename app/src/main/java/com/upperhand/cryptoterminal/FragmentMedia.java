@@ -18,11 +18,11 @@ import androidx.fragment.app.FragmentTransaction;
 import static android.content.Context.MODE_PRIVATE;
 
 
-public class fragment_media extends Fragment {
+public class FragmentMedia extends Fragment {
 
-    fragment_videos fragment_videos;
-    fragment_news fragment_news;
-    fragment_events fragment_events;
+    FragmentVideo FragmentVideo;
+    FragmentNews FragmentNews;
+    FragmentEvents FragmentEvents;
     Button btn1;
     Button btn2;
     Button btn3;
@@ -45,9 +45,9 @@ public class fragment_media extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_media, container, false);
 
-        fragment_videos = new fragment_videos();
-        fragment_events = new fragment_events();
-        fragment_news = new fragment_news();
+        FragmentVideo = new FragmentVideo();
+        FragmentEvents = new FragmentEvents();
+        FragmentNews = new FragmentNews();
 
         btn1 = view.findViewById(R.id.button1);
         btn2 = view.findViewById(R.id.button2);
@@ -56,13 +56,13 @@ public class fragment_media extends Fragment {
         fragmentManager = getActivity().getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
 
-        transaction.add(R.id.fragment_one, fragment_events);
-        transaction.add(R.id.fragment_two, fragment_videos);
-        transaction.add(R.id.fragment_three, fragment_news);
+        transaction.add(R.id.fragment_container, FragmentEvents);
+        transaction.add(R.id.fragment_container, FragmentVideo);
+        transaction.add(R.id.fragment_container, FragmentNews);
 
-        transaction.show(fragment_news);
-        transaction.hide(fragment_events);
-        transaction.hide(fragment_videos);
+        transaction.show(FragmentNews);
+        transaction.hide(FragmentEvents);
+        transaction.hide(FragmentVideo);
         transaction.commit();
 
 
@@ -76,12 +76,12 @@ public class fragment_media extends Fragment {
                 btn3.setTextColor(Color.parseColor("#FFFFFF"));
 
                 transaction = fragmentManager.beginTransaction();
-                transaction.show(fragment_videos);
-                transaction.hide(fragment_events);
-                transaction.hide(fragment_news);
+                transaction.show(FragmentVideo);
+                transaction.hide(FragmentEvents);
+                transaction.hide(FragmentNews);
                 transaction.commit();
                 selected = 1;
-                fragment_videos.onResume();
+                FragmentVideo.onResume();
             }
         });
 
@@ -95,9 +95,9 @@ public class fragment_media extends Fragment {
                 btn3.setTextColor(Color.parseColor("#FFFFFF"));
 
                 transaction = fragmentManager.beginTransaction();
-                transaction.hide(fragment_videos);
-                transaction.show(fragment_events);
-                transaction.hide(fragment_news);
+                transaction.hide(FragmentVideo);
+                transaction.show(FragmentEvents);
+                transaction.hide(FragmentNews);
                 transaction.commit();
                 selected = 2;
             }
@@ -113,9 +113,9 @@ public class fragment_media extends Fragment {
                 btn3.setTextColor(Color.parseColor("#0A75FF"));
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.hide(fragment_videos);
-                transaction.hide(fragment_events);
-                transaction.show(fragment_news);
+                transaction.hide(FragmentVideo);
+                transaction.hide(FragmentEvents);
+                transaction.show(FragmentNews);
                 transaction.commit();
                 selected = 3;
 
