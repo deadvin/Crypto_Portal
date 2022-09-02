@@ -22,26 +22,17 @@ import com.google.gson.reflect.TypeToken;
 import com.upperhand.cryptoterminal.adapters.event_adapter;
 import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
 import com.upperhand.cryptoterminal.objects.event;
-import com.upperhand.cryptoterminal.interfaces.GetData;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import java.lang.reflect.Type;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import okhttp3.OkHttpClient;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -100,7 +91,7 @@ public class FragmentEvents extends Fragment {
                 final Dialog customDialog = new Dialog(context);
                 customDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setContentView(R.layout.info);
+                customDialog.setContentView(R.layout.dialogue_info);
                 customDialog.setCancelable(true);
                 Window window = customDialog.getWindow();
                 window.setGravity(Gravity.CENTER);

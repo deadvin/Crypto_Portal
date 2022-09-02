@@ -37,22 +37,14 @@ import com.upperhand.cryptoterminal.objects.word;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.URL;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import okhttp3.OkHttpClient;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -108,7 +100,7 @@ public class FragmentBitcoinWords extends Fragment {
                 final Dialog customDialog = new Dialog(context);
                 customDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setContentView(R.layout.info);
+                customDialog.setContentView(R.layout.dialogue_info);
                 customDialog.setCancelable(true);
                 Window window = customDialog.getWindow();
                 window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);

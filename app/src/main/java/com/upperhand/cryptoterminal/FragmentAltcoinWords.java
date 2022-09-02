@@ -134,7 +134,7 @@ public class FragmentAltcoinWords extends Fragment {
                 final Dialog customDialog = new Dialog(context);
                 customDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setContentView(R.layout.info);
+                customDialog.setContentView(R.layout.dialogue_info);
                 customDialog.setCancelable(true);
                 Window window = customDialog.getWindow();
                 window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);

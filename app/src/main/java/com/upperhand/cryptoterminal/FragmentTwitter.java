@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,20 +20,22 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.upperhand.cryptoterminal.adapters.tweet_adapter;
-import com.upperhand.cryptoterminal.adapters.breaking_adapter;
+import com.upperhand.cryptoterminal.adapters.BreakingAdapter;
+import com.upperhand.cryptoterminal.adapters.TweetsAdapter;
 import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.upperhand.cryptoterminal.objects.tweet;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,50 +50,44 @@ import static android.content.Context.MODE_PRIVATE;
 public class FragmentTwitter extends Fragment {
 
     //region VARS
-    Button btn1;
-    Button btn3;
-    Button btn4;
-    Button btn5;
-    Button btn6;
-    Button btn7;
-    Button btn8;
-    Button btn9;
-    Button btn11;
-    Button[] btn_list2 = new Button[4];
-    ArrayList<tweet> list_all_1;
-    ArrayList<tweet> list_all_100;
-    ArrayList<tweet> list_all_10;
-    ArrayList<tweet> list_all_500;
-    ArrayList<tweet> list_sym;
-    ArrayList<tweet> list_sym_f;
-    ArrayList<tweet> list_rep_f;
-    ArrayList<tweet> list_rep;
-    ImageButton info_all;
-    ImageButton alert_all;
-    ImageButton info_rep;
-    ImageButton alert_rep;
-    Toast toast;
-    ListView mListView;
-    tweet_adapter adapter;
-    breaking_adapter breaking_adapter;
-    LinearLayout hsv;
-    LinearLayout hsv2;
-    LinearLayout linearLayout;
-    boolean two_tabs;
+    Button btnBitcoin;
+    Button btnAltcoin;
+    Button btn100;
+    Button btn500;
+    Button btn2m;
+    Button btn10m;
+    Button btnAll;
+    Button btnFilter;
+    Button btnBreaking;
+    ArrayList<tweet> listAll_1;
+    ArrayList<tweet> listAll_100;
+    ArrayList<tweet> listAll_10;
+    ArrayList<tweet> listAll_500;
+    ArrayList<tweet> listSym;
+    ArrayList<tweet> listSym_f;
+    ArrayList<tweet> listRep_f;
+    ArrayList<tweet> listRep;
+    ArrayList<tweet> activeList;
+    ImageButton btnInfoAll;
+    ImageButton btnAlertAll;
+    ImageButton btninfoRep;
+    ImageButton btnAlertRep;
+    RecyclerView mRecyclerView;
+    TweetsAdapter tweetsAdapter;
+    BreakingAdapter breakingAdapter;
+    LinearLayout layoutBitcoin;
+    LinearLayout layoutAltcoinBreaking;
     String selected = "";
     Call<List<tweet>> call;
-    Call<String> call2;
+    Call<String> callPost;
     RelativeLayout loading;
     Context context;
     SharedPreferences.Editor editor;
     SharedPreferences preferences;
-    boolean alert_breaking;
-    boolean alert_alts;
+    boolean alertBreaking;
+    boolean alertAlts;
     FirebaseRemoteConfig mFirebaseRemoteConfig;
-    String api_url;
     AdView adView;
-    Toast mToast;
-
 
 
     //endregion
@@ -99,18 +98,19 @@ public class FragmentTwitter extends Fragment {
         context = this.getActivity();
 
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-//        api_url = mFirebaseRemoteConfig.getString("url");
-        api_url = getString(R.string.url);
 
-        list_all_1 = new ArrayList<>();
-        list_all_10 = new ArrayList<>();
-        list_all_100 = new ArrayList<>();
-        list_all_500 = new ArrayList<>();
-        list_sym = new ArrayList<>();
-        list_sym_f = new ArrayList<>();
-        list_rep = new ArrayList<>();
-        list_rep_f = new ArrayList<>();
-        
+
+        listAll_1 = new ArrayList<>();
+        listAll_10 = new ArrayList<>();
+        listAll_100 = new ArrayList<>();
+        listAll_500 = new ArrayList<>();
+        listSym = new ArrayList<>();
+        listSym_f = new ArrayList<>();
+        listRep = new ArrayList<>();
+        listRep_f = new ArrayList<>();
+        activeList = new ArrayList<>();
+
+
     }
 
     @Override
@@ -118,8 +118,6 @@ public class FragmentTwitter extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_twitter, container, false);
 
         //   ===================   ADVIEW   ===================
-
-        //region ads
 
 //        adView = new AdView(context);
 //        adView.setAdSize(AdSize.BANNER);
@@ -146,271 +144,140 @@ public class FragmentTwitter extends Fragment {
         //endregion
 
         loading = view.findViewById(R.id.loadingPanel);
-        hsv =  view.findViewById(R.id.linearLayout1);
-        hsv2 =  view.findViewById(R.id.linearLayout2);
-        linearLayout =  view.findViewById(R.id.linearLayout3);
-        mListView =  view.findViewById(R.id.listView);
-        btn1 = view.findViewById(R.id.button1);
-        btn3 = view.findViewById(R.id.button3);
-        btn4 = view.findViewById(R.id.button4);
-        btn5 = view.findViewById(R.id.button5);
-        btn6 = view.findViewById(R.id.button6);
-        btn7 = view.findViewById(R.id.button7);
-        btn8 = view.findViewById(R.id.button8);
-        btn9 = view.findViewById(R.id.button9);
-        btn11 = view.findViewById(R.id.button11);
-        info_all = view.findViewById(R.id.button12);
-        alert_all = view.findViewById(R.id.button10);
-        alert_rep = view.findViewById(R.id.button13);
-        info_rep = view.findViewById(R.id.button14);
-        btn_list2[0] = btn4;
-        btn_list2[1] = btn5;
-        btn_list2[2] = btn6;
-        btn_list2[3] = btn7;
+        layoutBitcoin =  view.findViewById(R.id.layoutBitcoin);
+        layoutAltcoinBreaking =  view.findViewById(R.id.layoutAltcoinBreaking);
+        mRecyclerView =  view.findViewById(R.id.recyclerView);
+        btnBitcoin = view.findViewById(R.id.btnBitcoin);
+        btnAltcoin = view.findViewById(R.id.btnAltcoin);
+        btnBreaking = view.findViewById(R.id.btnBreaking);
+        btn100 = view.findViewById(R.id.btn100);
+        btn500 = view.findViewById(R.id.btn500);
+        btn2m = view.findViewById(R.id.btn2m);
+        btn10m = view.findViewById(R.id.btn10m);
+        btnAll = view.findViewById(R.id.btnAll);
+        btnFilter = view.findViewById(R.id.btnFilter);
 
+        btnInfoAll = view.findViewById(R.id.button12);
+        btnAlertAll = view.findViewById(R.id.button10);
+        btnAlertRep = view.findViewById(R.id.button13);
+        btninfoRep = view.findViewById(R.id.button14);
 
-        btn1.setOnClickListener( new View.OnClickListener() {
+        breakingAdapter = new BreakingAdapter(context, activeList);
+        tweetsAdapter = new TweetsAdapter(context, activeList);
+        mRecyclerView.setAdapter(tweetsAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
+        btnBitcoin.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                hsv2.setVisibility(View.VISIBLE);
-                linearLayout.setVisibility(View.INVISIBLE);
-                two_tabs = false;
-
-                reset_colour2();
-                btn1.setTextColor(Color.parseColor("#0A75FF"));
-                btn3.setTextColor(Color.parseColor("#FFFFFF"));
-                btn11.setTextColor(Color.parseColor("#FFFFFF"));
-                btn6.setTextColor(Color.parseColor("#0A75FF"));
+                layoutBitcoin.setVisibility(View.VISIBLE);
+                layoutAltcoinBreaking.setVisibility(View.INVISIBLE);
                 selected = "1";
-                if(list_all_1.isEmpty() || is_refresh()){
-                    mListView.setVisibility(View.INVISIBLE);
-                    loading.setVisibility(View.VISIBLE);
-
-                    call = RetrofitSingleton.get().getData().get_1();
-                    call(list_all_1);
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_1);
-                    mListView.setAdapter(adapter);
-                }
+                setButtonColours();
+                loadList();
             }
-        }); //     CRYPTO
+        });
 
-        btn3.setOnClickListener( new View.OnClickListener() {
+        btnAltcoin.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                hsv2.setVisibility(View.INVISIBLE);
-                linearLayout.setVisibility(View.VISIBLE);
-                btn9.setText("filter");
-
-                btn1.setTextColor(Color.parseColor("#FFFFFF"));
-                btn3.setTextColor(Color.parseColor("#0A75FF"));
-                btn8.setTextColor(Color.parseColor("#0A75FF"));
-                btn11.setTextColor(Color.parseColor("#FFFFFF"));
-                btn9.setTextColor(Color.parseColor("#FFFFFF"));
+                layoutBitcoin.setVisibility(View.INVISIBLE);
+                layoutAltcoinBreaking.setVisibility(View.VISIBLE);
                 selected = "sym";
-
-                if(list_sym.isEmpty() || is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_sym();
-                    call(list_sym);
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_sym);
-                    mListView.setAdapter(adapter);
-                }
-
+                setButtonColours();
+                loadList();
             }
-        });    //   ALTCOINS
+        });
 
-        btn11.setOnClickListener( new View.OnClickListener() {
+        btnBreaking.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                hsv2.setVisibility(View.INVISIBLE);
-                linearLayout.setVisibility(View.VISIBLE);
-                btn9.setText("crypto");
-
-                btn1.setTextColor(Color.parseColor("#FFFFFF"));
-                btn3.setTextColor(Color.parseColor("#FFFFFF"));
-                btn8.setTextColor(Color.parseColor("#FFFFFF"));
-                btn9.setTextColor(Color.parseColor("#0A75FF"));
-                btn11.setTextColor(Color.parseColor("#0A75FF"));
+                layoutBitcoin.setVisibility(View.INVISIBLE);
+                layoutAltcoinBreaking.setVisibility(View.VISIBLE);
                 selected = "breaking_f";
-
-                if(list_rep_f.isEmpty() || is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_rep_f();
-                    call(list_rep_f);
-                }else{
-                    breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking,list_rep_f);
-                    mListView.setAdapter(breaking_adapter);
-                }
-
+                setButtonColours();
+                loadList();
             }
-        });    //   BREAKING
+        });
 
-        btn4.setOnClickListener( new View.OnClickListener() {
+        btn100.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                reset_colour2();
-                btn4.setTextColor(Color.parseColor("#0A75FF"));
                 selected = "100";
-
-                if(list_all_100.isEmpty() || is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_100();
-                    call(list_all_100);
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_100);
-                    mListView.setAdapter(adapter);
-                }
+                setButtonColours();
+                loadList();
             }
-        });    //    100
+        });
 
-        btn5.setOnClickListener( new View.OnClickListener() {    // 500
+        btn500.setOnClickListener( new View.OnClickListener() {    // 500
 
             @Override
             public void onClick(View v) {
-
-                reset_colour2();
-                btn5.setTextColor(Color.parseColor("#0A75FF"));
                 selected = "500";
-
-                if(list_all_500.isEmpty() || is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_500();
-                    call(list_all_500);
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_500);
-                    mListView.setAdapter(adapter);
-                }
+                setButtonColours();
+                loadList();
             }
-        });  // 500
+        });
 
-        btn6.setOnClickListener( new View.OnClickListener() {
+        btn2m.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                reset_colour2();
-                btn6.setTextColor(Color.parseColor("#0A75FF"));
                 selected = "1";
-
-                if(list_all_1.isEmpty() || is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_1();
-                    call(list_all_1);
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_1);
-                    mListView.setAdapter(adapter);
-                }
+                setButtonColours();
+                loadList();
             }
-        });   //    2m
+        });
 
-        btn7.setOnClickListener( new View.OnClickListener() {
+        btn10m.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                reset_colour2();
-                btn7.setTextColor(Color.parseColor("#0A75FF"));
                 selected = "10";
-
-                if(list_all_10.isEmpty() || is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_10();
-                    call(list_all_10);
-
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_10);
-                    mListView.setAdapter(adapter);
-                }
+                setButtonColours();
+                loadList();
             }
-        });    // 10m
+        });
 
-        btn8.setOnClickListener( new View.OnClickListener() {   //   ALL
+        btnAll.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                btn8.setTextColor(Color.parseColor("#0A75FF"));
-                btn9.setTextColor(Color.parseColor("#FFFFFF"));
 
                 if (selected.equals("sym") || selected.equals("sym_f")){
                     selected = "sym";
-                    if(list_sym.isEmpty() || is_refresh()){
-                        loading.setVisibility(View.VISIBLE);
-                        mListView.setVisibility(View.INVISIBLE);
-                        call = RetrofitSingleton.get().getData().get_sym();
-                        call(list_sym);
-
-                    }else{
-                        adapter = new tweet_adapter(context, R.layout.layout_tweet,list_sym);
-                        mListView.setAdapter(adapter);
-                    }
                 }else{
                     selected = "breaking";
-                    if(list_rep.isEmpty() || is_refresh()){
-                        loading.setVisibility(View.VISIBLE);
-                        mListView.setVisibility(View.INVISIBLE);
-                        call = RetrofitSingleton.get().getData().get_rep();
-                        call(list_rep);
-                    }else{
-                        breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking,list_rep);
-                        mListView.setAdapter(breaking_adapter);
-                    }
                 }
+                loadList();
+                setButtonColours();
             }
-        });   //   ALL
+        });
 
-        btn9.setOnClickListener( new View.OnClickListener() {
+        btnFilter.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                btn9.setTextColor(Color.parseColor("#0A75FF"));
-                btn8.setTextColor(Color.parseColor("#FFFFFF"));
-
                 if (selected.equals("sym") || selected.equals("sym_f")) {
-
                     selected = "sym_f";
-                    if (list_sym_f.isEmpty() || is_refresh()) {
-                        loading.setVisibility(View.VISIBLE);
-                        mListView.setVisibility(View.INVISIBLE);
-                        call = RetrofitSingleton.get().getData().get_sym_f();
-                        call(list_sym_f);
-                    } else {
-                        adapter = new tweet_adapter(context, R.layout.layout_tweet, list_sym_f);
-                        mListView.setAdapter(adapter);
-                    }
                 }else{
                     selected = "breaking_f";
-                    if(list_rep_f.isEmpty() || is_refresh()){
-                        loading.setVisibility(View.VISIBLE);
-                        mListView.setVisibility(View.INVISIBLE);
-                        call = RetrofitSingleton.get().getData().get_rep_f();
-                        call(list_rep_f);
-                    }else{
-                        breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking,list_rep_f);
-                        mListView.setAdapter(breaking_adapter);
-                    }
                 }
+                loadList();
+                setButtonColours();
             }
-        });   //     FILTERED
+        });
 
-        alert_rep.setOnClickListener( new View.OnClickListener() {    //     FILTERED
+        btnAlertRep.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -432,8 +299,8 @@ public class FragmentTwitter extends Fragment {
                 androidx.appcompat.widget.SwitchCompat switch_1 = customDialog.findViewById(R.id.switch1);
                 androidx.appcompat.widget.SwitchCompat switch_2 = customDialog.findViewById(R.id.switch2);
 
-                switch_1.setChecked(alert_alts);
-                switch_2.setChecked(alert_breaking);
+                switch_1.setChecked(alertAlts);
+                switch_2.setChecked(alertBreaking);
                 al1.setText("Altcoin official accounts");
                 al2.setText("    Breaking news    ");
 
@@ -441,15 +308,15 @@ public class FragmentTwitter extends Fragment {
                 switch_1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            alert_alts = true;
-                            editor = context.getSharedPreferences("alert_alts", MODE_PRIVATE).edit();
-                            editor.putBoolean("alert_alts", true);
+                            alertAlts = true;
+                            editor = context.getSharedPreferences("alertAlts", MODE_PRIVATE).edit();
+                            editor.putBoolean("alertAlts", true);
                             editor.apply();
                             manage(true, "alts");
                         } else {
-                            alert_alts = false;
-                            editor = context.getSharedPreferences("alert_alts", MODE_PRIVATE).edit();
-                            editor.putBoolean("alert_alts", false);
+                            alertAlts = false;
+                            editor = context.getSharedPreferences("alertAlts", MODE_PRIVATE).edit();
+                            editor.putBoolean("alertAlts", false);
                             editor.apply();
                             manage(false, "alts");
                         }
@@ -459,15 +326,15 @@ public class FragmentTwitter extends Fragment {
                 switch_2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            alert_breaking = true;
-                            editor = context.getSharedPreferences("alert_breaking", MODE_PRIVATE).edit();
-                            editor.putBoolean("alert_breaking", true);
+                            alertBreaking = true;
+                            editor = context.getSharedPreferences("alertBreaking", MODE_PRIVATE).edit();
+                            editor.putBoolean("alertBreaking", true);
                             editor.apply();
                             manage(true, "alts");
                         } else {
-                            alert_alts = false;
-                            editor = context.getSharedPreferences("alert_breaking", MODE_PRIVATE).edit();
-                            editor.putBoolean("alert_breaking", false);
+                            alertAlts = false;
+                            editor = context.getSharedPreferences("alertBreaking", MODE_PRIVATE).edit();
+                            editor.putBoolean("alertBreaking", false);
                             editor.apply();
                             manage(false, "alts");
                         }
@@ -487,7 +354,7 @@ public class FragmentTwitter extends Fragment {
             }
         });
 
-        info_all.setOnClickListener( new View.OnClickListener() {    //     FILTERED
+        btnInfoAll.setOnClickListener( new View.OnClickListener() {    //     FILTERED
 
             @Override
             public void onClick(View v) {
@@ -495,7 +362,7 @@ public class FragmentTwitter extends Fragment {
                 final Dialog customDialog = new Dialog(context);
                 customDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setContentView(R.layout.info);
+                customDialog.setContentView(R.layout.dialogue_info);
                 customDialog.setCancelable(true);
                 Window window = customDialog.getWindow();
                 window.setGravity(Gravity.CENTER);
@@ -519,7 +386,7 @@ public class FragmentTwitter extends Fragment {
             }
         });
 
-        info_rep.setOnClickListener( new View.OnClickListener() {    //     FILTERED
+        btninfoRep.setOnClickListener( new View.OnClickListener() {    //     FILTERED
 
             @Override
             public void onClick(View v) {
@@ -527,7 +394,7 @@ public class FragmentTwitter extends Fragment {
                 final Dialog customDialog = new Dialog(context);
                 customDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setContentView(R.layout.info);
+                customDialog.setContentView(R.layout.dialogue_info);
                 customDialog.setCancelable(true);
                 Window window = customDialog.getWindow();
                 window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
@@ -553,11 +420,11 @@ public class FragmentTwitter extends Fragment {
             }
         });
 
-        btn1.performClick();
+        btnBitcoin.performClick();
 
 //        ==============   HIDE POSTS
 
-//        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//        mRecyclerView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 //            @Override
 //            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 //                                           int pos, long id) {
@@ -596,62 +463,129 @@ public class FragmentTwitter extends Fragment {
         return view;
     }
 
+    public void loadList(){
 
-    public void call(ArrayList<tweet> list){
+        if(!curList().isEmpty() && !isRefresh()){
+            activeList.clear();
+            activeList.addAll(curList());
+            notifyAdapter();
+        }else{
+            loading.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            buildCall();
+            call();
+        }
+    }
+
+    public void buildCall(){
+
+        switch (selected) {
+            case "100":
+                call = RetrofitSingleton.get().getData().get_100();
+                break;
+            case "500":
+                call = RetrofitSingleton.get().getData().get_500();
+                break;
+            case "1":
+                call = RetrofitSingleton.get().getData().get_1();
+                break;
+            case "10":
+                call = RetrofitSingleton.get().getData().get_10();
+                break;
+            case "sym":
+                call = RetrofitSingleton.get().getData().get_sym();
+                break;
+            case "sym_f":
+                call = RetrofitSingleton.get().getData().get_sym_f();
+                break;
+            case "breaking":
+                call = RetrofitSingleton.get().getData().get_rep();
+                break;
+            case "breaking_f":
+                call = RetrofitSingleton.get().getData().get_rep_f();
+                break;
+        }
+    }
+
+    public void notifyAdapter(){
+
+        if(selected.equals("breaking") || selected.equals("breaking_f")){
+            mRecyclerView.setAdapter(breakingAdapter);
+            breakingAdapter.notifyDataSetChanged();
+        }else {
+            mRecyclerView.setAdapter(tweetsAdapter);
+            tweetsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void call(){
 
         call.enqueue(new Callback<List<tweet>>() {
             @Override
-            public void onResponse(Call<List<tweet>> call, Response<List<tweet>> response) {
+            public void onResponse(@NotNull Call<List<tweet>> call, @NotNull Response<List<tweet>> response) {
 
                 loading.setVisibility(View.GONE);
-                mListView.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.VISIBLE);
 
                 if (!response.isSuccessful()) {
-                    if (toast!= null) {
-                        toast.cancel();
-                    }
-                    toast = Toast.makeText(context, "Error Code" + response.code(), Toast.LENGTH_LONG);
-                    toast.show();
-                    load_from_sp();
+                    Utils.makeToast(context,"Error Code" + response.code());
+//                    load_from_sp();
                     return;
                 }
+
                 List<tweet> tweets = response.body();
                 if(tweets == null || tweets.isEmpty()){
                     return;
                 }
 
-                list.clear();
-                list.addAll(tweets);
-                Collections.reverse(list);
-                save_sp(list);
+                curList().clear();
+                curList().addAll(tweets);
+                Collections.reverse(curList());
 
-                if(selected.equals("breaking") || selected.equals("breaking_f")){
-                    breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking, list);
-                    mListView.setAdapter(breaking_adapter);
-                    breaking_adapter.notifyDataSetChanged();
-                }else {
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet, list);
-                    mListView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-                }
+                activeList.clear();
+                activeList.addAll(curList());
+//                save_sp(activeList);
+
+                notifyAdapter();
 
             }
             @Override
             public void onFailure(Call<List<tweet>> call, Throwable t) {
-                if(list_all_1.isEmpty() || is_refresh()) {
-                    if (mToast != null) {
-                        mToast.cancel();
-                    }
-                    mToast = Toast.makeText(context, "Problem connecting the server. Loading old data.",
-                            Toast.LENGTH_LONG);
-                    mToast.show();
-                }
-                load_from_sp();
+//                if(listAll_1.isEmpty() || isRefresh()) {
+//                    if (mToast != null) {
+//                        mToast.cancel();
+//                    }
+//                    mToast = Toast.makeText(context, "Problem connecting the server. Loading old data.",
+//                            Toast.LENGTH_LONG);
+//                    mToast.show();
+//                }
+//                load_from_sp();
             }
         });
     }
 
+    public ArrayList<tweet> curList(){
 
+        switch (selected) {
+            case "100":
+                return listAll_100;
+            case "500":
+                return listAll_500;
+            case "1":
+                return listAll_1;
+            case "10":
+                return listAll_10;
+            case "sym":
+                return listSym;
+            case "sym_f":
+                return listSym_f;
+            case "breaking":
+                return listRep;
+            case "breaking_f":
+                return listRep_f;
+        }
+        return null;
+    }
 
     public void load_from_sp(){
 
@@ -662,42 +596,42 @@ public class FragmentTwitter extends Fragment {
 
         switch (selected) {
             case "100":
-                if(!list_all_100.isEmpty()){ return; }
+                if(!listAll_100.isEmpty()){ return; }
                 preferences = context.getSharedPreferences("100", Context.MODE_PRIVATE);
                 json = preferences.getString("100", "");
                 break;
             case "500":
-                if(!list_all_500.isEmpty()){ return; }
+                if(!listAll_500.isEmpty()){ return; }
                 preferences = context.getSharedPreferences("500", Context.MODE_PRIVATE);
                 json = preferences.getString("500", "");
                 break;
             case "1":
-                if(!list_all_1.isEmpty()){ return; }
+                if(!listAll_1.isEmpty()){ return; }
                 preferences = context.getSharedPreferences("1", Context.MODE_PRIVATE);
                 json = preferences.getString("1", "");
                 break;
             case "10":
-                if(!list_all_10.isEmpty()){ return; }
+                if(!listAll_10.isEmpty()){ return; }
                 preferences = context.getSharedPreferences("10", Context.MODE_PRIVATE);
                 json = preferences.getString("10", "");
                 break;
             case "sym":
-                if(!list_sym.isEmpty()){ return; }
+                if(!listSym.isEmpty()){ return; }
                 preferences = context.getSharedPreferences("sym", Context.MODE_PRIVATE);
                 json = preferences.getString("sym", "");
                 break;
             case "sym_f":
-                if(!list_sym_f.isEmpty()){ return; }
+                if(!listSym_f.isEmpty()){ return; }
                 preferences = context.getSharedPreferences("sym_f", Context.MODE_PRIVATE);
                 json = preferences.getString("sym_f", "");
                 break;
             case "breaking":
-                if(!list_rep.isEmpty()){ return; }
+                if(!listRep.isEmpty()){ return; }
                 preferences = context.getSharedPreferences("breaking", Context.MODE_PRIVATE);
                 json = preferences.getString("breaking", "");
                 break;
             case "breaking_f":
-                if(!list_rep_f.isEmpty()){ return; }
+                if(!listRep_f.isEmpty()){ return; }
                 preferences = context.getSharedPreferences("breaking_f", Context.MODE_PRIVATE);
                 json = preferences.getString("breaking_f", "");
                 break;
@@ -709,43 +643,42 @@ public class FragmentTwitter extends Fragment {
         if(list != null && !list.isEmpty()) {
 
             if(selected.equals("breaking") || selected.equals("breaking_f")){
-                breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking, list);
-                mListView.setAdapter(breaking_adapter);
-                breaking_adapter.notifyDataSetChanged();
+
+                mRecyclerView.setAdapter(tweetsAdapter);
+                breakingAdapter.notifyDataSetChanged();
             }else {
-                adapter = new tweet_adapter(context, R.layout.layout_tweet, list);
-                mListView.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+
+                mRecyclerView.setAdapter(tweetsAdapter);
+                tweetsAdapter.notifyDataSetChanged();
             }
             loading.setVisibility(View.GONE);
-            mListView.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
 
-//       ===========================  FILL GLOBAL LIST
 
             switch (selected) {
                 case "100":
-                    list_all_100 = list;
+                    listAll_100 = list;
                     break;
                 case "500":
-                    list_all_500 = list;
+                    listAll_500 = list;
                     break;
                 case "1":
-                    list_all_1 = list;
+                    listAll_1 = list;
                     break;
                 case "10":
-                    list_all_10 = list;
+                    listAll_10 = list;
                     break;
                 case "sym":
-                    list_sym = list;
+                    listSym = list;
                     break;
                 case "sym_f":
-                    list_sym_f = list;
+                    listSym_f = list;
                     break;
                 case "breaking":
-                    list_rep = list;
+                    listRep = list;
                     break;
                 case "breaking_f":
-                    list_rep_f = list;
+                    listRep_f = list;
                     break;
             }
 
@@ -757,7 +690,7 @@ public class FragmentTwitter extends Fragment {
         Gson gson = new Gson();
         String json = gson.toJson(list);
 
-        switch (selected) {  //              CHANGE ALL  WITH SELECTER ===============================================================
+        switch (selected) {
             case "100":
                 editor = context.getSharedPreferences("100", MODE_PRIVATE).edit();
                 editor.putString("100", json);
@@ -803,7 +736,7 @@ public class FragmentTwitter extends Fragment {
 
     public void send_link(){
 
-        call2.enqueue(new Callback<String>() {
+        callPost.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
 
@@ -817,14 +750,55 @@ public class FragmentTwitter extends Fragment {
         });
     }
 
-    public void reset_colour2() {
-        for (int i = 0; i < 4; i++) {
-            btn_list2[i].setBackgroundColor(Color.parseColor("#3b3b3b"));
-            btn_list2[i].setTextColor(Color.parseColor("#FFFFFF"));
+    public void setButtonColours() {
+
+        btnBitcoin.setTextColor(Color.parseColor("#FFFFFF"));
+        btnAltcoin.setTextColor(Color.parseColor("#FFFFFF"));
+        btn100.setTextColor(Color.parseColor("#FFFFFF"));
+        btn500.setTextColor(Color.parseColor("#FFFFFF"));
+        btn2m.setTextColor(Color.parseColor("#FFFFFF"));
+        btn10m.setTextColor(Color.parseColor("#FFFFFF"));
+        btnAll.setTextColor(Color.parseColor("#FFFFFF"));
+        btnFilter.setTextColor(Color.parseColor("#FFFFFF"));
+        btnBreaking.setTextColor(Color.parseColor("#FFFFFF"));
+
+        switch (selected) {
+            case "100":
+                btnBitcoin.setTextColor(Color.parseColor("#0A75FF"));
+                btn100.setTextColor(Color.parseColor("#0A75FF"));
+                break;
+            case "500":
+                btnBitcoin.setTextColor(Color.parseColor("#0A75FF"));
+                btn500.setTextColor(Color.parseColor("#0A75FF"));
+                break;
+            case "1":
+                btnBitcoin.setTextColor(Color.parseColor("#0A75FF"));
+                btn2m.setTextColor(Color.parseColor("#0A75FF"));
+                break;
+            case "10":
+                btnBitcoin.setTextColor(Color.parseColor("#0A75FF"));
+                btn10m.setTextColor(Color.parseColor("#0A75FF"));
+                break;
+            case "sym":
+                btnAltcoin.setTextColor(Color.parseColor("#0A75FF"));
+                btnAll.setTextColor(Color.parseColor("#0A75FF"));
+                break;
+            case "sym_f":
+                btnAltcoin.setTextColor(Color.parseColor("#0A75FF"));
+                btnFilter.setTextColor(Color.parseColor("#0A75FF"));
+                break;
+            case "breaking":
+                btnBreaking.setTextColor(Color.parseColor("#0A75FF"));
+                btnAll.setTextColor(Color.parseColor("#0A75FF"));
+                break;
+            case "breaking_f":
+                btnBreaking.setTextColor(Color.parseColor("#0A75FF"));
+                btnFilter.setTextColor(Color.parseColor("#0A75FF"));
+                break;
         }
     }
 
-    public boolean is_refresh(){
+    public boolean isRefresh(){
 
         preferences = context.getSharedPreferences("refresh_" + selected, Context.MODE_PRIVATE);
         boolean refresh = preferences.getBoolean("refresh_" + selected, false);
@@ -842,15 +816,13 @@ public class FragmentTwitter extends Fragment {
             FirebaseMessaging.getInstance().subscribeToTopic(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Toast.makeText(context, "Alert On",
-                            Toast.LENGTH_SHORT).show();
+                    Utils.makeToast(context, "Alert On");
                 }});
         }else{
             FirebaseMessaging.getInstance().unsubscribeFromTopic(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Toast.makeText(context, "Alert Off",
-                            Toast.LENGTH_SHORT).show();
+                    Utils.makeToast(context, "Alert Off");
                 }});
         }
     }
@@ -858,132 +830,40 @@ public class FragmentTwitter extends Fragment {
     @Override
     public void onResume() {
 
-        //   =============   SHARED PREFS
+        //   =============   OPEN NOTIFIED TAB
 
         context = this.getActivity();
 
-        preferences = context.getSharedPreferences("alert_alts", Context.MODE_PRIVATE);
-        alert_alts = preferences.getBoolean("alert_alts", false);
+        preferences = context.getSharedPreferences("alertAlts", Context.MODE_PRIVATE);
+        alertAlts = preferences.getBoolean("alertAlts", false);
 
-        preferences = context.getSharedPreferences("alert_breaking", Context.MODE_PRIVATE);
-        alert_breaking = preferences.getBoolean("alert_breaking", false);
+        preferences = context.getSharedPreferences("alertBreaking", Context.MODE_PRIVATE);
+        alertBreaking = preferences.getBoolean("alertBreaking", false);
 
         preferences = context.getSharedPreferences("topic", Context.MODE_PRIVATE);
         String topic = preferences.getString("topic", "none");
 
         if(topic.equals("breaking")){
             selected = "braking_f";
-            btn11.performClick();
+            btnBreaking.performClick();
             editor = context.getSharedPreferences("topic", MODE_PRIVATE).edit();
             editor.putString("topic", "none");
             editor.apply();
         }else if(topic.equals("alts")){
             selected = "sym";
-            btn3.performClick();
+            btnAltcoin.performClick();
             editor = context.getSharedPreferences("topic", MODE_PRIVATE).edit();
             editor.putString("topic", "none");
             editor.apply();
         }
 
-        switch (selected) {
-            case "100":
-                if(is_refresh()){
-                    mListView.setVisibility(View.INVISIBLE);
-                    loading.setVisibility(View.VISIBLE);
-                    call = RetrofitSingleton.get().getData().get_100();
-                    call(list_all_100);
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_100);
-                    mListView.setAdapter(adapter);
-                }
-                break;
-            case "500":
-                if(is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_500();
-                    call(list_all_500);
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_500);
-                    mListView.setAdapter(adapter);
-                }
-                break;
-            case "1":
-                if(is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_1();
-                    call(list_all_1);
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_1);
-                    mListView.setAdapter(adapter);
-                }
-                break;
-            case "10":
-                if(is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_10();
-                    call(list_all_10);
-
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_all_10);
-                    mListView.setAdapter(adapter);
-                }
-                break;
-            case "sym":
-                if(is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_sym();
-                    call(list_sym);
-                }else{
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet,list_sym);
-                    mListView.setAdapter(adapter);
-                }
-                break;
-            case "sym_f":
-                if (is_refresh()) {
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_sym_f();
-                    call(list_sym_f);
-                } else {
-                    adapter = new tweet_adapter(context, R.layout.layout_tweet, list_sym_f);
-                    mListView.setAdapter(adapter);
-                }
-                break;
-            case "breaking":
-                if(is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_rep();
-                    call(list_rep);
-                }else{
-                    breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking,list_rep);
-                    mListView.setAdapter(breaking_adapter);
-                }
-                break;
-            case "breaking_f":
-                if(is_refresh()){
-                    loading.setVisibility(View.VISIBLE);
-                    mListView.setVisibility(View.INVISIBLE);
-                    call = RetrofitSingleton.get().getData().get_rep_f();
-                    call(list_rep_f);
-                }else{
-                    breaking_adapter = new breaking_adapter(context, R.layout.layout_breaking,list_rep_f);
-                    mListView.setAdapter(breaking_adapter);
-                }
-                break;
-        }
+        loadList();
         super.onResume();
     }
 
     @Override
     public void onPause() {
-
-        Log.e("see", "Twitter paused.");
-
+        
         super.onPause();
     }
 

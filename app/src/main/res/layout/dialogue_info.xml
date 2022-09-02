@@ -45,7 +45,7 @@
             app:fontFamily="@font/cc"
             android:textColor="@color/dark"
             android:textSize="14dp"
-            android:text="ala bala 100 batala" />
+           />
 
 
 

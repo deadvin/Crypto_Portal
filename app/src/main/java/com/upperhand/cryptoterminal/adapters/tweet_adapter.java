@@ -39,8 +39,8 @@ public class tweet_adapter extends ArrayAdapter<tweet> {
         ImageView open;
     }
 
-    public tweet_adapter(Context context, int resource, ArrayList<tweet> objects) {
-        super(context, resource, objects);
+    public tweet_adapter(Context context, int resource, ArrayList<tweet> tweets) {
+        super(context, resource, tweets);
         this.mContext = context;
         mResource = resource;
 
@@ -105,7 +105,6 @@ public class tweet_adapter extends ArrayAdapter<tweet> {
 
             Date today = new Date();
             long diff = today.getTime() - d.getTime();
-
 
             int hours = (int) (diff / (1000 * 60 * 60));
             int minutes = (int) (diff / (1000 * 60) % 60);
