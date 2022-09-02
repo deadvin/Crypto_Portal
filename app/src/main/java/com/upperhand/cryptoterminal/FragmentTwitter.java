@@ -283,7 +283,7 @@ public class FragmentTwitter extends Fragment {
 
                 switchAltsAlerts.setChecked(alertAlts);
                 switchBreakingAlerts.setChecked(alertBreaking);
-                al1.setText("Altcoin official accounts");
+                al1.setText("Altcoins official accounts");
                 al2.setText("    Breaking news    ");
 
                 switchAltsAlerts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -444,7 +444,7 @@ public class FragmentTwitter extends Fragment {
 
                 if (!response.isSuccessful()) {
                     Utils.makeToast("Loading old data", context);
-                    load_from_sp();
+                    loadFromSp();
                     return;
                 }
 
@@ -461,14 +461,14 @@ public class FragmentTwitter extends Fragment {
                 activeList.addAll(curList());
                 notifyAdapter();
 
-                save_sp(activeList);
+                saveIntoSp(activeList);
 
             }
             @Override
             public void onFailure(Call<List<tweet>> call, Throwable t) {
 
                 Utils.makeToast("Loading old data", context);
-                load_from_sp();
+                loadFromSp();
             }
         });
     }
@@ -496,7 +496,7 @@ public class FragmentTwitter extends Fragment {
         return null;
     }
 
-    public void load_from_sp(){
+    public void loadFromSp(){
 
         Gson gson = new Gson();
         String json = null;
@@ -524,7 +524,7 @@ public class FragmentTwitter extends Fragment {
         }
     }
 
-    public void save_sp(ArrayList<tweet> list){
+    public void saveIntoSp(ArrayList<tweet> list){
 
         Gson gson = new Gson();
         String json = gson.toJson(list);
