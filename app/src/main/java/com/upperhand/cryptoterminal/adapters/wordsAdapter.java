@@ -1,7 +1,6 @@
 package com.upperhand.cryptoterminal.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -30,10 +28,10 @@ public class wordsAdapter extends ArrayAdapter<word>  {
 
     Context mContext;
     private int mResource;
-    private boolean vol;
-    int num_elements;
+    private boolean isVolume;
+    int numberElements;
     int count;
-    ArrayList<String> mylist;
+    ArrayList<String> listHours;
 
     private class ViewHolder {
         TextView name1;
@@ -46,7 +44,7 @@ public class wordsAdapter extends ArrayAdapter<word>  {
     public wordsAdapter(Context context, int resource, ArrayList<word> objects, boolean vol) {
         super(context, resource, objects);
         this.mContext = context;
-        this.vol = vol;
+        this.isVolume = vol;
         mResource = resource;
 
         //   ===========================   CREATE HOURS ARRAY
@@ -56,43 +54,43 @@ public class wordsAdapter extends ArrayAdapter<word>  {
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
         int mins = calendar.get(Calendar.MINUTE);
         boolean half;
-        num_elements = 101;
+        numberElements = 101;
         count = 50;
 
-        mylist = new ArrayList<String>();
+        listHours = new ArrayList<String>();
         if (mins > 30){
-            mylist.add(hours + ":30");
+            listHours.add(hours + ":30");
             half = true;
             if(mins < 45) {
-                num_elements = 103;
+                numberElements = 103;
                 count = 51;
             }else {
-                num_elements = 102;
+                numberElements = 102;
                 count = 50;
             }
         }else {
-            mylist.add(hours + ":00");
+            listHours.add(hours + ":00");
             half = false;
             hours -=1;
             if(mins >= 15) {
-                num_elements = 102;
+                numberElements = 102;
             }
         }
 
         for (int i = 0; i < count; i++) {
             if(half){
                 half = !half;
-                mylist.add(hours + ":00");
+                listHours.add(hours + ":00");
                 hours -=1;
             }else{
                 half = !half;
-                mylist.add(hours + ":30");
+                listHours.add(hours + ":30");
             }
             if(hours < 0){
                 hours = 23;
             }
         }
-        Collections.reverse(mylist);
+        Collections.reverse(listHours);
 
         //endregion
     }
@@ -107,7 +105,7 @@ public class wordsAdapter extends ArrayAdapter<word>  {
         int avg;
         float scale;
         ArrayList<Integer> numbers;
-        if(!vol) {
+        if(!isVolume) {
             numbers = getItem(position).getNumbers();
             avg = getItem(position).get_av();
             scale = 0.8f;
@@ -117,7 +115,7 @@ public class wordsAdapter extends ArrayAdapter<word>  {
             scale = 0.2f;
         }
         ArrayList<String> words = getItem(position).getWords();
-        numbers = new ArrayList<>(numbers.subList(numbers.size()-Math.min(numbers.size(),num_elements), numbers.size()));
+        numbers = new ArrayList<>(numbers.subList(numbers.size()-Math.min(numbers.size(),numberElements), numbers.size()));
 
         //   ============   BARCHART DATA
 
@@ -127,9 +125,6 @@ public class wordsAdapter extends ArrayAdapter<word>  {
             if (entry < 0){
                 entry = 0;
             }
-
-//            float entry = (float)(numbers.get(i))/(float)(avg * 2) ;
-//            Log.e("asd",String.valueOf(entry));
 
             data_list.add(new BarEntry((float)(i*0.5),entry));
         }
@@ -202,14 +197,13 @@ public class wordsAdapter extends ArrayAdapter<word>  {
         holder.chart.setScaleEnabled(false);
 
 
-
         //=================   SET HOURS ON TOP
 
         XAxis xAxis = holder.chart.getXAxis();
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return mylist.get((int) value);
+                return listHours.get((int) value);
             }
         });
         xAxis.setAxisMinimum(0.5f);

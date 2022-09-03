@@ -30,7 +30,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     ArrayList<tweet> tweets;
 
     public TweetsAdapter(Context context, ArrayList<tweet> tweets) {
-
         this.mContext = context;
         this.tweets = tweets;
     }
