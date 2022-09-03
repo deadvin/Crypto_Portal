@@ -70,9 +70,9 @@ public class FragmentTwitter extends Fragment {
     ArrayList<tweet> activeList;
     ImageButton btnInfoAll;
     ImageButton btnAlertAll;
-    ImageButton btninfoRep;
+    ImageButton btnInfoRep;
     ImageButton btnAlertRep;
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
     TweetsAdapter tweetsAdapter;
     BreakingAdapter breakingAdapter;
     LinearLayout layoutBitcoin;
@@ -82,24 +82,16 @@ public class FragmentTwitter extends Fragment {
     Call<String> callPost;
     RelativeLayout loading;
     Context context;
-    SharedPreferences.Editor editor;
-    SharedPreferences preferences;
     boolean alertBreaking;
     boolean alertAlts;
-    FirebaseRemoteConfig mFirebaseRemoteConfig;
-    AdView adView;
-
 
     //endregion
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         context = this.getActivity();
-
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-
-
         listAll_1 = new ArrayList<>();
         listAll_10 = new ArrayList<>();
         listAll_100 = new ArrayList<>();
@@ -109,8 +101,6 @@ public class FragmentTwitter extends Fragment {
         listRep = new ArrayList<>();
         listRep_f = new ArrayList<>();
         activeList = new ArrayList<>();
-
-
     }
 
     @Override
@@ -146,7 +136,7 @@ public class FragmentTwitter extends Fragment {
         loading = view.findViewById(R.id.loadingPanel);
         layoutBitcoin =  view.findViewById(R.id.layoutBitcoin);
         layoutAltcoinBreaking =  view.findViewById(R.id.layoutAltcoinBreaking);
-        mRecyclerView =  view.findViewById(R.id.recyclerView);
+        recyclerView =  view.findViewById(R.id.recyclerView);
         btnBitcoin = view.findViewById(R.id.btnBitcoin);
         btnAltcoin = view.findViewById(R.id.btnAltcoin);
         btnBreaking = view.findViewById(R.id.btnBreaking);
@@ -160,13 +150,13 @@ public class FragmentTwitter extends Fragment {
         btnInfoAll = view.findViewById(R.id.button12);
         btnAlertAll = view.findViewById(R.id.button10);
         btnAlertRep = view.findViewById(R.id.button13);
-        btninfoRep = view.findViewById(R.id.button14);
+        btnInfoRep = view.findViewById(R.id.button14);
 
         breakingAdapter = new BreakingAdapter(context, activeList);
         tweetsAdapter = new TweetsAdapter(context, activeList);
-        mRecyclerView.setAdapter(tweetsAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.setAdapter(tweetsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         btnBitcoin.setOnClickListener( new View.OnClickListener() {
 
@@ -188,6 +178,7 @@ public class FragmentTwitter extends Fragment {
 
                 layoutBitcoin.setVisibility(View.INVISIBLE);
                 layoutAltcoinBreaking.setVisibility(View.VISIBLE);
+                btnFilter.setText("Filtered");
                 selected = "sym";
                 setButtonColours();
                 loadList();
@@ -201,6 +192,7 @@ public class FragmentTwitter extends Fragment {
 
                 layoutBitcoin.setVisibility(View.INVISIBLE);
                 layoutAltcoinBreaking.setVisibility(View.VISIBLE);
+                btnFilter.setText("Crypto");
                 selected = "breaking_f";
                 setButtonColours();
                 loadList();
@@ -282,141 +274,63 @@ public class FragmentTwitter extends Fragment {
             @Override
             public void onClick(View v) {
 
-                final Dialog customDialog = new Dialog(context);
-                customDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setContentView(R.layout.alert_all);
-                customDialog.setCancelable(true);
-                Window window = customDialog.getWindow();
-                window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                window.setGravity(Gravity.CENTER);
-                customDialog.getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
+                Utils.buildAlertDialogue(R.layout.alert_all,context);
 
-                Button cancel =  customDialog.findViewById(R.id.button);
+                TextView al1 = Utils.getAlertDialogue().findViewById(R.id.textView4);
+                TextView al2 = Utils.getAlertDialogue().findViewById(R.id.textView5);
+                androidx.appcompat.widget.SwitchCompat switchAltsAlerts = Utils.getAlertDialogue().findViewById(R.id.switch1);
+                androidx.appcompat.widget.SwitchCompat switchBreakingAlerts = Utils.getAlertDialogue().findViewById(R.id.switch2);
 
-                TextView al1 = customDialog.findViewById(R.id.textView4);
-                TextView al2 = customDialog.findViewById(R.id.textView5);
-                androidx.appcompat.widget.SwitchCompat switch_1 = customDialog.findViewById(R.id.switch1);
-                androidx.appcompat.widget.SwitchCompat switch_2 = customDialog.findViewById(R.id.switch2);
-
-                switch_1.setChecked(alertAlts);
-                switch_2.setChecked(alertBreaking);
+                switchAltsAlerts.setChecked(alertAlts);
+                switchBreakingAlerts.setChecked(alertBreaking);
                 al1.setText("Altcoin official accounts");
                 al2.setText("    Breaking news    ");
 
-
-                switch_1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                switchAltsAlerts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            alertAlts = true;
-                            editor = context.getSharedPreferences("alertAlts", MODE_PRIVATE).edit();
-                            editor.putBoolean("alertAlts", true);
-                            editor.apply();
-                            manage(true, "alts");
-                        } else {
-                            alertAlts = false;
-                            editor = context.getSharedPreferences("alertAlts", MODE_PRIVATE).edit();
-                            editor.putBoolean("alertAlts", false);
-                            editor.apply();
-                            manage(false, "alts");
-                        }
+                        alertAlts = isChecked;
+                        Utils.setSharedPref("alertAlts", alertAlts, context);
+                        Utils.firebaseSubscribe(alertAlts, "alts", context);
                     }
                 });
 
-                switch_2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                switchBreakingAlerts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            alertBreaking = true;
-                            editor = context.getSharedPreferences("alertBreaking", MODE_PRIVATE).edit();
-                            editor.putBoolean("alertBreaking", true);
-                            editor.apply();
-                            manage(true, "alts");
-                        } else {
-                            alertAlts = false;
-                            editor = context.getSharedPreferences("alertBreaking", MODE_PRIVATE).edit();
-                            editor.putBoolean("alertBreaking", false);
-                            editor.apply();
-                            manage(false, "alts");
-                        }
+                        alertBreaking = isChecked;
+                        Utils.setSharedPref("alertBreaking", alertBreaking, context);
+                        Utils.firebaseSubscribe(alertBreaking, "breaking", context);
                     }
                 });
 
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        customDialog.dismiss();
-                    }
-                });
-
-
-                customDialog.show();
+                Utils.getAlertDialogue().show();
             }
         });
 
-        btnInfoAll.setOnClickListener( new View.OnClickListener() {    //     FILTERED
+        btnInfoAll.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                final Dialog customDialog = new Dialog(context);
-                customDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setContentView(R.layout.dialogue_info);
-                customDialog.setCancelable(true);
-                Window window = customDialog.getWindow();
-                window.setGravity(Gravity.CENTER);
-                window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                customDialog.getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
-
-                Button cancel =  customDialog.findViewById(R.id.button);
-
-                TextView al1 = customDialog.findViewById(R.id.textView2);
-                al1.setText(R.string.info_all);
-
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        customDialog.dismiss();
-                    }
-                });
-
-                customDialog.show();
+                Utils.buildAlertDialogue(R.layout.dialogue_info,context);
+                TextView alertText = Utils.getAlertDialogue().findViewById(R.id.textView2);
+                alertText.setText(R.string.info_all);
+                Utils.getAlertDialogue().show();
             }
         });
 
-        btninfoRep.setOnClickListener( new View.OnClickListener() {    //     FILTERED
+        btnInfoRep.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                final Dialog customDialog = new Dialog(context);
-                customDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setContentView(R.layout.dialogue_info);
-                customDialog.setCancelable(true);
-                Window window = customDialog.getWindow();
-                window.setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                window.setGravity(Gravity.CENTER);
-                customDialog.getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
-
-                Button cancel =  customDialog.findViewById(R.id.button);
-                TextView al1 = customDialog.findViewById(R.id.textView2);
+                Utils.buildAlertDialogue(R.layout.dialogue_info,context);
+                TextView alertText = Utils.getAlertDialogue().findViewById(R.id.textView2);
                 if(selected.equals("breaking") || selected.equals("breaking_f")){
-                    al1.setText(R.string.info_breaking);
+                    alertText.setText(R.string.info_breaking);
                 }else{
-                    al1.setText(R.string.info_alts);
+                    alertText.setText(R.string.info_alts);
                 }
-
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        customDialog.dismiss();
-                    }
-                });
-
-                customDialog.show();
+                Utils.getAlertDialogue().show();
             }
         });
 
@@ -424,7 +338,7 @@ public class FragmentTwitter extends Fragment {
 
 //        ==============   HIDE POSTS
 
-//        mRecyclerView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//        recyclerView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 //            @Override
 //            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 //                                           int pos, long id) {
@@ -463,6 +377,7 @@ public class FragmentTwitter extends Fragment {
         return view;
     }
 
+
     public void loadList(){
 
         if(!curList().isEmpty() && !isRefresh()){
@@ -471,7 +386,7 @@ public class FragmentTwitter extends Fragment {
             notifyAdapter();
         }else{
             loading.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
             buildCall();
             call();
         }
@@ -510,10 +425,10 @@ public class FragmentTwitter extends Fragment {
     public void notifyAdapter(){
 
         if(selected.equals("breaking") || selected.equals("breaking_f")){
-            mRecyclerView.setAdapter(breakingAdapter);
+            recyclerView.setAdapter(breakingAdapter);
             breakingAdapter.notifyDataSetChanged();
         }else {
-            mRecyclerView.setAdapter(tweetsAdapter);
+            recyclerView.setAdapter(tweetsAdapter);
             tweetsAdapter.notifyDataSetChanged();
         }
     }
@@ -525,11 +440,11 @@ public class FragmentTwitter extends Fragment {
             public void onResponse(@NotNull Call<List<tweet>> call, @NotNull Response<List<tweet>> response) {
 
                 loading.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
 
                 if (!response.isSuccessful()) {
-                    Utils.makeToast(context,"Error Code" + response.code());
-//                    load_from_sp();
+                    Utils.makeToast("Loading old data", context);
+                    load_from_sp();
                     return;
                 }
 
@@ -544,22 +459,16 @@ public class FragmentTwitter extends Fragment {
 
                 activeList.clear();
                 activeList.addAll(curList());
-//                save_sp(activeList);
-
                 notifyAdapter();
+
+                save_sp(activeList);
 
             }
             @Override
             public void onFailure(Call<List<tweet>> call, Throwable t) {
-//                if(listAll_1.isEmpty() || isRefresh()) {
-//                    if (mToast != null) {
-//                        mToast.cancel();
-//                    }
-//                    mToast = Toast.makeText(context, "Problem connecting the server. Loading old data.",
-//                            Toast.LENGTH_LONG);
-//                    mToast.show();
-//                }
-//                load_from_sp();
+
+                Utils.makeToast("Loading old data", context);
+                load_from_sp();
             }
         });
     }
@@ -594,94 +503,24 @@ public class FragmentTwitter extends Fragment {
         Type type;
         ArrayList<tweet> list;
 
-        switch (selected) {
-            case "100":
-                if(!listAll_100.isEmpty()){ return; }
-                preferences = context.getSharedPreferences("100", Context.MODE_PRIVATE);
-                json = preferences.getString("100", "");
-                break;
-            case "500":
-                if(!listAll_500.isEmpty()){ return; }
-                preferences = context.getSharedPreferences("500", Context.MODE_PRIVATE);
-                json = preferences.getString("500", "");
-                break;
-            case "1":
-                if(!listAll_1.isEmpty()){ return; }
-                preferences = context.getSharedPreferences("1", Context.MODE_PRIVATE);
-                json = preferences.getString("1", "");
-                break;
-            case "10":
-                if(!listAll_10.isEmpty()){ return; }
-                preferences = context.getSharedPreferences("10", Context.MODE_PRIVATE);
-                json = preferences.getString("10", "");
-                break;
-            case "sym":
-                if(!listSym.isEmpty()){ return; }
-                preferences = context.getSharedPreferences("sym", Context.MODE_PRIVATE);
-                json = preferences.getString("sym", "");
-                break;
-            case "sym_f":
-                if(!listSym_f.isEmpty()){ return; }
-                preferences = context.getSharedPreferences("sym_f", Context.MODE_PRIVATE);
-                json = preferences.getString("sym_f", "");
-                break;
-            case "breaking":
-                if(!listRep.isEmpty()){ return; }
-                preferences = context.getSharedPreferences("breaking", Context.MODE_PRIVATE);
-                json = preferences.getString("breaking", "");
-                break;
-            case "breaking_f":
-                if(!listRep_f.isEmpty()){ return; }
-                preferences = context.getSharedPreferences("breaking_f", Context.MODE_PRIVATE);
-                json = preferences.getString("breaking_f", "");
-                break;
+        if (curList().isEmpty()){
+            return;
         }
 
+        json = Utils.getSharedPref(selected, "", context);
 
         type = new TypeToken<List<tweet>>(){}.getType();
         list = gson.fromJson(json, type);
+
         if(list != null && !list.isEmpty()) {
 
-            if(selected.equals("breaking") || selected.equals("breaking_f")){
+            curList().clear();
+            curList().addAll(list);
+            Collections.reverse(curList());
 
-                mRecyclerView.setAdapter(tweetsAdapter);
-                breakingAdapter.notifyDataSetChanged();
-            }else {
-
-                mRecyclerView.setAdapter(tweetsAdapter);
-                tweetsAdapter.notifyDataSetChanged();
-            }
-            loading.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-
-
-            switch (selected) {
-                case "100":
-                    listAll_100 = list;
-                    break;
-                case "500":
-                    listAll_500 = list;
-                    break;
-                case "1":
-                    listAll_1 = list;
-                    break;
-                case "10":
-                    listAll_10 = list;
-                    break;
-                case "sym":
-                    listSym = list;
-                    break;
-                case "sym_f":
-                    listSym_f = list;
-                    break;
-                case "breaking":
-                    listRep = list;
-                    break;
-                case "breaking_f":
-                    listRep_f = list;
-                    break;
-            }
-
+            activeList.clear();
+            activeList.addAll(curList());
+            notifyAdapter();
         }
     }
 
@@ -689,49 +528,8 @@ public class FragmentTwitter extends Fragment {
 
         Gson gson = new Gson();
         String json = gson.toJson(list);
+        Utils.setSharedPref(selected, json, context);
 
-        switch (selected) {
-            case "100":
-                editor = context.getSharedPreferences("100", MODE_PRIVATE).edit();
-                editor.putString("100", json);
-                editor.apply();
-                break;
-            case "500":
-                editor = context.getSharedPreferences("500", MODE_PRIVATE).edit();
-                editor.putString("500", json);
-                editor.apply();
-                break;
-            case "1":
-                editor = context.getSharedPreferences("1", MODE_PRIVATE).edit();
-                editor.putString("1", json);
-                editor.apply();
-                break;
-            case "10":
-                editor = context.getSharedPreferences("10", MODE_PRIVATE).edit();
-                editor.putString("10", json);
-                editor.apply();
-                break;
-            case "sym":
-                editor = context.getSharedPreferences("sym", MODE_PRIVATE).edit();
-                editor.putString("sym", json);
-                editor.apply();
-                break;
-            case "sym_f":
-                editor = context.getSharedPreferences("sym_f", MODE_PRIVATE).edit();
-                editor.putString("sym_f", json);
-                editor.apply();
-                break;
-            case "breaking":
-                editor = context.getSharedPreferences("breaking", MODE_PRIVATE).edit();
-                editor.putString("breaking", json);
-                editor.apply();
-                break;
-            case "breaking_f":
-                editor = context.getSharedPreferences("breaking_f", MODE_PRIVATE).edit();
-                editor.putString("breaking_f", json);
-                editor.apply();
-                break;
-        }
     }
 
     public void send_link(){
@@ -800,61 +598,30 @@ public class FragmentTwitter extends Fragment {
 
     public boolean isRefresh(){
 
-        preferences = context.getSharedPreferences("refresh_" + selected, Context.MODE_PRIVATE);
-        boolean refresh = preferences.getBoolean("refresh_" + selected, false);
-
-        editor = context.getSharedPreferences("refresh_" + selected, MODE_PRIVATE).edit();
-        editor.putBoolean("refresh_" + selected, false);
-        editor.apply();
+        boolean refresh = Utils.getSharedPref("refresh_" + selected, false, context);
+        Utils.setSharedPref("refresh_" + selected,false , context);
 
         return refresh;
     }
 
-    public void manage(boolean sub, String tag) {
-
-        if(sub) {
-            FirebaseMessaging.getInstance().subscribeToTopic(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Utils.makeToast(context, "Alert On");
-                }});
-        }else{
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Utils.makeToast(context, "Alert Off");
-                }});
-        }
-    }
 
     @Override
     public void onResume() {
 
         //   =============   OPEN NOTIFIED TAB
 
-        context = this.getActivity();
-
-        preferences = context.getSharedPreferences("alertAlts", Context.MODE_PRIVATE);
-        alertAlts = preferences.getBoolean("alertAlts", false);
-
-        preferences = context.getSharedPreferences("alertBreaking", Context.MODE_PRIVATE);
-        alertBreaking = preferences.getBoolean("alertBreaking", false);
-
-        preferences = context.getSharedPreferences("topic", Context.MODE_PRIVATE);
-        String topic = preferences.getString("topic", "none");
+        alertAlts = Utils.getSharedPref("alertAlts",false,context);
+        alertBreaking = Utils.getSharedPref("alertBreaking",false,context);
+        String topic = Utils.getSharedPref("topic","none",context);
 
         if(topic.equals("breaking")){
             selected = "braking_f";
             btnBreaking.performClick();
-            editor = context.getSharedPreferences("topic", MODE_PRIVATE).edit();
-            editor.putString("topic", "none");
-            editor.apply();
+            Utils.setSharedPref("topic","none", context);
         }else if(topic.equals("alts")){
             selected = "sym";
             btnAltcoin.performClick();
-            editor = context.getSharedPreferences("topic", MODE_PRIVATE).edit();
-            editor.putString("topic", "none");
-            editor.apply();
+            Utils.setSharedPref("topic","none", context);
         }
 
         loadList();
@@ -863,7 +630,6 @@ public class FragmentTwitter extends Fragment {
 
     @Override
     public void onPause() {
-        
         super.onPause();
     }
 
