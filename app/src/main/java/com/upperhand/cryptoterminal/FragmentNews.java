@@ -19,11 +19,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.upperhand.cryptoterminal.adapters.BreakingAdapter;
+import com.upperhand.cryptoterminal.adapters.TweetsAdapter;
+import com.upperhand.cryptoterminal.adapters.VideoAdapter;
 import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
+import com.upperhand.cryptoterminal.objects.event;
+import com.upperhand.cryptoterminal.objects.tweet;
 import com.upperhand.cryptoterminal.objects.video;
-import com.upperhand.cryptoterminal.adapters.video_adapter;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -40,350 +48,198 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentNews extends Fragment {
 
-
-    ArrayList<video> list_all;
-    ArrayList<video> list_top;
-    ListView mListView;
-    video_adapter adapter;
+    ArrayList<video> listAll;
+    ArrayList<video> listTop;
+    ArrayList<video> activeList;
+    VideoAdapter adapter;
+    RecyclerView recyclerView;
     Call<List<video>> call;
-    RelativeLayout loading;
-    Button btn_all;
-    Button btn_top;
-    boolean all;
-    boolean alerts;
-    SharedPreferences.Editor editor;
-    SharedPreferences preferences;
+    RelativeLayout loadingLayout;
+    Button btnAll;
+    Button btnTop;
     Context context;
-    ImageButton info;
-    ImageButton alert;
-    FirebaseRemoteConfig mFirebaseRemoteConfig;
-    String api_url;
-    Toast toast;
+    ImageButton btnInfo;
+    ImageButton btnAlert;
     String selected;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        list_all = new ArrayList<>();
-        list_top = new ArrayList<>();
-
+        listAll = new ArrayList<>();
+        listTop = new ArrayList<>();
         context = this.getActivity();
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-
-        preferences = context.getSharedPreferences("news", Context.MODE_PRIVATE);
-        alerts = preferences.getBoolean("news", false);
-
+        activeList = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_news, container, false);
 
-        btn_all = view.findViewById(R.id.button1);
-        btn_top = view.findViewById(R.id.button2);
-        info = view.findViewById(R.id.button4);
-        alert = view.findViewById(R.id.button3);
+        btnAll = view.findViewById(R.id.button1);
+        btnTop = view.findViewById(R.id.button2);
+        btnInfo = view.findViewById(R.id.button4);
+        btnAlert = view.findViewById(R.id.button3);
+        loadingLayout = view.findViewById(R.id.loadingPanel);
+        recyclerView =  view.findViewById(R.id.listView);
 
-        loading = view.findViewById(R.id.loadingPanel);
-        mListView =  view.findViewById(R.id.listView);
+        adapter = new VideoAdapter(context, activeList);
 
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
-        btn_all.setOnClickListener( new View.OnClickListener() {
+        btnAll.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                btn_all.setTextColor(Color.parseColor("#0A75FF"));
-                btn_top.setTextColor(Color.parseColor("#FFFFFF"));
-                all = true;
+                btnAll.setTextColor(Color.parseColor("#0A75FF"));
+                btnTop.setTextColor(Color.parseColor("#FFFFFF"));
                 selected ="news";
-                if(list_all.isEmpty() || is_refresh()){
-                    mListView.setVisibility(View.INVISIBLE);
-                    loading.setVisibility(View.VISIBLE);
-                    call = RetrofitSingleton.get().getData().get_news();
-                    call(list_all);
-                }else{
-                    adapter = new video_adapter(context, R.layout.layout_video, list_all);
-                    mListView.setAdapter(adapter);
-                }
+                loadList();
             }
         });
 
-        btn_top.setOnClickListener( new View.OnClickListener() {
+        btnTop.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                btn_all.setTextColor(Color.parseColor("#FFFFFF"));
-                btn_top.setTextColor(Color.parseColor("#0A75FF"));
-                all = false;
+                btnAll.setTextColor(Color.parseColor("#FFFFFF"));
+                btnTop.setTextColor(Color.parseColor("#0A75FF"));
                 selected ="news_top";
-                if(list_top.isEmpty() || is_refresh()){
-                    mListView.setVisibility(View.INVISIBLE);
-                    loading.setVisibility(View.VISIBLE);
-                    call = RetrofitSingleton.get().getData().get_news_f();
-                    call(list_top);
-                }else{
-                    adapter = new video_adapter(context, R.layout.layout_video, list_top);
-                    mListView.setAdapter(adapter);
-                }
-
+                loadList();
             }
         });
 
-
-        alert.setOnClickListener( new View.OnClickListener() {    //     FILTERED
+        btnInfo.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                final Dialog customDialog = new Dialog(context);
-                customDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setContentView(R.layout.alert_all);
-                customDialog.setCancelable(true);
-                Window window = customDialog.getWindow();
-                window.setGravity(Gravity.CENTER);
-                customDialog.getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
-
-                Button cancel =  customDialog.findViewById(R.id.button);
-
-
-                TextView al1 = customDialog.findViewById(R.id.textView4);
-                TextView al2 = customDialog.findViewById(R.id.textView5);
-                androidx.appcompat.widget.SwitchCompat switch_1 = customDialog.findViewById(R.id.switch1);
-                androidx.appcompat.widget.SwitchCompat switch_2 = customDialog.findViewById(R.id.switch2);
-
-                switch_1.setChecked(alerts);
-                al1.setText("Above 2 million followers");
-
-                al2.setVisibility(View.GONE);
-                switch_2.setVisibility(View.GONE);
-
-
-                switch_1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                        if(isChecked){
-                            alerts = true;
-                            editor = context.getSharedPreferences("news", MODE_PRIVATE).edit();
-                            editor.putBoolean("news", true);
-                            editor.apply();
-                            manage(true,"news");
-                        }else{
-                            alerts = false;
-                            editor = context.getSharedPreferences("news", MODE_PRIVATE).edit();
-                            editor.putBoolean("news", false);
-                            editor.apply();
-                            manage(false,"news");
-                        }
-                    }
-                });
-
-
-
-
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        customDialog.dismiss();
-                    }
-                });
-
-                customDialog.show();
+                Utils.buildAlertDialogue(R.layout.dialogue_info, context);
+                TextView text = Utils.getAlertDialogue().findViewById(R.id.textView2);
+                text.setText(R.string.info_news);
+                Utils.getAlertDialogue().show();
             }
         });
 
-        info.setOnClickListener( new View.OnClickListener() {    //     FILTERED
-
-            @Override
-            public void onClick(View v) {
-
-                final Dialog customDialog = new Dialog(context);
-                customDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                customDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                customDialog.setContentView(R.layout.dialogue_info);
-                customDialog.setCancelable(true);
-                Window window = customDialog.getWindow();
-                window.setGravity(Gravity.CENTER);
-                customDialog.getWindow().getAttributes().windowAnimations = R.style.PauseDialogAnimation;
-
-                Button cancel =  customDialog.findViewById(R.id.button);
-                TextView al1 = customDialog.findViewById(R.id.textView2);
-                al1.setText(R.string.info_news);
-
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        customDialog.dismiss();
-                    }
-                });
-
-                customDialog.show();
-            }
-        });
-
-
-        btn_top.performClick();
+        btnTop.performClick();
 
         return view;
     }
 
-    public void call(ArrayList<video> list){
+    public void call(){
 
         call.enqueue(new Callback<List<video>>() {
             @Override
             public void onResponse(Call<List<video>> call, Response<List<video>> response) {
 
-                loading.setVisibility(View.GONE);
-                mListView.setVisibility(View.VISIBLE);
+                loadingLayout.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
 
                 if (!response.isSuccessful()) {
-                    if (toast!= null) {
-                        toast.cancel();
-                    }
-                    toast = Toast.makeText(context, "Error Code" + response.code(), Toast.LENGTH_LONG);
-                    toast.show();
-                    load_from_sp();
+                    Utils.makeToast("Loading old data", context);
+                    loadFromSp();
                     return;
                 }
 
-                List<video> posts = response.body();
-                if(posts == null || posts.isEmpty()){
+                List<video> videos = response.body();
+                if(videos == null || videos.isEmpty()){
                     return;
                 }
 
-                list.clear();
-                list.addAll(posts);
-                Collections.reverse(list);
-                save_sp(list);
+                curList().clear();
+                curList().addAll(videos);
+                Collections.reverse(curList());
 
-                adapter = new video_adapter(context, R.layout.layout_video, list);
-                mListView.setAdapter(adapter);
+                activeList.clear();
+                activeList.addAll(curList());
                 adapter.notifyDataSetChanged();
+
+                saveIntoSp();
             }
             @Override
             public void onFailure(Call<List<video>> call, Throwable t) {
-                load_from_sp();
+                loadFromSp();
             }
         });
     }
 
-    public void load_from_sp(){
+    public void loadList(){
 
-        Gson gson = new Gson();
-        String json = null;
-        Type type;
-        ArrayList<video> list;
-
-        switch (selected) {
-            case "news":
-                if(!list_all.isEmpty()){ return;}
-                break;
-            case "news_top":
-                if(!list_top.isEmpty()){ return;}
-                break;
-        }
-
-        switch (selected) {
-            case "news":
-                preferences = context.getSharedPreferences("news_all", Context.MODE_PRIVATE);
-                json = preferences.getString("news_all", "");
-                break;
-            case "news_top":
-                preferences = context.getSharedPreferences("news_top", Context.MODE_PRIVATE);
-                json = preferences.getString("news_top", "");
-                break;
-        }
-
-        type = new TypeToken<List<video>>(){}.getType();
-        list = gson.fromJson(json, type);
-        if(list != null && !list.isEmpty()) {
-
-            adapter = new video_adapter(context, R.layout.layout_video, list);
-            mListView.setAdapter(adapter);
+        if(!curList().isEmpty() && !isRefresh()){
+            activeList.clear();
+            activeList.addAll(curList());
             adapter.notifyDataSetChanged();
-            loading.setVisibility(View.GONE);
-            mListView.setVisibility(View.VISIBLE);
-
-            switch (selected) {
-                case "news":
-                    list_all = list;
-                    break;
-                case "news_top":
-                    list_top = list;
-                    break;
-            }
+        }else{
+            loadingLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+            buildCall();
+            call();
         }
-
     }
 
-    public void save_sp(ArrayList<video> list){
-
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
+    public void buildCall(){
 
         switch (selected) {
             case "news":
-                editor = context.getSharedPreferences("news_all", MODE_PRIVATE).edit();
-                editor.putString("news_all", json);
-                editor.apply();
+                call = RetrofitSingleton.get().getData().get_news();
                 break;
             case "news_top":
-                editor = context.getSharedPreferences("news_top", MODE_PRIVATE).edit();
-                editor.putString("news_top", json);
-                editor.apply();
+                call = RetrofitSingleton.get().getData().get_news_f();
                 break;
         }
-
     }
 
-    public void manage(boolean sub, String tag) {
+    public void loadFromSp(){
 
-        if(sub) {
+        Gson gson = new Gson();
+        String json;
+        Type type;
 
-            Log.e("see"," sub sub sub");
+        json = Utils.getSharedPref(selected, "", context);
+        type = new TypeToken<List<video>>() {}.getType();
 
-            FirebaseMessaging.getInstance().subscribeToTopic(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Toast.makeText(context, "Alert On",
-                            Toast.LENGTH_SHORT).show();
-                }});
-        }else{
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Toast.makeText(context, "Alert Off",
-                            Toast.LENGTH_SHORT).show();
-                }});
+        ArrayList<video> list = gson.fromJson(json, type);
+
+        if(list != null && !list.isEmpty()) {
+            curList().clear();
+            curList().addAll(list);
+            adapter.notifyDataSetChanged();
+            loadingLayout.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 
+    public void saveIntoSp(){
+        Gson gson = new Gson();
+        String json = gson.toJson(curList());
+        Utils.setSharedPref(selected, json, context);
+    }
 
+    public ArrayList<video> curList(){
+
+        switch (selected) {
+            case "news":
+                return listAll;
+            case "news_top":
+                return listTop;
+        }
+        return null;
+    }
+
+    public boolean isRefresh(){
+        boolean refresh = Utils.getSharedPref("refresh_" + selected, false, context);
+        Utils.setSharedPref("refresh_" + selected, false, context);
+        return refresh;
+    }
 
     @Override
     public void onDestroy() {
         if(call != null) {
             call.cancel();
         }
-
         super.onDestroy();
-    }
-
-    public boolean is_refresh(){
-
-        preferences = context.getSharedPreferences("refresh_" + selected, Context.MODE_PRIVATE);
-        boolean refresh = preferences.getBoolean("refresh_" + selected, false);
-
-        editor = context.getSharedPreferences("refresh_" + selected, MODE_PRIVATE).edit();
-        editor.putBoolean("refresh_" + selected, false);
-        editor.apply();
-
-        return refresh;
     }
 
     @Override

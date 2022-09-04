@@ -1,5 +1,4 @@
 package com.upperhand.cryptoterminal.adapters;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -7,16 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-
 import com.upperhand.cryptoterminal.R;
 import com.upperhand.cryptoterminal.objects.symbol;
 
 import java.util.ArrayList;
 
 
-public class SymbolAdapter extends ArrayAdapter<symbol> {
+
+public class SymbolAdapter2 extends ArrayAdapter<symbol> {
 
     Context mContext;
     private int mResource;
@@ -31,7 +29,7 @@ public class SymbolAdapter extends ArrayAdapter<symbol> {
 
     }
 
-    public SymbolAdapter(Context context, int resource, ArrayList<symbol> objects) {
+    public SymbolAdapter2(Context context, int resource, ArrayList<symbol> objects) {
         super(context, resource, objects);
         this.mContext = context;
         mResource = resource;

@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
 import com.upperhand.cryptoterminal.objects.word;
-import com.upperhand.cryptoterminal.adapters.wordsAdapter;
+import com.upperhand.cryptoterminal.adapters.wordsAdapter2;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +43,7 @@ public class FragmentAltcoinWords extends Fragment {
     Button btn_scaled;
     ArrayList<word> list_words;
     ListView mListView;
-    wordsAdapter adapter;
+    wordsAdapter2 adapter;
     boolean scale_vol;
     Call<List<word>> call;
     RelativeLayout loading;
@@ -96,7 +96,7 @@ public class FragmentAltcoinWords extends Fragment {
                     call();
 
                 }else{
-                    adapter = new wordsAdapter(context, R.layout.layout_words, list_words, scale_vol);
+                    adapter = new wordsAdapter2(context, R.layout.layout_words, list_words, scale_vol);
                     mListView.setAdapter(adapter);
                 }
 
@@ -119,7 +119,7 @@ public class FragmentAltcoinWords extends Fragment {
                     call();
 
                 }else{
-                    adapter = new wordsAdapter(context, R.layout.layout_words, list_words, scale_vol);
+                    adapter = new wordsAdapter2(context, R.layout.layout_words, list_words, scale_vol);
                     mListView.setAdapter(adapter);
                 }
 
@@ -191,7 +191,7 @@ public class FragmentAltcoinWords extends Fragment {
                 });
                 Collections.reverse(list_words);
                 save_sp();
-                adapter = new wordsAdapter(context, R.layout.layout_words, list_words, scale_vol);
+                adapter = new wordsAdapter2(context, R.layout.layout_words, list_words, scale_vol);
                 mListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -224,7 +224,7 @@ public class FragmentAltcoinWords extends Fragment {
         list_words = gson.fromJson(json, type);
         if(list_words != null && !list_words.isEmpty()) {
             if (adapter == null) {
-                adapter = new wordsAdapter(context, R.layout.layout_words, list_words, scale_vol);
+                adapter = new wordsAdapter2(context, R.layout.layout_words, list_words, scale_vol);
                 mListView.setAdapter(adapter);
             }
             adapter.notifyDataSetChanged();

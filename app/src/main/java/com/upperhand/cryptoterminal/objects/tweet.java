@@ -26,12 +26,10 @@ public class tweet {
     public String getText() {
 
         if(text != null && !text .isEmpty()) {
-
             return text;
         }else {
             return " ";
         }
-
     }
 
     public String getLink() {

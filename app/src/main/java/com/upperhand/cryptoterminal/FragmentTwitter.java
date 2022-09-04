@@ -80,7 +80,7 @@ public class FragmentTwitter extends Fragment {
     String selected = "";
     Call<List<tweet>> call;
     Call<String> callPost;
-    RelativeLayout loading;
+    RelativeLayout loadingLayout;
     Context context;
     boolean alertBreaking;
     boolean alertAlts;
@@ -133,7 +133,7 @@ public class FragmentTwitter extends Fragment {
 
         //endregion
 
-        loading = view.findViewById(R.id.loadingPanel);
+        loadingLayout = view.findViewById(R.id.loadingPanel);
         layoutBitcoin =  view.findViewById(R.id.layoutBitcoin);
         layoutAltcoinBreaking =  view.findViewById(R.id.layoutAltcoinBreaking);
         recyclerView =  view.findViewById(R.id.recyclerView);
@@ -385,7 +385,7 @@ public class FragmentTwitter extends Fragment {
             activeList.addAll(curList());
             notifyAdapter();
         }else{
-            loading.setVisibility(View.VISIBLE);
+            loadingLayout.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.INVISIBLE);
             buildCall();
             call();
@@ -439,7 +439,7 @@ public class FragmentTwitter extends Fragment {
             @Override
             public void onResponse(@NotNull Call<List<tweet>> call, @NotNull Response<List<tweet>> response) {
 
-                loading.setVisibility(View.GONE);
+                loadingLayout.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
 
                 if (!response.isSuccessful()) {
@@ -461,8 +461,7 @@ public class FragmentTwitter extends Fragment {
                 activeList.addAll(curList());
                 notifyAdapter();
 
-                saveIntoSp(activeList);
-
+                saveIntoSp();
             }
             @Override
             public void onFailure(Call<List<tweet>> call, Throwable t) {
@@ -503,31 +502,31 @@ public class FragmentTwitter extends Fragment {
         Type type;
         ArrayList<tweet> list;
 
-        if (curList().isEmpty()){
-            return;
-        }
-
         json = Utils.getSharedPref(selected, "", context);
-
         type = new TypeToken<List<tweet>>(){}.getType();
         list = gson.fromJson(json, type);
+
+        Log.e("asd" , list + " zzzzzzzzzzzzzzzzzzzzzzzz ");
 
         if(list != null && !list.isEmpty()) {
 
             curList().clear();
             curList().addAll(list);
-            Collections.reverse(curList());
 
             activeList.clear();
             activeList.addAll(curList());
             notifyAdapter();
+
+            loadingLayout.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
+
     }
 
-    public void saveIntoSp(ArrayList<tweet> list){
+    public void saveIntoSp(){
 
         Gson gson = new Gson();
-        String json = gson.toJson(list);
+        String json = gson.toJson(activeList);
         Utils.setSharedPref(selected, json, context);
 
     }
@@ -599,7 +598,7 @@ public class FragmentTwitter extends Fragment {
     public boolean isRefresh(){
 
         boolean refresh = Utils.getSharedPref("refresh_" + selected, false, context);
-        Utils.setSharedPref("refresh_" + selected,false , context);
+        Utils.setSharedPref("refresh_" + selected,false, context);
 
         return refresh;
     }

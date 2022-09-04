@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import com.upperhand.cryptoterminal.R;
+import com.upperhand.cryptoterminal.Utils;
 import com.upperhand.cryptoterminal.objects.tweet;
 import org.jetbrains.annotations.NotNull;
 import java.util.Date;
@@ -44,21 +45,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NotNull ViewHolder holder, int position) {
 
-        try {
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
-            date = sdf.parse(tweets.get(position).gettime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Date today = new Date();
-        long diff = today.getTime() - date.getTime();
-
-        int hours = (int) (diff / (1000 * 60 * 60));
-        int mins = (int) (diff / (1000 * 60) % 60);
-        String min = "" + mins;
         String followers;
         int numberFollowers = tweets.get(position).getfow();
 
@@ -67,10 +55,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         } else {
             followers = numberFollowers + "K";
         }
-        if (mins < 10) {
-            min = "0" + mins;
-        }
-
 
         holder.text.setText(tweets.get(position).getText());
 
@@ -79,7 +63,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         } else {
             holder.likes.setText(" \uD83D\uDCC8 " + tweets.get(position).get_eng_score() + " \u2764 " + tweets.get(position).get_likes() + " \uD83D\uDD01 " + tweets.get(position).get_retweets());
         }
-        holder.source.setText(tweets.get(position).getSource() + "  " + " \u2022" + "  " + followers + "  " + "\u2022" + "  " + hours + ":" + min + " ago");
+        holder.source.setText(tweets.get(position).getSource() + "  " + " \u2022" + "  " + followers + "  " + "\u2022" + "  " + Utils.getTimeDifference(tweets.get(position).gettime()));
         holder.text.setText(tweets.get(position).getText());
 
         holder.open.setOnClickListener(new View.OnClickListener() {

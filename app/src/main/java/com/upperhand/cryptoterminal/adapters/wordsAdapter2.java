@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -26,7 +24,7 @@ import java.util.Calendar;
 import java.util.Collections;
 
 
-public class wordsAdapter extends ArrayAdapter<word>  {
+public class wordsAdapter2 extends ArrayAdapter<word>  {
 
     Context mContext;
     private int mResource;
@@ -43,7 +41,7 @@ public class wordsAdapter extends ArrayAdapter<word>  {
         BarChart chart;
     }
 
-    public wordsAdapter(Context context, int resource, ArrayList<word> objects, boolean vol) {
+    public wordsAdapter2(Context context, int resource, ArrayList<word> objects, boolean vol) {
         super(context, resource, objects);
         this.mContext = context;
         this.isVolume = vol;
@@ -81,11 +79,11 @@ public class wordsAdapter extends ArrayAdapter<word>  {
 
         for (int i = 0; i < count; i++) {
             if(half){
-                half = false;
+                half = !half;
                 listHours.add(hours + ":00");
                 hours -=1;
             }else{
-                half = true;
+                half = !half;
                 listHours.add(hours + ":30");
             }
             if(hours < 0){

@@ -3,17 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:paddingBottom="3dp"
     android:paddingTop="7dp"
     android:paddingRight="10dp"
     android:paddingLeft="10dp"
-    android:weightSum="100">
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="20"
         android:padding="0dp"
         >
 
@@ -72,10 +71,5 @@
             app:fontFamily="@font/cc" />
 
     </RelativeLayout>
-
-
-
-
-
 
 </LinearLayout>

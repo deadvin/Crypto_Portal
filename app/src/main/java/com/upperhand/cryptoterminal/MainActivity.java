@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     boolean visible;
     String[] refresh_sp_list = new String[] {"refresh_keywords_altcoins", "refresh_keywords_btc", "refresh_news_top", "refresh_news",
             "refresh_vid",  "refresh_breaking_f",  "refresh_breaking",  "refresh_sym_f",  "refresh_sym",
-            "refresh_10",  "refresh_500",  "refresh_1",  "refresh_100"};
+            "refresh_10",  "refresh_500",  "refresh_1",  "refresh_100", "refresh_events"};
 
 
     @SuppressLint("ClickableViewAccessibility")

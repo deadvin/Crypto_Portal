@@ -20,7 +20,7 @@
             android:indeterminate="true" />
     </RelativeLayout>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listView"
         android:visibility="visible"
         android:layout_width="match_parent"

@@ -14,6 +14,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public final class Utils {
@@ -22,6 +27,8 @@ public final class Utils {
     private static SharedPreferences.Editor editor;
     private static SharedPreferences preferences;
     private static Dialog customDialog;
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+    private static Date date;
 
     public static void makeToast(String text, Context context){
 
@@ -107,6 +114,55 @@ public final class Utils {
         return preferences.getString(tag, defaultVal);
     }
 
+    public static String getTimeDifference(String time){
+
+        try {
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+            date = sdf.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Date today = new Date();
+        long diff = today.getTime() - date.getTime();
+        int hours = (int) (diff / 3600000);
+        int mins = (int) (diff / 60000 % 60);
+        String min = "" + mins;
+
+        if (mins < 10) {
+            min = "0" + mins;
+        }
+
+        return hours + ":" + min + " ago";
+    }
+
+    public static String getTimeDifferenceDays(String time){
+
+        try {
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+            date = sdf.parse(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Date today = new Date();
+        long diff =  today.getTime() - date.getTime();
+
+        int days = (int) (diff / 86400000);
+        int hours = (int) (diff / (3600000));
+        int minutes = (int) (diff / 60000 % 60);
+        String min = ""+ minutes;
+
+        if(minutes < 10){
+            min = "0" + minutes;
+        }
+
+        if(days < 2) {
+            return "announced " + hours + ":" + min + " ago";
+        }else{
+            return "announced " + days + " days ago";
+        }
+    }
 
 
 }
