@@ -193,12 +193,18 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.ViewHolder> 
         //=================   SET HOURS ON TOP
 
         XAxis xAxis = holder.chart.getXAxis();
-        xAxis.setValueFormatter(new ValueFormatter() {
+        try {
+                 xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
                 return listHours.get((int) value);
             }
         });
+        }catch (Exception e){
+        }
+
+
+
         xAxis.setAxisMinimum(0.5f);
         xAxis.setYOffset(-15);
         xAxis.setDrawGridLines(true);

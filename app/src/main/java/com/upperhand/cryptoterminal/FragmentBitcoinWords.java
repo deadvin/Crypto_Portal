@@ -216,13 +216,14 @@ public class FragmentBitcoinWords extends Fragment {
 //        ================  SET TOP HOURS
 
         XAxis xAxis = linechartVol.getXAxis();
-        xAxis.setValueFormatter(new ValueFormatter() {
+        try {
+             xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
                 return mylist.get((int) value);
             }
         });
-
+        }catch (Exception e){}
         xAxis.setAxisMinimum(0.5f);
         xAxis.setYOffset(-15);
         xAxis.setDrawGridLines(true);
@@ -275,8 +276,6 @@ public class FragmentBitcoinWords extends Fragment {
                 if(words == null || words.isEmpty()){
                     return;
                 }
-
-
 
                 listTrendsFlat.clear();
                 listTrendsVol.clear();

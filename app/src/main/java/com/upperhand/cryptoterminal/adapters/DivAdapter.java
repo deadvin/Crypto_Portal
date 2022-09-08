@@ -456,12 +456,14 @@ public class DivAdapter extends RecyclerView.Adapter<DivAdapter.ViewHolder> {
 //        ================  SET TOP HOURS
 
         XAxis xAxis =  holder.chart.getXAxis();
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return listHours.get((int) value);
-            }
-        });
+        try {
+            xAxis.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    return listHours.get((int) value);
+                }
+            });
+        }catch (Exception e){}
 
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setAxisMinimum(0.5f);
