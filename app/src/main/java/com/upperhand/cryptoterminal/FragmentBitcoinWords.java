@@ -333,6 +333,7 @@ public class FragmentBitcoinWords extends Fragment {
 
     @Override
     public void onPause() {
+
         super.onPause();
     }
 

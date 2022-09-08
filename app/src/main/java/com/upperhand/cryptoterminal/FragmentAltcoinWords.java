@@ -98,7 +98,7 @@ public class FragmentAltcoinWords extends Fragment {
             }
         });
 
-        btnFlat.performClick();
+
 
         return view;
     }
@@ -202,7 +202,7 @@ public class FragmentAltcoinWords extends Fragment {
 
     @Override
     public void onResume() {
-        loadList();
+        btnFlat.performClick();
         super.onResume();
     }
 
