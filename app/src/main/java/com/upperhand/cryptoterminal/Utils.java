@@ -1,6 +1,5 @@
 package com.upperhand.cryptoterminal;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,15 +9,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-
 import static android.content.Context.MODE_PRIVATE;
 
 public final class Utils {
@@ -100,6 +96,18 @@ public final class Utils {
         editor = context.getSharedPreferences(tag, MODE_PRIVATE).edit();
         editor.putString(tag, string);
         editor.apply();
+    }
+
+    public static void setSharedPref(String tag, int num, Context context){
+        editor = context.getSharedPreferences(tag, MODE_PRIVATE).edit();
+        editor.putInt(tag, num);
+        editor.apply();
+    }
+
+    public static int getSharedPref(String tag, int num, Context context){
+
+        preferences = context.getSharedPreferences(tag, Context.MODE_PRIVATE);
+        return preferences.getInt(tag, num);
     }
 
     public static boolean getSharedPref(String tag, boolean defaultVal, Context context){

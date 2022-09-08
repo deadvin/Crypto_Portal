@@ -9,17 +9,14 @@ public class event {
     private String text;
     private String time;
     private String link;
-    private int seen;
 
-
-    public event(String sym,String name,String date, String text, String time, String link, int seen) {
+    public event(String sym,String name,String date, String text, String time, String link) {
         this.text = text;
         this.link = link;
         this.date = date;
         this.sym = sym;
         this.name = name;
         this.time = time;
-        this.seen = seen;
     }
 
     public String getText() {
@@ -45,15 +42,6 @@ public class event {
     public String getDate() {
         return date;
     }
-
-    public int getseen() {
-        return seen;
-    }
-
-
-
-
-
 
 }
 

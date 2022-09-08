@@ -8,24 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.upperhand.cryptoterminal.adapters.VideoAdapter;
 import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
-import com.upperhand.cryptoterminal.objects.event;
 import com.upperhand.cryptoterminal.objects.video;
-
+import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,7 +41,6 @@ public class FragmentVideo extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         context = this.getActivity();
         videoList = new ArrayList<>();
     }
@@ -86,7 +81,7 @@ public class FragmentVideo extends Fragment {
 
         call.enqueue(new Callback<List<video>>() {
             @Override
-            public void onResponse(Call<List<video>> call, Response<List<video>> response) {
+            public void onResponse(@NotNull Call<List<video>> call, @NotNull Response<List<video>> response) {
 
                 loadingLayout.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
@@ -129,7 +124,6 @@ public class FragmentVideo extends Fragment {
     }
 
     public void loadFromSp(){
-
         Gson gson = new Gson();
         String json;
         Type type;

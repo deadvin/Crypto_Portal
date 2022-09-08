@@ -1,14 +1,19 @@
 package com.upperhand.cryptoterminal.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -19,39 +24,39 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.upperhand.cryptoterminal.R;
+import com.upperhand.cryptoterminal.Utils;
+import com.upperhand.cryptoterminal.objects.video;
 import com.upperhand.cryptoterminal.objects.word;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 
 
-public class wordsAdapter extends ArrayAdapter<word>  {
+public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.ViewHolder> {
 
     Context mContext;
-    private int mResource;
-    private boolean isVolume;
+    public boolean isVolume;
     int numberElements;
     int count;
     ArrayList<String> listHours;
+    ArrayList<word> wordsList;
 
-    private class ViewHolder {
-        TextView name1;
-        TextView name2;
-        TextView name3;
-        TextView name4;
-        BarChart chart;
+    public WordsAdapter(Context context, ArrayList<word> wordsList, boolean volume) {
+        this.mContext = context;
+        this.isVolume = volume;
+        this.wordsList = wordsList;
     }
 
-    public wordsAdapter(Context context, int resource, ArrayList<word> objects, boolean vol) {
-        super(context, resource, objects);
-        this.mContext = context;
-        this.isVolume = vol;
-        mResource = resource;
-
-        //   ===========================   CREATE HOURS ARRAY
-
-        //region HOURS ARRAY
+    @Override
+    public int getItemCount() {
+        return wordsList.size();
+    }
+    
+    private void createHoursArray(){
+        
         Calendar calendar = Calendar.getInstance();
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
         int mins = calendar.get(Calendar.MINUTE);
@@ -93,37 +98,42 @@ public class wordsAdapter extends ArrayAdapter<word>  {
             }
         }
         Collections.reverse(listHours);
-
-        //endregion
     }
 
-    @NonNull
+    @NotNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = inflater.inflate(R.layout.layout_words, parent, false);
+        return new ViewHolder(view);
+    }
 
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onBindViewHolder(@NotNull ViewHolder holder, int position) {
 
-//    ==========================    CREATE DATA FROM TREND OBJECTS
+        createHoursArray();
 
-        int avg;
+        int average;
         float scale;
         ArrayList<Integer> numbers;
         if(!isVolume) {
-            numbers = getItem(position).getNumbers();
-            avg = getItem(position).get_av();
+            numbers = wordsList.get(position).getNumbers();
+            average =  wordsList.get(position).getAv();
             scale = 0.8f;
         }else {
-            numbers = getItem(position).getNumbers_vol();
-            avg = getItem(position).get_av_vol();
+            numbers = wordsList.get(position).getNumbersVol();
+            average = wordsList.get(position).getAvVol();
             scale = 0.2f;
         }
-        ArrayList<String> words = getItem(position).getWords();
+        ArrayList<String> words = wordsList.get(position).getWords();
         numbers = new ArrayList<>(numbers.subList(numbers.size()-Math.min(numbers.size(),numberElements), numbers.size()));
 
-        //   ============   BARCHART DATA
+        //   ============  CREATE BARDATASET
 
         ArrayList data_list = new ArrayList();
         for (int i = 0; i < numbers.size(); i++) {
-            int entry = numbers.get(i) - (int)(avg* scale);
+            int entry = numbers.get(i) - (int)(average * scale);
             if (entry < 0){
                 entry = 0;
             }
@@ -131,32 +141,14 @@ public class wordsAdapter extends ArrayAdapter<word>  {
             data_list.add(new BarEntry((float)(i*0.5),entry));
         }
 
-        BarDataSet bardataset = new BarDataSet(data_list, "ooo");
-        BarData data = new BarData(  bardataset);
+        BarDataSet bardataset = new BarDataSet(data_list, "");
+        BarData data = new BarData(bardataset);
         bardataset.setDrawValues(false);
         bardataset.setColors(ColorTemplate.PASTEL_COLORS);
         data.setBarWidth(0.5f);
 
-        //        ============   CREATE HOLDER VIEW
-
-        ViewHolder holder;
-
-        if(convertView == null){
-            holder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(mResource, parent, false);
-            holder.chart = convertView.findViewById(R.id.chart1);
-            holder.name1 = convertView.findViewById(R.id.name1);
-            holder.name2 = convertView.findViewById(R.id.name2);
-            holder.name3 = convertView.findViewById(R.id.name3);
-            holder.name4 = convertView.findViewById(R.id.name4);
-            convertView.setTag(holder);
-        } else{
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        int startColor = ContextCompat.getColor(convertView.getContext(), R.color.black70);
-        int endColor = ContextCompat.getColor(convertView.getContext(), R.color.blue);
+        int startColor = ContextCompat.getColor(mContext, R.color.black70);
+        int endColor = ContextCompat.getColor(mContext, R.color.blue);
         bardataset.setGradientColor(startColor, endColor);
 
         // ============ SETTING KEYWORDS TEXTVIEWS
@@ -198,7 +190,6 @@ public class wordsAdapter extends ArrayAdapter<word>  {
         holder.chart.setExtraRightOffset(30);
         holder.chart.setScaleEnabled(false);
 
-
         //=================   SET HOURS ON TOP
 
         XAxis xAxis = holder.chart.getXAxis();
@@ -213,11 +204,24 @@ public class wordsAdapter extends ArrayAdapter<word>  {
         xAxis.setDrawGridLines(true);
         xAxis.setDrawGridLinesBehindData(true);
         xAxis.setGridColor(ContextCompat.getColor(mContext, R.color.gray_super_light));
-
-
-        return convertView;
     }
 
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView name1;
+        TextView name2;
+        TextView name3;
+        TextView name4;
+        BarChart chart;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            chart = itemView.findViewById(R.id.chart1);
+            name1 = itemView.findViewById(R.id.name1);
+            name2 = itemView.findViewById(R.id.name2);
+            name3 = itemView.findViewById(R.id.name3);
+            name4 = itemView.findViewById(R.id.name4);
+        }
+    }
 
 }
 

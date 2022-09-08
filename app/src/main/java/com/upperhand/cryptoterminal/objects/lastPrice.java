@@ -1,15 +1,11 @@
 package com.upperhand.cryptoterminal.objects;
 
+public class lastPrice {
 
-import java.util.ArrayList;
+    private final String symbol;
+    private final float price;
 
-public class last_price {
-
-    private String symbol;
-    private float price;
-
-
-    public last_price(String symbol, float price) {
+    public lastPrice(String symbol, float price) {
         this.symbol = symbol;
         this.price = price;
     }
@@ -20,7 +16,6 @@ public class last_price {
     public float getPrice() {
         return price;
     }
-
 
 }
 

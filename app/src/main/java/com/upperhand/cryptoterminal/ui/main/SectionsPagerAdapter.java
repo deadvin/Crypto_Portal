@@ -22,9 +22,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private FragmentTwitter FragmentTwitter;
     private FragmentPrices FragmentPrices;
-    private FragmentPrices fragment_words;
-    private FragmentPrices fragment_media;
-    private FragmentPrices settings;
+
 
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1,  R.string.tab_text_2,R.string.tab_text_3, R.string.tab_text_4, R.string.tab_text_5};
@@ -41,7 +39,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @NotNull
     @Override
     public Fragment getItem(int position) {
-        Fragment fragment = null;
         switch (position) {
             case 0:
                 return new FragmentTwitter();
@@ -68,7 +65,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Object instantiateItem(@NotNull ViewGroup container, int position) {
         Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
-        // save the appropriate reference depending on position
         switch (position) {
             case 0:
                 FragmentTwitter = (FragmentTwitter) createdFragment;

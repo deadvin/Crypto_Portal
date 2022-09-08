@@ -1,50 +1,32 @@
 package com.upperhand.cryptoterminal;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.upperhand.cryptoterminal.adapters.BreakingAdapter;
-import com.upperhand.cryptoterminal.adapters.TweetsAdapter;
 import com.upperhand.cryptoterminal.adapters.VideoAdapter;
 import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
-import com.upperhand.cryptoterminal.objects.event;
-import com.upperhand.cryptoterminal.objects.tweet;
 import com.upperhand.cryptoterminal.objects.video;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentNews extends Fragment {
 
@@ -84,7 +66,6 @@ public class FragmentNews extends Fragment {
         recyclerView =  view.findViewById(R.id.listView);
 
         adapter = new VideoAdapter(context, activeList);
-
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
@@ -196,10 +177,8 @@ public class FragmentNews extends Fragment {
         Gson gson = new Gson();
         String json;
         Type type;
-
         json = Utils.getSharedPref(selected, "", context);
         type = new TypeToken<List<video>>() {}.getType();
-
         ArrayList<video> list = gson.fromJson(json, type);
 
         if(list != null && !list.isEmpty()) {
@@ -244,7 +223,7 @@ public class FragmentNews extends Fragment {
 
     @Override
     public void onResume() {
-        context = this.getActivity();
+        loadList();
         super.onResume();
     }
 }

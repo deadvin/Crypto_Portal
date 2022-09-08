@@ -8,7 +8,7 @@
     tools:context=".FragmentPrices">
 
     <RelativeLayout
-        android:id="@+id/loadingPanel_altcoins"
+        android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
@@ -51,8 +51,8 @@
         app:srcCompat="@drawable/shadow" />
 
 
-    <ListView
-        android:id="@+id/listView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/linearLayout2"
@@ -61,6 +61,7 @@
         android:divider="#00000000"
         android:dividerHeight="10dp"
         android:fadingEdgeLength="28dp"
+        android:scrollbars="vertical"
         android:padding="5dp"
         android:requiresFadingEdge="vertical"
         android:visibility="visible" />

@@ -1,8 +1,6 @@
 package com.upperhand.cryptoterminal;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -10,12 +8,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -28,14 +23,8 @@ import com.google.gson.reflect.TypeToken;
 import com.upperhand.cryptoterminal.adapters.BreakingAdapter;
 import com.upperhand.cryptoterminal.adapters.TweetsAdapter;
 import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.upperhand.cryptoterminal.objects.tweet;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,8 +33,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class FragmentTwitter extends Fragment {
 
@@ -289,7 +276,7 @@ public class FragmentTwitter extends Fragment {
                 switchAltsAlerts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         alertAlts = isChecked;
-                        Utils.setSharedPref("alertAlts", alertAlts, context);
+                        Utils.setSharedPref("alert_alts", alertAlts, context);
                         Utils.firebaseSubscribe(alertAlts, "alts", context);
                     }
                 });
@@ -297,7 +284,7 @@ public class FragmentTwitter extends Fragment {
                 switchBreakingAlerts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         alertBreaking = isChecked;
-                        Utils.setSharedPref("alertBreaking", alertBreaking, context);
+                        Utils.setSharedPref("alert_breaking", alertBreaking, context);
                         Utils.firebaseSubscribe(alertBreaking, "breaking", context);
                     }
                 });
@@ -506,8 +493,6 @@ public class FragmentTwitter extends Fragment {
         type = new TypeToken<List<tweet>>(){}.getType();
         list = gson.fromJson(json, type);
 
-        Log.e("asd" , list + " zzzzzzzzzzzzzzzzzzzzzzzz ");
-
         if(list != null && !list.isEmpty()) {
 
             curList().clear();
@@ -520,7 +505,6 @@ public class FragmentTwitter extends Fragment {
             loadingLayout.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void saveIntoSp(){
@@ -609,8 +593,8 @@ public class FragmentTwitter extends Fragment {
 
         //   =============   OPEN NOTIFIED TAB
 
-        alertAlts = Utils.getSharedPref("alertAlts",false,context);
-        alertBreaking = Utils.getSharedPref("alertBreaking",false,context);
+        alertAlts = Utils.getSharedPref("alert_alts",false,context);
+        alertBreaking = Utils.getSharedPref("alert_breaking",false,context);
         String topic = Utils.getSharedPref("topic","none",context);
 
         if(topic.equals("breaking")){

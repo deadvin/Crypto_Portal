@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 public class div {
 
-    private String name;
-    private String full_name;
-    private ArrayList<Float> price;
+    private final String name;
+    private final String full_name;
+    private final ArrayList<Float> price;
 
-    public div(String name,String full_name, ArrayList<Float> price, int price_av) {
+    public div(String name,String full_name, ArrayList<Float> price) {
         this.name = name;
         this.full_name = full_name;
         this.price = price;
@@ -18,7 +18,8 @@ public class div {
     public String getName() {
         return name;
     }
-    public String getName_full() {
+
+    public String getFullName() {
         return full_name;
     }
 
@@ -26,16 +27,13 @@ public class div {
         return price;
     }
 
-    public float get_av_div(){
-
+    public float getAverageDiv(){
         float total = 0;
-
         for(int i =  price.size()- 30; i < price.size(); i++) {
             if(price.get(i) > - 80) {
                 total = total + price.get(i);
             }
         }
-
         return total;
     }
 

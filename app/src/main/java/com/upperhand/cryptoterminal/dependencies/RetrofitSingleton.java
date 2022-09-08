@@ -22,6 +22,7 @@ public class RetrofitSingleton {
     private static RetrofitSingleton instance;
     private static final String apiUrl = "https://restapiforapp.herokuapp.com/";
     private static final String apiBinanceUrl = "https://api.binance.com/api/v3/ticker/" ;
+
     private GetData getInterface;
     private PostData postInterface;
     private GetData apiPriceInterface;

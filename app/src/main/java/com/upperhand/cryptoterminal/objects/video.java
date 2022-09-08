@@ -3,21 +3,16 @@ package com.upperhand.cryptoterminal.objects;
 
 public class video{
 
-
     private String name;
     private String text;
     private String link;
     private String time;
-    private int seen;
 
-
-
-    public video(String name, String text, String link,String time, int seen) {
+    public video(String name, String text, String link,String time) {
         this.name = name;
         this.text = text;
         this.link = link;
         this.time = time;
-        this.seen = seen;
     }
 
     public String getName() {
@@ -35,12 +30,6 @@ public class video{
     public String getTime() {
         return time;
     }
-
-    public int getAlarm() {
-        return seen;
-    }
-
-
 
 }
 

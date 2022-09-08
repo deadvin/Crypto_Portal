@@ -1,18 +1,17 @@
 package com.upperhand.cryptoterminal.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -27,106 +26,121 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.upperhand.cryptoterminal.R;
 import com.upperhand.cryptoterminal.objects.div;
-import com.upperhand.cryptoterminal.objects.last_price;
+import com.upperhand.cryptoterminal.objects.lastPrice;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 
 
-public class divAdapter extends ArrayAdapter<div>  {
+public class DivAdapter extends RecyclerView.Adapter<DivAdapter.ViewHolder> {
 
     Context mContext;
-    private int mResource;
     int count = 0;
-    int num_elements = 0;
+    int numberElements = 0;
     public boolean isAnimate;
-    ArrayList<String> list = new ArrayList<>();
-    ArrayList<last_price> last_prices;
-    String name_alt;
-    float interval_size;
+    ArrayList<String> listHours = new ArrayList<>();
+    ArrayList<lastPrice> listLastPrices ;
+    ArrayList<div> listDivs = new ArrayList<>();;
+    float intervalSize;
     int hours;
     int mins;
-    int visible_elements;
-    boolean half;
-    String selected;
-    public boolean price_update = false;
-    Calendar calendar = Calendar.getInstance();
-    String[] month_names = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-    ArrayList<Float> saved_x = new ArrayList<>();
+    int visibleElements;
+    public static final String PAYLOAD_NAME = "PRICE_UPDATE";
+    public boolean isSaveX;
+    String[] monthNames = new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    ArrayList<Float> savedX = new ArrayList<>();
+    
+    
+    public DivAdapter(Context context, ArrayList<div> listDivs, ArrayList<lastPrice> listLastPrices) {
+        this.mContext = context;
+        this.listLastPrices = listLastPrices;
+        this.listDivs = listDivs;
+        savedX.clear();
+        for (int i = 0; i < 60; i++) {
+            savedX.add(-1f);
+        }
+    }
 
+    @Override
+    public int getItemCount() {
+        return listDivs.size();
+    }
 
-    private static class ViewHolder {
+    @NotNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = inflater.inflate(R.layout.layout_div, parent, false);
+        return new ViewHolder(view);
+    }
+    
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        
         LineChart chart;
         TextView name;
         TextView name_full;
         TextView price;
         ImageView icon;
-    }
 
-    public divAdapter(Context context, int resource, ArrayList<div> objects, ArrayList<last_price> last_prices) {
-        super(context, resource, objects);
-        this.mContext = context;
-        this.last_prices = last_prices;
-        mResource = resource;
-
-        saved_x.clear();
-        for (int i = 0; i < 60; i++) {
-            saved_x.add(-1f);
+        ViewHolder(View itemView) {
+            super(itemView);
+            chart = itemView.findViewById(R.id.chart1);
+            name = itemView.findViewById(R.id.name_alt);
+            name_full = itemView.findViewById(R.id.name_full);
+            icon = itemView.findViewById(R.id.imageView);
+            price = itemView.findViewById(R.id.price);
         }
-
     }
-
+    
     public void setMode(String mode){
 
-        calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
         hours = calendar.get(Calendar.HOUR_OF_DAY);
         mins = calendar.get(Calendar.MINUTE);
-        list.clear();
-
-        selected = mode;
-
+        listHours.clear();
+        boolean half;
+        
         switch (mode) {
             case "1 MIN":
                 //region 1 MIN
-                visible_elements = 15;
-                interval_size = 0.4f;
-
+                visibleElements = 15;
+                intervalSize = 0.4f;
                 int mins_10 = mins % 10;
                 int mins_5 = mins % 5;
 
                 if (mins_10 == 5 || mins_10 == 6 || mins_10 == 0) {
-                    num_elements = 151 - (5 - mins_5);
-                    count = (num_elements / 4) - 7;
+                    numberElements = 151 - (5 - mins_5);
+                    count = (numberElements / 4) - 7;
                 } else if (mins_10 == 1) {
-                    num_elements = 148 - mins_5;
-                    count = (num_elements / 4) - 7;
+                    numberElements = 148 - mins_5;
+                    count = (numberElements / 4) - 7;
                 } else if (mins_10 < 3) {
-                    num_elements = 150 - mins_5;
-                    count = (num_elements / 4) - 8;
+                    numberElements = 150 - mins_5;
+                    count = (numberElements / 4) - 8;
                 } else if (mins_10 < 5) {
-                    num_elements = 151 - (5 - mins_5);
-                    count = (num_elements / 4) - 8;
+                    numberElements = 151 - (5 - mins_5);
+                    count = (numberElements / 4) - 8;
                 } else {
-                    num_elements = 151 - (5 - mins_5);
-                    count = (num_elements / 4) - 8;
+                    numberElements = 151 - (5 - mins_5);
+                    count = (numberElements / 4) - 8;
                 }
-
                 mins = (mins / 5) * 5;
-
                 if (mins_5 == 0) {
-                    list.add(" ");
-                    list.add(" ");
+                    listHours.add(" ");
+                    listHours.add(" ");
                 } else {
                     if (mins < 10) {
-                        list.add(hours + ":0" + mins);
-                        list.add(hours + ":0" + mins);
+                        listHours.add(hours + ":0" + mins);
+                        listHours.add(hours + ":0" + mins);
                     } else {
-                        list.add(hours + ":" + mins);
-                        list.add(hours + ":" + mins);
+                        listHours.add(hours + ":" + mins);
+                        listHours.add(hours + ":" + mins);
                     }
                 }
-
                 for (int i = 0; i < count; i++) {
                     mins -= 5;
                     if (mins < 0) {
@@ -137,81 +151,70 @@ public class divAdapter extends ArrayAdapter<div>  {
                         hours = 23;
                     }
                     if (mins < 10) {
-                        list.add(hours + ":0" + mins);
-                        list.add(hours + ":0" + mins);
+                        listHours.add(hours + ":0" + mins);
+                        listHours.add(hours + ":0" + mins);
                     } else {
-                        list.add(hours + ":" + mins);
-                        list.add(hours + ":" + mins);
+                        listHours.add(hours + ":" + mins);
+                        listHours.add(hours + ":" + mins);
                     }
                 }
-                Collections.reverse(list);
-
+                Collections.reverse(listHours);
                 //endregion
                 break;
             case "15 MIN":
                 //region HOURS ARRAY 15 MIN
-
-                visible_elements = 10;
-                interval_size = 0.5f;
-                hours = calendar.get(Calendar.HOUR_OF_DAY);
-                mins = calendar.get(Calendar.MINUTE);
-
+                visibleElements = 10;
+                intervalSize = 0.5f;
                 if (mins > 30) {
-                    list.add(hours + ":30");
+                    listHours.add(hours + ":30");
                     half = true;
                     if (mins < 45) {
-                        num_elements = 149;
+                        numberElements = 149;
                         count = 74;
                     } else {
-                        num_elements = 150;
+                        numberElements = 150;
                         count = 74;
                     }
                 } else {
-                    list.add(hours + ":00");
+                    listHours.add(hours + ":00");
                     half = false;
                     hours -= 1;
                     if (mins >= 15) {
-                        num_elements = 150;
+                        numberElements = 150;
                         count = 74;
                     } else {
-                        num_elements = 149;
+                        numberElements = 149;
                         count = 74;
                     }
                 }
                 for (int i = 0; i < count; i++) {
                     if (half) {
                         half = false;
-                        list.add(hours + ":00");
+                        listHours.add(hours + ":00");
                         hours -= 1;
                     } else {
                         half = true;
-                        list.add(hours + ":30");
+                        listHours.add(hours + ":30");
                     }
                     if (hours < 0) {
                         hours = 23;
                     }
                 }
-                Collections.reverse(list);
-
-
+                Collections.reverse(listHours);
                 //endregion
                 break;
             case "1 HOUR":
                 //region HOURS ARRAY 1 HOUR
-
-                hours = calendar.get(Calendar.HOUR_OF_DAY);
-
-                visible_elements = 10;
-                interval_size = 0.5f;
-                num_elements = 150;
+                visibleElements = 10;
+                intervalSize = 0.5f;
+                numberElements = 150;
                 count = 75;
-
                 hours -= 1;
                 if (hours < 0) {
                     hours = 23;
                 }
                 for (int i = 0; i < count; i++) {
-                    list.add(hours + ":00");
+                    listHours.add(hours + ":00");
                     hours -= 2;
                     if (hours == -2) {
                         hours = 22;
@@ -219,96 +222,102 @@ public class divAdapter extends ArrayAdapter<div>  {
                         hours = 23;
                     }
                 }
-                Collections.reverse(list);
-
+                Collections.reverse(listHours);
                 //endregion
                 break;
             case "1 DAY":
                 //region HOURS ARRAY 1 DAY
-
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
                 int month = calendar.get(Calendar.MONTH);
-
-                String month_name = month_names[month];
-
-                visible_elements = 10;
-                interval_size = 0.5f;
-                num_elements = 150;
+                String monthName = monthNames[month];
+                visibleElements = 10;
+                intervalSize = 0.5f;
+                numberElements = 150;
                 count = 75;
-
                 day -= 1;
                 if (day == 0) {
                     month -= 1;
-                    month_name = month_names[month];
-                    day = get_last_month_days(month);
+                    monthName = monthNames[month];
+                    day = getLastMonthDays(month);
                 }
-
                 for (int i = 0; i < count; i++) {
-                    list.add(day + month_name);
+                    listHours.add(day + monthName);
                     day -= 2;
                     if (day == -1) {
                         month -= 1;
-                        month_name = month_names[month];
-                        day = get_last_month_days(month) - 1;
+                        monthName = monthNames[month];
+                        day = getLastMonthDays(month) - 1;
                     } else if (day == 0) {
                         month -= 1;
-                        month_name = month_names[month];
-                        day = get_last_month_days(month);
+                        monthName = monthNames[month];
+                        day = getLastMonthDays(month);
                     }
                 }
-                Collections.reverse(list);
-
+                Collections.reverse(listHours);
                 //endregion
                 break;
         }
     }
 
-    public void refresh_saved_x(){
-        price_update = false;
-        saved_x.clear();
+    public void refreshSavedX(){
+
+        isSaveX = false;
+        savedX.clear();
         for (int i = 0; i < 60; i++) {
-            saved_x.add(-1f);
+            savedX.add(-1f);
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @NonNull
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public int getLastMonthDays(int month){
+        month+=1;
+        if (month == 4 || month == 6 || month == 9 || month == 11) {
+            return 30;
+        } else if (month == 2) {
+            return 28;
+        } else {
+            return 31;
+        }
+    }
+
+    public void onBindViewHolder(@NotNull DivAdapter.ViewHolder holder, int position, @NotNull final List<Object> payloads) {
+
+        if (!payloads.isEmpty()) {
+            for (int i = 0; i < listLastPrices.size(); i++) {
+                if((listDivs.get(position).getName() + "USDT").equals(listLastPrices.get(i).getName())){
+                    holder.price.setText(" " + listLastPrices.get(i).getPrice() + "$");
+                }
+            if(savedX.get(position) >=0) {
+                holder.chart.moveViewToX(savedX.get(position));
+               }
+            }
+        } else {
+            super.onBindViewHolder(holder, position, payloads);
+        }
+    }
+
+
+    public void onBindViewHolder(@NotNull DivAdapter.ViewHolder holder, int position) {
 
         //   ============   CREATE HOLDER VIEW
-
-        ViewHolder holder;
-
-        if(convertView == null){
-            holder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            convertView = inflater.inflate(mResource, parent, false);
-            holder.chart = convertView.findViewById(R.id.chart1);
-            holder.name = convertView.findViewById(R.id.name_alt);
-            holder.name_full = convertView.findViewById(R.id.name_full);
-            holder.icon = convertView.findViewById(R.id.imageView);
-            holder.price = convertView.findViewById(R.id.price);
-            convertView.setTag(holder);
-        } else{
-            holder = (ViewHolder) convertView.getTag();
-        }
-        name_alt = getItem(position).getName().toLowerCase();
+        
+        String name_alt;
+        
+        name_alt = listDivs.get(position).getName().toLowerCase();
         holder.name.setText(name_alt);
-        holder.name_full.setText(getItem(position).getName_full());
+        holder.name_full.setText(listDivs.get(position).getFullName());
 
         //    =========   CREATE DATA FROM  OBJECTS
 
         ArrayList<Float> numbers;
-        numbers = getItem(position).getPrice();
-        ArrayList<Entry> dataVals_pos  = new ArrayList<>();
-        ArrayList<Entry> dataVals_neg  = new ArrayList<>();
-        numbers = new ArrayList<>(numbers.subList(numbers.size()-Math.min(numbers.size(),num_elements), numbers.size()));
+        numbers = listDivs.get(position).getPrice();
+        ArrayList<Entry> dataValsPos  = new ArrayList<>();
+        ArrayList<Entry> dataValsNeg  = new ArrayList<>();
+        numbers = new ArrayList<>(numbers.subList(numbers.size()-Math.min(numbers.size(),numberElements), numbers.size()));
 
         //   =========   BARCHART DATA
 
-        boolean only_pos = true;
-        boolean only_neg = true;
+        boolean isOnlyPos = true;
+        boolean isOnlyNeg = true;
 
         for (int i = 0; i < numbers.size(); i++) {
             Float entry = numbers.get(i);
@@ -316,52 +325,49 @@ public class divAdapter extends ArrayAdapter<div>  {
                 entry = 0f;
             }
             if(entry > 0){
-                dataVals_neg.add(new BarEntry((i * interval_size), 0));
-                dataVals_pos.add(new BarEntry((i * interval_size), entry));
-                only_neg = false;
+                dataValsNeg.add(new BarEntry((i * intervalSize), 0));
+                dataValsPos.add(new BarEntry((i * intervalSize), entry));
+                isOnlyNeg = false;
             }else{
-                dataVals_pos.add(new BarEntry((i * interval_size), 0));
-                dataVals_neg.add(new BarEntry((i * interval_size), entry));
-                only_pos = false;
+                dataValsPos.add(new BarEntry((i * intervalSize), 0));
+                dataValsNeg.add(new BarEntry((i * intervalSize), entry));
+                isOnlyPos = false;
             }
         }
-
-
+        
         //   ============   POSITIVE DATA SET
 
-        LineDataSet linedataset_pos = new LineDataSet(dataVals_pos,"dataset");
-        linedataset_pos.setDrawValues(false);
-        linedataset_pos.setDrawCircles(false);
-        linedataset_pos.setColor(R.color.blue);
-        linedataset_pos.setColor(mContext.getResources().getColor(R.color.blue));
-        linedataset_pos.setLineWidth(0.5f);
+        LineDataSet linedatasetPos = new LineDataSet(dataValsPos,"dataset");
+        linedatasetPos.setDrawValues(false);
+        linedatasetPos.setDrawCircles(false);
+        linedatasetPos.setColor(R.color.blue);
+        linedatasetPos.setColor(mContext.getResources().getColor(R.color.blue));
+        linedatasetPos.setLineWidth(0.5f);
         Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.fade_blue);
-        linedataset_pos.setFillDrawable(drawable);
-        linedataset_pos.setDrawFilled(true);
+        linedatasetPos.setFillDrawable(drawable);
+        linedatasetPos.setDrawFilled(true);
 
         //   ============   NEGATIVE DATA SET
 
-        LineDataSet linedataset_neg = new LineDataSet(dataVals_neg,"dataset");
-        linedataset_neg.setDrawValues(false);
-        linedataset_neg.setDrawCircles(false);
-        linedataset_neg.setColor(R.color.red);
-        linedataset_neg.setColor(mContext.getResources().getColor(R.color.red));
-        linedataset_neg.setLineWidth(0.5f);
+        LineDataSet linedatasetNeg = new LineDataSet(dataValsNeg,"dataset");
+        linedatasetNeg.setDrawValues(false);
+        linedatasetNeg.setDrawCircles(false);
+        linedatasetNeg.setColor(R.color.red);
+        linedatasetNeg.setColor(mContext.getResources().getColor(R.color.red));
+        linedatasetNeg.setLineWidth(0.5f);
 
         drawable = ContextCompat.getDrawable(mContext, R.drawable.fade_red);
-        linedataset_neg.setFillDrawable(drawable);
-        linedataset_neg.setDrawFilled(true);
+        linedatasetNeg.setFillDrawable(drawable);
+        linedatasetNeg.setDrawFilled(true);
 
         //   ============   ADD LINESETS TO DATASET
 
         ArrayList<ILineDataSet> dataSets_vol = new ArrayList<>();
-        if(!only_neg){dataSets_vol.add(linedataset_pos);}
-        if(!only_pos){dataSets_vol.add(linedataset_neg);}
+        if(!isOnlyNeg){dataSets_vol.add(linedatasetPos);}
+        if(!isOnlyPos){dataSets_vol.add(linedatasetNeg);}
         LineData data = new LineData(dataSets_vol);
 
-
         //   ============   SET IMAGE AND CURRENT PRICE
-
 
         if(name_alt.equals("1inch")){
             name_alt = "oneinch";
@@ -371,11 +377,10 @@ public class divAdapter extends ArrayAdapter<div>  {
         Drawable res = ContextCompat.getDrawable(mContext,imageResource);
         holder.icon.setImageDrawable(res);
 
-
-        for (int i = 0; i < last_prices.size(); i++) {
-           if((getItem(position).getName() + "USDT").equals(last_prices.get(i).getName())){
-               holder.price.setText(" " + last_prices.get(i).getPrice() + "$");
-           }
+        for (int i = 0; i < listLastPrices.size(); i++) {
+            if((listDivs.get(position).getName() + "USDT").equals(listLastPrices.get(i).getName())){
+                holder.price.setText(" " + listLastPrices.get(i).getPrice() + "$");
+            }
         }
 
         //     ================  SET DATA
@@ -388,12 +393,12 @@ public class divAdapter extends ArrayAdapter<div>  {
 
         //      ================  VISUAL
 
-        Legend l_v =   holder.chart.getLegend();
-        l_v.setEnabled(false);
+        Legend legend = holder.chart.getLegend();
+        legend.setEnabled(false);
 
         holder.chart.getDescription().setXOffset(10);
         holder.chart.getAxisLeft().setDrawLabels(false);
-        holder.chart.setVisibleXRangeMaximum(visible_elements);
+        holder.chart.setVisibleXRangeMaximum(visibleElements);
         holder.chart.moveViewToX(180);
         holder.chart.setScaleEnabled(false);
         holder.chart.setViewPortOffsets(10f, 10f, 100f, 10f);
@@ -403,15 +408,13 @@ public class divAdapter extends ArrayAdapter<div>  {
         holder.chart.getAxisLeft().setDrawZeroLine(true);
         holder.chart.getDescription().setEnabled(false);
 
-
-        if(price_update) {
-            if(saved_x.get(position) >=0) {
-                holder.chart.moveViewToX(saved_x.get(position));
+        if(isSaveX) {
+            if(savedX.get(position) >=0) {
+                holder.chart.moveViewToX(savedX.get(position));
             }
         }
 
         holder.chart.setDragDecelerationEnabled(false);
-
         holder.chart.setOnChartGestureListener(new OnChartGestureListener() {
 
             @Override
@@ -422,7 +425,7 @@ public class divAdapter extends ArrayAdapter<div>  {
             public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
 
                 float lowX = holder.chart.getLowestVisibleX();
-                saved_x.set(position, lowX);
+                savedX.set(position, lowX);
             }
 
             @Override
@@ -450,14 +453,13 @@ public class divAdapter extends ArrayAdapter<div>  {
             }
         });
 
-
 //        ================  SET TOP HOURS
 
         XAxis xAxis =  holder.chart.getXAxis();
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return list.get((int) value);
+                return listHours.get((int) value);
             }
         });
 
@@ -467,21 +469,8 @@ public class divAdapter extends ArrayAdapter<div>  {
         xAxis.setDrawGridLines(true);
         xAxis.setDrawGridLinesBehindData(true);
         xAxis.setGridColor(ContextCompat.getColor(mContext, R.color.gray_super_light));
-
-        return convertView;
     }
-
-
-    public int get_last_month_days(int month){
-        month+=1;
-        if (month == 4 || month == 6 || month == 9 || month == 11) {
-            return 30;
-        } else if (month == 2) {
-            return 28;
-        } else {
-            return 31;
-        }
-    }
+    
 }
 
 

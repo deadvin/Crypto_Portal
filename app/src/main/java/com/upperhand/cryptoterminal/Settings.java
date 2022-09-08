@@ -1,10 +1,7 @@
 package com.upperhand.cryptoterminal;
 
-
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +12,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.upperhand.cryptoterminal.dependencies.RetrofitSingleton;
+import org.jetbrains.annotations.NotNull;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -31,294 +27,227 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class Settings extends Fragment {
 
-
-    androidx.appcompat.widget.SwitchCompat switch_all;
-    androidx.appcompat.widget.SwitchCompat switch_breaking;
-    androidx.appcompat.widget.SwitchCompat switch_alts;
-    CheckBox checkbox1;
-    CheckBox checkbox2;
-    Spinner spinner_alts;
-    Spinner spinner_breaking;
-    EditText message;
-    EditText email;
-    Button send;
-    boolean breaking;
-    boolean alts;
-    boolean alerts;
-    boolean links;
-    int breaking_s;
-    int alts_s;
-    SharedPreferences.Editor editor;
-    SharedPreferences preferences;
-
+    androidx.appcompat.widget.SwitchCompat switchAll;
+    androidx.appcompat.widget.SwitchCompat switchBreaking;
+    androidx.appcompat.widget.SwitchCompat switchAlts;
+    CheckBox checkboxLinksIn;
+    CheckBox checkboxLinksOut;
+    Spinner spinnerAlts;
+    Spinner spinnerBreaking;
+    EditText editTextMessage;
+    EditText editTextEmail;
+    Button btnSend;
+    boolean isBreakingOn;
+    boolean isAltson;
+    boolean isalertsOn;
+    boolean islinksIn;
+    int alertBreakingSound;
+    int alertAltsSound;
     Context context;
-    TextView text;
-
+    TextView textViewResume;
     FirebaseRemoteConfig mFirebaseRemoteConfig;
-
-
-    LinearLayout ln1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
-
-        preferences = this.getActivity().getSharedPreferences("links", Context.MODE_PRIVATE);
-        links = preferences.getBoolean("links", false);
-
-        preferences = this.getActivity().getSharedPreferences("breaking_s", Context.MODE_PRIVATE);
-        breaking_s = preferences.getInt("breaking_s", 1);
-
-        preferences = this.getActivity().getSharedPreferences("alts_s", Context.MODE_PRIVATE);
-        alts_s = preferences.getInt("alts_s", 1);
-
+        islinksIn = Utils.getSharedPref("links", false, context);
+        alertBreakingSound = Utils.getSharedPref("breaking_sound", 1, context);
+        alertAltsSound = Utils.getSharedPref("breaking_sound", 1, context);
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_setting, container, false);
 
-        switch_breaking = view.findViewById(R.id.switch3);
-        switch_alts = view.findViewById(R.id.switch4);
-        switch_all = view.findViewById(R.id.switch00);
-
-        spinner_breaking = view.findViewById(R.id.spinner3);
-        spinner_alts = view.findViewById(R.id.spinner4);
-
-        checkbox1 = view.findViewById(R.id.checkBox1);
-        checkbox2 = view.findViewById(R.id.checkBox2);
-        ln1 = view.findViewById(R.id.ln1);
-
-        text = view.findViewById(R.id.textView23);
-        text.setText(R.string.resume);
-
-        email = view.findViewById(R.id.et1);
-        message = view.findViewById(R.id.et2);
-        send = view.findViewById(R.id.btn_send);
-
+        switchBreaking = view.findViewById(R.id.switch3);
+        switchAlts = view.findViewById(R.id.switch4);
+        switchAll = view.findViewById(R.id.switch00);
+        spinnerBreaking = view.findViewById(R.id.spinner3);
+        spinnerAlts = view.findViewById(R.id.spinner4);
+        checkboxLinksIn = view.findViewById(R.id.checkBox1);
+        checkboxLinksOut = view.findViewById(R.id.checkBox2);
+        textViewResume = view.findViewById(R.id.textViewResume);
+        textViewResume.setText(R.string.resume);
+        editTextEmail = view.findViewById(R.id.et1);
+        editTextMessage = view.findViewById(R.id.et2);
+        btnSend = view.findViewById(R.id.btn_send);
 
         String[] items = new String[]{"None","Soft","Default"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, items);
-
         adapter.setDropDownViewResource(R.layout.spin_item);
+        spinnerBreaking.setAdapter(adapter);
+        spinnerAlts.setAdapter(adapter);
+        spinnerBreaking.setSelection(alertBreakingSound);
+        spinnerAlts.setSelection(alertAltsSound);
 
-        spinner_breaking.setAdapter(adapter);
-        spinner_alts.setAdapter(adapter);
-
-        spinner_breaking.setSelection(breaking_s);
-        spinner_alts.setSelection(alts_s);
-
-        spinner_alts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerAlts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-
-                alts_s = position;
-                editor = context.getSharedPreferences("alts_s", MODE_PRIVATE).edit();
-                editor.putInt("alts_s", position);
-                editor.apply();
+                alertAltsSound = position;
+                Utils.setSharedPref("alertAltsSound", alertAltsSound, context);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
             }
         });
 
-        spinner_breaking.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerBreaking.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-
-                breaking_s = position;
-                editor = context.getSharedPreferences("breaking_s", MODE_PRIVATE).edit();
-                editor.putInt("breaking_s", position);
-                editor.apply();
+                alertBreakingSound = position;
+                Utils.setSharedPref("alertBreakingSound", alertBreakingSound, context);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
             }
         });
 
-        switch_alts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchAlts.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(!switch_alts.isPressed()) {
+                if(!switchAlts.isPressed()) {
                     return;
                 }
 
                 if(isChecked){
-                    alts = true;
-                    editor = context.getSharedPreferences("alert_alts", MODE_PRIVATE).edit();
-                    editor.putBoolean("alert_alts", true);
-                    editor.apply();
+                    isAltson = true;
+                    Utils.setSharedPref("alert_alts", isAltson, context);
                     manage(true,"alts");
                 }else{
-                    alts = false;
-                    editor = context.getSharedPreferences("alert_alts", MODE_PRIVATE).edit();
-                    editor.putBoolean("alert_alts", false);
-                    editor.apply();
+                    isAltson = false;
+                    Utils.setSharedPref("alert_alts", isAltson, context);
                     manage(false,"alts");
                 }
             }
         });
 
-        switch_breaking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchBreaking.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(!switch_breaking.isPressed()) {
+                if(!switchBreaking.isPressed()) {
                     return;
                 }
 
                 if(isChecked){
-                    breaking = true;
-                    editor = context.getSharedPreferences("alert_breaking", MODE_PRIVATE).edit();
-                    editor.putBoolean("alert_breaking", true);
-                    editor.apply();
+                    isBreakingOn = true;
+                    Utils.setSharedPref("alert_breaking", isBreakingOn, context);
                     manage(true,"breaking");
                 }else{
-                    breaking = false;
-                    editor = context.getSharedPreferences("alert_breaking", MODE_PRIVATE).edit();
-                    editor.putBoolean("alert_breaking", false);
-                    editor.apply();
+                    isBreakingOn = false;
+                    Utils.setSharedPref("alert_breaking", isBreakingOn, context);
                     manage(false,"breaking");
                 }
             }
         });
 
-        switch_all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(!switch_all.isPressed()) {
+                if(!switchAll.isPressed()) {
                     return;
                 }
 
                 if(isChecked){
-                    alerts = true;
-                    editor = context.getSharedPreferences("alerts", MODE_PRIVATE).edit();
-                    editor.putBoolean("alerts", true);
-                    editor.apply();
-                    switch_breaking.setEnabled(true);
-                    switch_alts.setEnabled(true);
+                    isalertsOn = true;
+                    Utils.setSharedPref("alerts", isalertsOn, context);
+                    switchBreaking.setEnabled(true);
+                    switchAlts.setEnabled(true);
                 }else{
-                    alerts = false;
-                    editor = context.getSharedPreferences("alerts", MODE_PRIVATE).edit();
-                    editor.putBoolean("alerts", false);
-                    editor.apply();
-                    switch_breaking.setEnabled(false);
-                    switch_alts.setEnabled(false);
+                    isalertsOn = false;
+                    Utils.setSharedPref("alerts", isalertsOn, context);
+                    switchBreaking.setEnabled(false);
+                    switchAlts.setEnabled(false);
                 }
             }
         });
 
-
-        if(links){
-            checkbox1.setChecked(false);
-            checkbox2.setChecked(true);
+        if(islinksIn){
+            checkboxLinksIn.setChecked(false);
+            checkboxLinksOut.setChecked(true);
         }else{
-            checkbox1.setChecked(true);
-            checkbox2.setChecked(false);
+            checkboxLinksIn.setChecked(true);
+            checkboxLinksOut.setChecked(false);
         }
 
-        checkbox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkboxLinksIn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
                 if(isChecked){
-                    checkbox2.setChecked(false);
-                    links = false;
-                    editor = context.getSharedPreferences("links", MODE_PRIVATE).edit();
-                    editor.putBoolean("links", false);
-                    editor.apply();
+                    checkboxLinksOut.setChecked(false);
+                    islinksIn = false;
+                    Utils.setSharedPref("links", islinksIn, context);
                 }else{
-                    if(!checkbox1.isPressed()){
+                    if(!checkboxLinksIn.isPressed()){
                         return;
                     }
-                    checkbox1.setChecked(true);
+                    checkboxLinksIn.setChecked(true);
                 }
-            }
-          }
-        );
+            }});
 
-        checkbox2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        checkboxLinksOut.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
                 if(isChecked){
-                    checkbox1.setChecked(false);
-                    links = true;
-                    editor = context.getSharedPreferences("links", MODE_PRIVATE).edit();
-                    editor.putBoolean("links", true);
-                    editor.apply();
+                    checkboxLinksIn.setChecked(false);
+                    islinksIn = true;
+                    Utils.setSharedPref("links", islinksIn, context);
                 }else{
-                    if(!checkbox2.isPressed()){
+                    if(!checkboxLinksOut.isPressed()){
                         return;
                     }
-                    checkbox2.setChecked(true);
+                    checkboxLinksOut.setChecked(true);
                 }
-            }
-        }
-        );
+            }});
 
-//        =============================   CONTACT FORM
+        //        =============================   CONTACT FORM
 
-        send.setOnClickListener(new View.OnClickListener() {
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (message.getText().toString().equals("") || message.getText().toString().equals(" ")){
+                if (editTextMessage.getText().toString().equals("") || editTextMessage.getText().toString().equals(" ")){
 
-                    Toast.makeText(context, "Please fill the message form.",
-                            Toast.LENGTH_LONG).show();
+                    Utils.makeToast("Please fill the editTextMessage form.", context);
+
                 }else {
-
-                    preferences = context.getSharedPreferences("id", Context.MODE_PRIVATE);
-                    int id = preferences.getInt("id", 0);
-                    String body = message.getText().toString();
-                    String mail = email.getText().toString();
 
                     RequestBody requestBody = new MultipartBody.Builder()
                             .setType(MultipartBody.FORM)
-                            .addFormDataPart("id", String.valueOf(id))
-                            .addFormDataPart("mess", body)
-                            .addFormDataPart("mail", mail)
+                            .addFormDataPart("id", String.valueOf(Utils.getSharedPref("id", 0 , context)))
+                            .addFormDataPart("mess", editTextMessage.getText().toString())
+                            .addFormDataPart("mail", editTextEmail.getText().toString())
                             .build();
 
                     Call<RequestBody> call = RetrofitSingleton.get().postData().form(requestBody);
 
-
                     call.enqueue(new Callback<RequestBody>() {
                         @Override
-                        public void onResponse(Call<RequestBody> call, Response<RequestBody> response) {
+                        public void onResponse(@NotNull Call<RequestBody> call, @NotNull Response<RequestBody> response) {
 
                             if (!response.isSuccessful()) {
-                                Toast.makeText(context, "Error Code" + response.code(),
-                                        Toast.LENGTH_LONG).show();
+                                Utils.makeToast("Error Code" + response.code(), context);
                             } else {
-                                Toast.makeText(context, "Thank you for your message!",
-                                        Toast.LENGTH_LONG).show();
-                                message.setText("");
-                                email.setText("");
-                                email.clearFocus();
-                                message.clearFocus();
+                                Utils.makeToast("Thank you for your message!", context);
+                                editTextMessage.setText("");
+                                editTextEmail.setText("");
+                                editTextEmail.clearFocus();
+                                editTextMessage.clearFocus();
                             }
                         }
-
                         @Override
-                        public void onFailure(Call<RequestBody> call, Throwable t) {
-                            Toast.makeText(context, "There was problem sending your message.",
-                                    Toast.LENGTH_LONG).show();
+                        public void onFailure(@NotNull Call<RequestBody> call, Throwable t) {
+                            Utils.makeToast("There was problem sending your editTextMessage.", context);
                         }
                     });
                 }
-
-
-
             }
         });
 
-        message.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editTextMessage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
@@ -327,7 +256,7 @@ public class Settings extends Fragment {
             }
         });
 
-        email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
@@ -342,27 +271,20 @@ public class Settings extends Fragment {
     @Override
     public void onResume() {
 
-        Log.e("see","settings update");
+        isBreakingOn = Utils.getSharedPref("alert_breaking", false, context);
+        isAltson = Utils.getSharedPref("alert_alts", false, context);
+        isalertsOn = Utils.getSharedPref("alerts", false, context);
 
-        preferences = this.getActivity().getSharedPreferences("alert_breaking", Context.MODE_PRIVATE);
-        breaking = preferences.getBoolean("alert_breaking", false);
+        switchBreaking.setChecked(isBreakingOn);
+        switchAlts.setChecked(isAltson);
+        switchAll.setChecked(isalertsOn);
 
-        preferences = this.getActivity().getSharedPreferences("alert_alts", Context.MODE_PRIVATE);
-        alts = preferences.getBoolean("alert_alts", false);
-
-        preferences = this.getActivity().getSharedPreferences("alerts", Context.MODE_PRIVATE);
-        alerts = preferences.getBoolean("alerts", false);
-
-        switch_breaking.setChecked(breaking);
-        switch_alts.setChecked(alts);
-        switch_all.setChecked(alerts);
-
-        if(alerts){
-            switch_breaking.setEnabled(true);
-            switch_alts.setEnabled(true);
+        if(isalertsOn){
+            switchBreaking.setEnabled(true);
+            switchAlts.setEnabled(true);
         }else{
-            switch_breaking.setEnabled(false);
-            switch_alts.setEnabled(false);
+            switchBreaking.setEnabled(false);
+            switchAlts.setEnabled(false);
         }
 
         super.onResume();
@@ -371,23 +293,16 @@ public class Settings extends Fragment {
     public void manage(boolean sub, String tag) {
 
         if(sub) {
-
-            Log.e("see"," sub sub sub");
-
             FirebaseMessaging.getInstance().subscribeToTopic(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Toast.makeText(getActivity(), "Alert On",
-                            Toast.LENGTH_SHORT).show();
+                    Utils.makeToast("Alert On", context);
                 }});
         }else{
             FirebaseMessaging.getInstance().unsubscribeFromTopic(tag).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-
-                    Toast.makeText(getActivity(), "Alert Off",
-                            Toast.LENGTH_SHORT).show();
-
+                    Utils.makeToast("Alert Off", context);
                 }});
         }
     }

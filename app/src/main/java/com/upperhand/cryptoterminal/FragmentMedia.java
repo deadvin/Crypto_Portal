@@ -1,21 +1,15 @@
 package com.upperhand.cryptoterminal;
 
-
-
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import static android.content.Context.MODE_PRIVATE;
 
 
 public class FragmentMedia extends Fragment {
@@ -23,16 +17,12 @@ public class FragmentMedia extends Fragment {
     FragmentVideo FragmentVideo;
     FragmentNews FragmentNews;
     FragmentEvents FragmentEvents;
-    Button btn1;
-    Button btn2;
-    Button btn3;
+    Button btnYoutube;
+    Button btnEvents;
+    Button btnNews;
     FragmentTransaction transaction;
     FragmentManager fragmentManager;
-    SharedPreferences.Editor editor;
-    SharedPreferences preferences;
     Context context;
-    int selected;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,9 +39,9 @@ public class FragmentMedia extends Fragment {
         FragmentEvents = new FragmentEvents();
         FragmentNews = new FragmentNews();
 
-        btn1 = view.findViewById(R.id.button1);
-        btn2 = view.findViewById(R.id.button2);
-        btn3 = view.findViewById(R.id.button3);
+        btnYoutube = view.findViewById(R.id.button1);
+        btnEvents = view.findViewById(R.id.button2);
+        btnNews = view.findViewById(R.id.button3);
 
         fragmentManager = getActivity().getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
@@ -66,95 +56,60 @@ public class FragmentMedia extends Fragment {
         transaction.commit();
 
 
-        btn1.setOnClickListener( new View.OnClickListener() {  //===============YOUTUBE
+        btnYoutube.setOnClickListener( new View.OnClickListener() { 
 
             @Override
             public void onClick(View v) {
 
-                btn1.setTextColor(Color.parseColor("#0A75FF"));
-                btn2.setTextColor(Color.parseColor("#FFFFFF"));
-                btn3.setTextColor(Color.parseColor("#FFFFFF"));
+                btnYoutube.setTextColor(Color.parseColor("#0A75FF"));
+                btnEvents.setTextColor(Color.parseColor("#FFFFFF"));
+                btnNews.setTextColor(Color.parseColor("#FFFFFF"));
 
                 transaction = fragmentManager.beginTransaction();
                 transaction.show(FragmentVideo);
                 transaction.hide(FragmentEvents);
                 transaction.hide(FragmentNews);
                 transaction.commit();
-                selected = 1;
                 FragmentVideo.onResume();
             }
         });
 
-        btn2.setOnClickListener( new View.OnClickListener() {  //===============EVENTS
+        btnEvents.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                btn1.setTextColor(Color.parseColor("#FFFFFF"));
-                btn2.setTextColor(Color.parseColor("#0A75FF"));
-                btn3.setTextColor(Color.parseColor("#FFFFFF"));
+                btnYoutube.setTextColor(Color.parseColor("#FFFFFF"));
+                btnEvents.setTextColor(Color.parseColor("#0A75FF"));
+                btnNews.setTextColor(Color.parseColor("#FFFFFF"));
 
                 transaction = fragmentManager.beginTransaction();
                 transaction.hide(FragmentVideo);
                 transaction.show(FragmentEvents);
                 transaction.hide(FragmentNews);
                 transaction.commit();
-                selected = 2;
             }
         });
 
-        btn3.setOnClickListener( new View.OnClickListener() {  //===============NEWS
+        btnNews.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                btn1.setTextColor(Color.parseColor("#FFFFFF"));
-                btn2.setTextColor(Color.parseColor("#FFFFFF"));
-                btn3.setTextColor(Color.parseColor("#0A75FF"));
+                btnYoutube.setTextColor(Color.parseColor("#FFFFFF"));
+                btnEvents.setTextColor(Color.parseColor("#FFFFFF"));
+                btnNews.setTextColor(Color.parseColor("#0A75FF"));
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.hide(FragmentVideo);
                 transaction.hide(FragmentEvents);
                 transaction.show(FragmentNews);
                 transaction.commit();
-                selected = 3;
-
             }
         });
 
-        btn3.performClick();
+        btnNews.performClick();
 
         return view;
     }
-
-
-
-    @Override
-    public void onResume() {
-
-        preferences = this.getActivity().getSharedPreferences("topic", Context.MODE_PRIVATE);
-        String topic = preferences.getString("topic", "none");
-
-        if(topic.equals("vid")){
-            btn1.performClick();
-            editor = context.getSharedPreferences("topic", MODE_PRIVATE).edit();
-            editor.putString("topic", "none");
-            editor.apply();
-        }else if(topic.equals("events")){
-            btn2.performClick();
-            editor = context.getSharedPreferences("topic", MODE_PRIVATE).edit();
-            editor.putString("topic", "none");
-            editor.apply();
-        }
-
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-
-
 }

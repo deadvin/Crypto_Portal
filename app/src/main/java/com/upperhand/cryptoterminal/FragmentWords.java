@@ -19,21 +19,16 @@ public class FragmentWords extends Fragment {
 
     FragmentAltcoinWords FragmentAltcoinWords;
     FragmentBitcoinWords FragmentBitcoinWords;
-    Button btn1;
-    Button btn2;
+    Button btnBitcoin;
+    Button btnAltcoins;
     FragmentTransaction transaction;
     FragmentManager fragmentManager;
-    SharedPreferences.Editor editor;
-    SharedPreferences preferences;
     Context context;
-    int selected;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         context = this.getActivity();
-
     }
 
     @Override
@@ -43,8 +38,8 @@ public class FragmentWords extends Fragment {
         FragmentAltcoinWords = new FragmentAltcoinWords();
         FragmentBitcoinWords = new FragmentBitcoinWords();
 
-        btn1 = view.findViewById(R.id.button1);
-        btn2 = view.findViewById(R.id.button2);
+        btnBitcoin = view.findViewById(R.id.button1);
+        btnAltcoins = view.findViewById(R.id.button2);
 
         fragmentManager = getActivity().getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
@@ -52,20 +47,19 @@ public class FragmentWords extends Fragment {
         transaction.add(R.id.fragment_altcoins, FragmentAltcoinWords);
         transaction.add(R.id.fragment_altcoins, FragmentBitcoinWords);
 
-        btn1.setTextColor(Color.parseColor("#FFFFFF"));
-        btn2.setTextColor(Color.parseColor("#0A75FF"));
+        btnBitcoin.setTextColor(Color.parseColor("#FFFFFF"));
+        btnAltcoins.setTextColor(Color.parseColor("#0A75FF"));
         transaction.show(FragmentAltcoinWords);
         transaction.hide(FragmentBitcoinWords);
         transaction.commit();
 
 
-        btn1.setOnClickListener( new View.OnClickListener() {  //=============   BITCOIN
+        btnBitcoin.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                btn1.setTextColor(Color.parseColor("#0A75FF"));
-                btn2.setTextColor(Color.parseColor("#FFFFFF"));
+                btnBitcoin.setTextColor(Color.parseColor("#0A75FF"));
+                btnAltcoins.setTextColor(Color.parseColor("#FFFFFF"));
                 transaction = fragmentManager.beginTransaction();
                 transaction.show(FragmentBitcoinWords);
                 transaction.hide(FragmentAltcoinWords);
@@ -73,13 +67,12 @@ public class FragmentWords extends Fragment {
             }
         });
 
-        btn2.setOnClickListener( new View.OnClickListener() {  //=============  ALTCOINS
+        btnAltcoins.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                btn1.setTextColor(Color.parseColor("#FFFFFF"));
-                btn2.setTextColor(Color.parseColor("#0A75FF"));
+                btnBitcoin.setTextColor(Color.parseColor("#FFFFFF"));
+                btnAltcoins.setTextColor(Color.parseColor("#0A75FF"));
                 transaction = fragmentManager.beginTransaction();
                 transaction.show(FragmentAltcoinWords);
                 transaction.hide(FragmentBitcoinWords);
@@ -90,47 +83,5 @@ public class FragmentWords extends Fragment {
         return view;
     }
 
-
-
-    @Override
-    public void onResume() {
-
-//        preferences = this.getActivity().getSharedPreferences("topic", Context.MODE_PRIVATE);
-//        String topic = preferences.getString("topic", "none");
-//
-//        if(topic.equals("vid")){
-//            btn1.performClick();
-//            editor = context.getSharedPreferences("topic", MODE_PRIVATE).edit();
-//            editor.putString("topic", "none");
-//            editor.apply();
-//        }else if(topic.equals("events")){
-//            btn2.performClick();
-//            editor = context.getSharedPreferences("topic", MODE_PRIVATE).edit();
-//            editor.putString("topic", "none");
-//            editor.apply();
-//        }
-//
-//        if(selected == 3){
-//            news.run();
-//        }
-
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-//        news.stop();
-        super.onPause();
-    }
-
-//
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser) {
-//        } else {
-//            news.stop();
-//        }
-//    }
 
 }

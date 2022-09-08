@@ -446,7 +446,7 @@ Contact Form :
                 />
 
    <TextView
-                android:id="@+id/textView23"
+                android:id="@+id/textViewResume"
                 android:text="ala bala 100 batala"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -3,14 +3,14 @@ package com.upperhand.cryptoterminal.objects;
 
 public class tweet {
 
-    private String text;
-    private String link;
-    private String source;
-    private String time;
-    private int fow;
-    private float eng_score;
-    private String likes;
-    private String retweet;
+    private final String text;
+    private final String link;
+    private final String source;
+    private final String time;
+    private final int fow;
+    private final float engScore;
+    private final String likes;
+    private final String retweet;
 
     public tweet(String text, String source, int fow, String time, String link, String likes, String retweet,float eng_score) {
         this.text = text;
@@ -20,12 +20,12 @@ public class tweet {
         this.fow = fow;
         this.likes = likes;
         this.retweet = retweet;
-        this.eng_score = eng_score;
+        this.engScore = eng_score;
     }
 
     public String getText() {
 
-        if(text != null && !text .isEmpty()) {
+        if(text != null && !text.isEmpty()) {
             return text;
         }else {
             return " ";
@@ -34,7 +34,6 @@ public class tweet {
 
     public String getLink() {
         if(link != null && !link .isEmpty()) {
-
             return link;
         }else {
             return " ";
@@ -53,15 +52,15 @@ public class tweet {
         return fow;
     }
 
-    public float get_eng_score() {
-        return eng_score;
+    public float getEngScore() {
+        return engScore;
     }
 
-    public String get_likes() {
+    public String getLikes() {
         return likes;
     }
 
-    public String get_retweets() {
+    public String getRetweets() {
         return retweet;
     }
 

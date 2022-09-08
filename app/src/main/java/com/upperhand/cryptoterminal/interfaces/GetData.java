@@ -2,7 +2,7 @@ package com.upperhand.cryptoterminal.interfaces;
 
 import com.upperhand.cryptoterminal.objects.event;
 import com.upperhand.cryptoterminal.objects.div;
-import com.upperhand.cryptoterminal.objects.last_price;
+import com.upperhand.cryptoterminal.objects.lastPrice;
 import com.upperhand.cryptoterminal.objects.tweet;
 import com.upperhand.cryptoterminal.objects.word;
 import com.upperhand.cryptoterminal.objects.video;
@@ -69,7 +69,7 @@ public interface GetData {
     Call<List<div>> get_div_1h();
 
     @GET
-    Call<List<last_price>> get_last_price(@Url String url);
+    Call<List<lastPrice>> get_last_price(@Url String url);
 
 
 

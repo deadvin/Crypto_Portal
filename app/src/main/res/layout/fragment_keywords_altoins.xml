@@ -33,13 +33,14 @@
     </RelativeLayout>
 
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listView"
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/adView"
         android:padding="0dp"
+        android:scrollbars="vertical"
         android:divider="@color/gray_light"
         android:dividerHeight="0.8dp"
         />

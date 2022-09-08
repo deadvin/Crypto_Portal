@@ -26,8 +26,6 @@ import java.util.TimeZone;
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder> {
 
     Context mContext;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-    Date date;
     ArrayList<tweet> tweets;
 
     public TweetsAdapter(Context context, ArrayList<tweet> tweets) {
@@ -58,10 +56,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         holder.text.setText(tweets.get(position).getText());
 
-        if (tweets.get(position).get_eng_score() == 0) {
-            holder.likes.setText(" \u2764 " + tweets.get(position).get_likes() + " \uD83D\uDD01 " + tweets.get(position).get_retweets());
+        if (tweets.get(position).getEngScore() == 0) {
+            holder.likes.setText(" \u2764 " + tweets.get(position).getLikes() + " \uD83D\uDD01 " + tweets.get(position).getRetweets());
         } else {
-            holder.likes.setText(" \uD83D\uDCC8 " + tweets.get(position).get_eng_score() + " \u2764 " + tweets.get(position).get_likes() + " \uD83D\uDD01 " + tweets.get(position).get_retweets());
+            holder.likes.setText(" \uD83D\uDCC8 " + tweets.get(position).getEngScore() + " \u2764 " + tweets.get(position).getLikes() + " \uD83D\uDD01 " + tweets.get(position).getRetweets());
         }
         holder.source.setText(tweets.get(position).getSource() + "  " + " \u2022" + "  " + followers + "  " + "\u2022" + "  " + Utils.getTimeDifference(tweets.get(position).gettime()));
         holder.text.setText(tweets.get(position).getText());
