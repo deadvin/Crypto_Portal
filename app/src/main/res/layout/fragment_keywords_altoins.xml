@@ -67,41 +67,12 @@
         android:padding="0dp"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
-        android:weightSum="5">
-
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:background="@color/dark"
-            android:fontFamily="@font/cc"
-            android:text="FLAT"
-            android:padding="0dp"
-            android:textColor="@color/white"
-            app:backgroundTint="@color/dark"
-            app:fontFamily="@font/cc" />
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="0dp"
-            android:padding="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:background="@color/dark"
-            android:fontFamily="@font/cc"
-            android:text="SCALE"
-            android:textColor="@color/white"
-            app:backgroundTint="@color/dark"
-            app:fontFamily="@font/cc"
-
-            />
+ >
 
 
         <ImageButton
             android:id="@+id/button12"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@null"

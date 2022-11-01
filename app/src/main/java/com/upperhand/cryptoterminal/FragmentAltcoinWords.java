@@ -1,12 +1,10 @@
 package com.upperhand.cryptoterminal;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,13 +29,9 @@ import retrofit2.Response;
 
 public class FragmentAltcoinWords extends Fragment {
 
-
-    Button btnFlat;
-    Button btnScaled;
     ArrayList<word> listWords;
     RecyclerView recyclerView;
     WordsAdapter adapter;
-    boolean isScaledVolume;
     Call<List<word>> call;
     RelativeLayout loadingLayout;
     Context context;
@@ -56,36 +50,12 @@ public class FragmentAltcoinWords extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_keywords_altoins, container, false);
         loadingLayout = view.findViewById(R.id.loadingPanel_altcoins);
         recyclerView =  view.findViewById(R.id.listView);
-        btnFlat = view.findViewById(R.id.button4);
-        btnScaled = view.findViewById(R.id.button5);
         btnInfo = view.findViewById(R.id.button12);
 
-        adapter = new WordsAdapter(context, listWords, isScaledVolume);
+        adapter = new WordsAdapter(context, listWords);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
-
-        btnFlat.setOnClickListener( new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                btnFlat.setTextColor(Color.parseColor("#0A75FF"));
-                btnScaled.setTextColor(Color.parseColor("#FFFFFF"));
-                isScaledVolume = false;
-                loadList();
-            }
-        });
-
-        btnScaled.setOnClickListener( new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                btnScaled.setTextColor(Color.parseColor("#0A75FF"));
-                btnFlat.setTextColor(Color.parseColor("#FFFFFF"));
-                isScaledVolume = true;
-                loadList();
-            }
-        });
 
         btnInfo.setOnClickListener( new View.OnClickListener() {    //     FILTERED
 
@@ -97,7 +67,6 @@ public class FragmentAltcoinWords extends Fragment {
                 Utils.getAlertDialogue().show();
             }
         });
-
 
 
         return view;
@@ -124,10 +93,9 @@ public class FragmentAltcoinWords extends Fragment {
                 listWords.addAll(words);
                 listWords.sort(new Comparator<word>() {
                     public int compare(word o1, word o2) {
-                        return Float.compare(o1.getLastAv(isScaledVolume), o2.getLastAv(isScaledVolume));
+                        return Float.compare(o1.getLastAv(), o2.getLastAv());
                     }});
                 Collections.reverse(listWords);
-                adapter.isVolume = isScaledVolume;
                 adapter.notifyDataSetChanged();
 
                 saveIntoSp();
@@ -146,10 +114,9 @@ public class FragmentAltcoinWords extends Fragment {
         if(listWords.isEmpty() || isRefresh()){
             loadingLayout.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.INVISIBLE);
-            call = RetrofitSingleton.get().getData().get_trend();
+            call = RetrofitSingleton.get().getData().get_words_trend();
             call();
         }else {
-            adapter.isVolume = isScaledVolume;
             adapter.notifyDataSetChanged();
         }
     }
@@ -159,11 +126,7 @@ public class FragmentAltcoinWords extends Fragment {
         String json;
         Type type;
 
-        if(isScaledVolume) {
-            json = Utils.getSharedPref("trends_vol", "", context);
-        }else{
-            json = Utils.getSharedPref("trends", "", context);
-        }
+        json = Utils.getSharedPref("trends", "", context);
         type = new TypeToken<List<word>>() {}.getType();
         ArrayList<word> list = gson.fromJson(json, type);
 
@@ -179,11 +142,7 @@ public class FragmentAltcoinWords extends Fragment {
     public void saveIntoSp(){
         Gson gson = new Gson();
         String json = gson.toJson(listWords);
-        if(isScaledVolume) {
-            Utils.setSharedPref("trends_vol", json, context);
-        }else {
-            Utils.setSharedPref("trends", json, context);
-        }
+        Utils.setSharedPref("trends", json, context);
     }
 
     public boolean isRefresh(){
@@ -202,7 +161,7 @@ public class FragmentAltcoinWords extends Fragment {
 
     @Override
     public void onResume() {
-        btnFlat.performClick();
+        loadList();
         super.onResume();
     }
 

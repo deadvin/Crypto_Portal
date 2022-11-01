@@ -8,7 +8,7 @@ public class tweet {
     private final String source;
     private final String time;
     private final int fow;
-    private final float engScore;
+    private final float eng_score;
     private final String likes;
     private final String retweet;
 
@@ -20,7 +20,7 @@ public class tweet {
         this.fow = fow;
         this.likes = likes;
         this.retweet = retweet;
-        this.engScore = eng_score;
+        this.eng_score = eng_score;
     }
 
     public String getText() {
@@ -53,7 +53,7 @@ public class tweet {
     }
 
     public float getEngScore() {
-        return engScore;
+        return eng_score;
     }
 
     public String getLikes() {

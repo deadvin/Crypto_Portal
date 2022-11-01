@@ -63,29 +63,7 @@
         android:textColor="@color/dark"
         />
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart2"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        >
-    </com.github.mikephil.charting.charts.LineChart>
-
-    <TextView
-        android:id="@+id/textView2"
-        android:text="Scaled by number of followers of author."
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-15dp"
-        android:layout_marginBottom="20dp"
-        android:padding="10dp"
-        android:layout_centerVertical="true"
-        android:fontFamily="@font/cc"
-        android:gravity="center"
-        android:textSize="12dp"
-        app:fontFamily="@font/cc"
-        android:textColor="@color/dark"
-        />
-              <TextView
+            <TextView
                 android:id="@+id/textView01"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

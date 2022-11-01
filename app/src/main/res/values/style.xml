@@ -3,7 +3,6 @@
 
     <style name="splashScreenTheme" parent="@style/Theme.CryptoTerminal.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
-
         <item name="android:navigationBarColor">@color/v_dark</item>
     </style>
 

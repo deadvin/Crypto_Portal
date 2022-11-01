@@ -43,11 +43,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         topic = (String) data.get("topic");
         String link = "" + data.get("link");
 
-        Log.e("see",title);
-        Log.e("see",text);
-        Log.e("see",topic);
-        Log.e("see",link);
-
         url();
 
         sendNotification(title,text,link);
@@ -55,20 +50,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(String title,String text, String link) {
 
-
         boolean alertsOn = Utils.getSharedPref("alerts", false, this);
 
         if(alertsOn) {
 
-            //==========================  EXTRA INPUT
-
             boolean links = Utils.getSharedPref("links", false, this);
             Intent intent;
 
-            if(!links) { //   INSIDE APP
+            if(!links) {    //   INSIDE APP
                 intent = new Intent(this, MainActivity.class);
                 Utils.setSharedPref("topic", topic, this);
-            }else {   //   OUTSIDE APP
+            }else {        //   OUTSIDE APP
                 if( topic.equals("breaking")){
                     intent = new Intent(this, MainActivity.class);
                     Utils.setSharedPref("topic", topic, this);
@@ -148,7 +140,5 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     break;
             }
         }
-
     }
-
 }

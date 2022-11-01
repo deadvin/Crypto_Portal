@@ -125,7 +125,7 @@ public final class Utils {
     public static String getTimeDifference(String time){
 
         try {
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT+2"));
             date = sdf.parse(time);
         } catch (ParseException e) {
             e.printStackTrace();

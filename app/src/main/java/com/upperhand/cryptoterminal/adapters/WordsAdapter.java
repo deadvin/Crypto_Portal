@@ -2,30 +2,24 @@ package com.upperhand.cryptoterminal.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.upperhand.cryptoterminal.R;
-import com.upperhand.cryptoterminal.Utils;
-import com.upperhand.cryptoterminal.objects.video;
 import com.upperhand.cryptoterminal.objects.word;
 
 import org.jetbrains.annotations.NotNull;
@@ -38,15 +32,13 @@ import java.util.Collections;
 public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.ViewHolder> {
 
     Context mContext;
-    public boolean isVolume;
     int numberElements;
     int count;
     ArrayList<String> listHours;
     ArrayList<word> wordsList;
 
-    public WordsAdapter(Context context, ArrayList<word> wordsList, boolean volume) {
+    public WordsAdapter(Context context, ArrayList<word> wordsList) {
         this.mContext = context;
-        this.isVolume = volume;
         this.wordsList = wordsList;
     }
 
@@ -56,44 +48,24 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.ViewHolder> 
     }
     
     private void createHoursArray(){
-        
+
         Calendar calendar = Calendar.getInstance();
         int hours = calendar.get(Calendar.HOUR_OF_DAY);
-        int mins = calendar.get(Calendar.MINUTE);
-        boolean half;
-        numberElements = 101;
-        count = 50;
+        numberElements = 48;
+        count = 24;
 
         listHours = new ArrayList<String>();
-        if (mins > 30){
-            listHours.add(hours + ":30");
-            half = true;
-            if(mins < 45) {
-                numberElements = 103;
-                count = 51;
-            }else {
-                numberElements = 102;
-                count = 50;
-            }
-        }else {
-            listHours.add(hours + ":00");
-            half = false;
-            hours -=1;
-            if(mins >= 15) {
-                numberElements = 102;
-            }
-        }
 
+        hours -= 1;
+        if (hours < 0) {
+            hours = 23;
+        }
         for (int i = 0; i < count; i++) {
-            if(half){
-                half = false;
-                listHours.add(hours + ":00");
-                hours -=1;
-            }else{
-                half = true;
-                listHours.add(hours + ":30");
-            }
-            if(hours < 0){
+            listHours.add(hours + ":00");
+            hours -= 2;
+            if (hours == -2) {
+                hours = 22;
+            } else if (hours == -1) {
                 hours = 23;
             }
         }
@@ -117,15 +89,11 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.ViewHolder> 
         int average;
         float scale;
         ArrayList<Integer> numbers;
-        if(!isVolume) {
-            numbers = wordsList.get(position).getNumbers();
-            average =  wordsList.get(position).getAv();
-            scale = 0.8f;
-        }else {
-            numbers = wordsList.get(position).getNumbersVol();
-            average = wordsList.get(position).getAvVol();
-            scale = 0.2f;
-        }
+
+        numbers = wordsList.get(position).getNumbers();
+        average =  wordsList.get(position).getAv();
+        scale = 0.8f;
+
         ArrayList<String> words = wordsList.get(position).getWords();
         numbers = new ArrayList<>(numbers.subList(numbers.size()-Math.min(numbers.size(),numberElements), numbers.size()));
 
@@ -141,15 +109,16 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.ViewHolder> 
             data_list.add(new BarEntry((float)(i*0.5),entry));
         }
 
-        BarDataSet bardataset = new BarDataSet(data_list, "");
-        BarData data = new BarData(bardataset);
-        bardataset.setDrawValues(false);
-        bardataset.setColors(ColorTemplate.PASTEL_COLORS);
-        data.setBarWidth(0.5f);
+        LineDataSet linedatasetFlat = new LineDataSet(data_list,"");
+        linedatasetFlat.setDrawCircles(false);
+        ArrayList<ILineDataSet> dataSets_flat = new ArrayList<>();
+        dataSets_flat.add(linedatasetFlat);
+        linedatasetFlat.setDrawValues(false);
+        linedatasetFlat.setColor(mContext.getResources().getColor(R.color.blue));
+        linedatasetFlat.setLineWidth(1);
+        linedatasetFlat.setDrawCircles(true);
 
-        int startColor = ContextCompat.getColor(mContext, R.color.black70);
-        int endColor = ContextCompat.getColor(mContext, R.color.blue);
-        bardataset.setGradientColor(startColor, endColor);
+        LineData data_flat = new LineData(dataSets_flat);
 
         // ============ SETTING KEYWORDS TEXTVIEWS
 
@@ -172,23 +141,38 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.ViewHolder> 
         }catch (Exception e){
         }
 
-        //=================   VISUAL
+//        =========== SET FILL COLOUR
 
+        Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.fade_blue);
+        linedatasetFlat.setFillDrawable(drawable);
+        linedatasetFlat.setDrawFilled(true);
+
+//        ================  SET DATA
+
+        holder.chart.setData(data_flat);
+        holder.chart.invalidate();
         holder.chart.animateY(500);
-        holder.chart.setData(data);
+        holder.chart.setData(data_flat);
 
-        Legend l =  holder.chart.getLegend();
-        l.setEnabled(false);
+//        ================  VISUAL
+
+        Legend legendFlat = holder.chart.getLegend();
+        legendFlat.setEnabled(false);
         holder.chart.getAxisLeft().setDrawLabels(false);
-        holder.chart.getAxisRight().setDrawLabels(false);
         holder.chart.getDescription().setEnabled(false);
-        holder.chart.setVisibleXRangeMaximum(15);
-        holder.chart.getAxisRight().setDrawGridLines(false);
-        holder.chart.getAxisLeft().setDrawGridLines(false);
-        holder.chart.setViewPortOffsets(0f, 0f, 0f, -20f);
+        holder.chart.setVisibleXRangeMaximum(10);
         holder.chart.moveViewToX(180);
-        holder.chart.setExtraRightOffset(30);
         holder.chart.setScaleEnabled(false);
+
+
+        holder.chart.getAxisRight().setEnabled(false);
+        holder.chart.setViewPortOffsets(10f, 10f, 0f, 10f);
+        holder.chart.getAxisRight().setDrawGridLines(false);
+        holder.chart.getAxisLeft().setEnabled(true);
+        holder.chart.getAxisLeft().setLabelCount(0, true);
+        holder.chart.getAxisLeft().setDrawZeroLine(true);
+        holder.chart.getDescription().setEnabled(false);
+
 
         //=================   SET HOURS ON TOP
 
@@ -203,8 +187,6 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.ViewHolder> 
         }catch (Exception e){
         }
 
-
-
         xAxis.setAxisMinimum(0.5f);
         xAxis.setYOffset(-15);
         xAxis.setDrawGridLines(true);
@@ -217,7 +199,7 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.ViewHolder> 
         TextView name2;
         TextView name3;
         TextView name4;
-        BarChart chart;
+        LineChart chart;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -228,30 +210,4 @@ public class WordsAdapter extends RecyclerView.Adapter<WordsAdapter.ViewHolder> 
             name4 = itemView.findViewById(R.id.name4);
         }
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

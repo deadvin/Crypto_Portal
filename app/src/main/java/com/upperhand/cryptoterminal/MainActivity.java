@@ -74,50 +74,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager.beginFakeDrag();
 
 
-        //============= SET APP ID
-
-
-        int id = Utils.getSharedPref("id", 0, context);
-        if(id == 0){
-            Utils.setSharedPref("id", new Random().nextInt(1000000000) ,context);
-        }
-
-
-        //=============   REMOTE CONFIG
-
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(3600)
-                .build();
-        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
-
-        HashMap<String,Object> defaults = new HashMap<>();
-        defaults.put("url",getString(R.string.url));
-
-        mFirebaseRemoteConfig.setDefaultsAsync(defaults);
-
-//        mFirebaseRemoteConfig.fetchAndActivate()
-//                .addOnCompleteListener(this, new OnCompleteListener<Boolean>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Boolean> task) {
-//                        if (task.isSuccessful()) {
-//                            boolean updated = task.getResult();
-//                            Log.d(TAG, "Config params updated: " + updated);
-//
-//                        } else {
-//                        }
-//                    }
-//                });
-
-        //========     SERVICES
-
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( MainActivity.this,  new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String updatedToken = instanceIdResult.getToken();
-                Log.e("Updated Token",updatedToken);
-            }
-        });
+        setAppId();
+        firebaseRemoteConfig();
 
 
         //========     SET TABS TEXT COLOR
@@ -226,6 +184,49 @@ public class MainActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void firebaseRemoteConfig(){
+
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+
+        HashMap<String,Object> defaults = new HashMap<>();
+        defaults.put("url",getString(R.string.url));
+
+        mFirebaseRemoteConfig.setDefaultsAsync(defaults);
+//        mFirebaseRemoteConfig.fetchAndActivate()
+//                .addOnCompleteListener(this, new OnCompleteListener<Boolean>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Boolean> task) {
+//                        if (task.isSuccessful()) {
+//                            boolean updated = task.getResult();
+//                            Log.d(TAG, "Config params updated: " + updated);
+//
+//                        } else {
+//                        }
+//                    }
+//                });
+
+        //========     SERVICES
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( MainActivity.this,  new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String updatedToken = instanceIdResult.getToken();
+                Log.e("Updated Token",updatedToken);
+            }
+        });
+    }
+
+    private void setAppId(){
+        int id = Utils.getSharedPref("id", 0, context);
+        if(id == 0){
+            Utils.setSharedPref("id", new Random().nextInt(1000000000) ,context);
+        }
     }
 
     @Override

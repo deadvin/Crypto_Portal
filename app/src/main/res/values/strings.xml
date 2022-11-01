@@ -22,14 +22,14 @@
     </string>
 
     <string name="info_keywords_altcoins">
-        "\u2022" Tracking the number of mentioning certain altcoin keywords in every tweet. \n \n
-        "\u2022" Each candle represent 15 min real time data compared to 500 period moving average. \n \n
-        "\u2022" Scale option: scale with the number of author followers. \n \n
+        "\u2022" Tracking the number of mentioning altcoin keywords in every tweet. \n \n
+        "\u2022" Each point represent 1 hour real time data compared to 150 period moving average. \n \n
     </string>
 
     <string name="info_keywords_bitcoin">
         "\u2022" Tracking the number of mentioning crypto keywords in every tweet. \n \n
-        "\u2022" Scale option: scale with number of author followers. \n \n
+        "\u2022" Each point represent 1 hour real time data compared to 150 period moving average. \n \n
+        "\u2022" Fear / Greed index. \n \n
     </string>
 
     <string name="info_breaking">

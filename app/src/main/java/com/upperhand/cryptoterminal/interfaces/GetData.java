@@ -53,6 +53,12 @@ public interface GetData {
     @GET("trends")
     Call<List<word>> get_trend();
 
+    @GET("words_trend")
+    Call<List<word>> get_words_trend();
+
+    @GET("words_trend_btc")
+    Call<List<word>> get_words_trend_btc();
+
     @GET("trends_btc")
     Call<List<word>> get_trend_btc();
 

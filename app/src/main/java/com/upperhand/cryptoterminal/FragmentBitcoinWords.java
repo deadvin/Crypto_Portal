@@ -39,14 +39,12 @@ import retrofit2.Response;
 public class FragmentBitcoinWords extends Fragment {
 
     ArrayList<Integer> listTrendsFlat;
-    ArrayList<Integer> listTrendsVol;
     Call<List<word>> call;
     Context context;
     ImageButton btnInfo;
     ImageView greedFearIndex;
     Drawable drawable;
     LineChart linechartFlat;
-    LineChart linechartVol;
 
 
     @Override
@@ -55,7 +53,6 @@ public class FragmentBitcoinWords extends Fragment {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
         listTrendsFlat = new ArrayList<>();
-        listTrendsVol = new ArrayList<>();
     }
 
     @Override
@@ -64,7 +61,6 @@ public class FragmentBitcoinWords extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_keywords_btc, container, false);
         greedFearIndex = view.findViewById(R.id.imageView);
         linechartFlat = view.findViewById(R.id.chart1);
-        linechartVol = view.findViewById(R.id.chart2);
         btnInfo = view.findViewById(R.id.button12);
 
         loadGreedFearImage.start();
@@ -134,19 +130,9 @@ public class FragmentBitcoinWords extends Fragment {
         Collections.reverse(mylist);
 
         //endregion
-        
-        ArrayList<Entry> dataValsVol  = new ArrayList<Entry>();
-        ArrayList<Entry> dataValsFlat  = new ArrayList<Entry>();
-        listTrendsVol = new ArrayList<>(listTrendsVol.subList(listTrendsVol.size()-Math.min(listTrendsVol.size(),numElements), listTrendsVol.size()));
-        listTrendsFlat = new ArrayList<>(listTrendsFlat.subList(listTrendsFlat.size()-Math.min(listTrendsFlat.size(),numElements), listTrendsFlat.size()));
 
-        for (int i = 0; i < listTrendsVol.size(); i++) {
-            int entry = listTrendsVol.get(i);
-            if (entry < 0) {
-                entry = 0;
-            }
-            dataValsVol.add(new BarEntry((float)(i*0.5), entry));
-        }
+        ArrayList<Entry> dataValsFlat  = new ArrayList<Entry>();
+        listTrendsFlat = new ArrayList<>(listTrendsFlat.subList(listTrendsFlat.size()-Math.min(listTrendsFlat.size(),numElements), listTrendsFlat.size()));
 
         for (int i = 0; i < listTrendsFlat.size(); i++) {
             int entry = listTrendsFlat.get(i);
@@ -155,15 +141,6 @@ public class FragmentBitcoinWords extends Fragment {
             }
             dataValsFlat.add(new BarEntry((float)(i*0.5), entry));
         }
-
-        LineDataSet linedatasetVol = new LineDataSet(dataValsVol,"dataset");
-        linedatasetVol.setDrawCircles(false);
-        ArrayList<ILineDataSet> dataSets_vol = new ArrayList<>();
-        dataSets_vol.add(linedatasetVol);
-        linedatasetVol.setDrawValues(false);
-        linedatasetVol.setColor(context.getResources().getColor(R.color.blue));
-        linedatasetVol.setLineWidth(1);
-        LineData data_vol = new LineData(dataSets_vol);
 
         LineDataSet linedatasetFlat = new LineDataSet(dataValsFlat,"dataset");
         linedatasetFlat.setDrawCircles(false);
@@ -178,17 +155,10 @@ public class FragmentBitcoinWords extends Fragment {
 //        =========== SET FILL COLOUR
 
         Drawable drawable = ContextCompat.getDrawable(context, R.drawable.fade_blue);
-        linedatasetVol.setFillDrawable(drawable);
-        linedatasetVol.setDrawFilled(true);
         linedatasetFlat.setFillDrawable(drawable);
         linedatasetFlat.setDrawFilled(true);
 
 //        ================  SET DATA
-
-        linechartVol.setData(data_vol);
-        linechartVol.invalidate();
-        linechartVol.animateY(1500);
-        linechartVol.setData(data_vol);
 
         linechartFlat.setData(data_flat);
         linechartFlat.invalidate();
@@ -196,14 +166,6 @@ public class FragmentBitcoinWords extends Fragment {
         linechartFlat.setData(data_flat);
         
 //        ================  VISUAL
-
-        Legend legendVol =  linechartVol.getLegend();
-        legendVol.setEnabled(false);
-        linechartVol.getAxisLeft().setDrawLabels(false);
-        linechartVol.getDescription().setEnabled(false);
-        linechartVol.setVisibleXRangeMaximum(15);
-        linechartVol.moveViewToX(180);
-        linechartVol.setScaleEnabled(false);
 
         Legend legendFlat =  linechartFlat.getLegend();
         legendFlat.setEnabled(false);
@@ -215,7 +177,7 @@ public class FragmentBitcoinWords extends Fragment {
         
 //        ================  SET TOP HOURS
 
-        XAxis xAxis = linechartVol.getXAxis();
+        XAxis xAxis = linechartFlat.getXAxis();
         try {
              xAxis.setValueFormatter(new ValueFormatter() {
             @Override
@@ -278,9 +240,7 @@ public class FragmentBitcoinWords extends Fragment {
                 }
 
                 listTrendsFlat.clear();
-                listTrendsVol.clear();
                 listTrendsFlat.addAll(words.get(0).getNumbers());
-                listTrendsVol.addAll(words.get(0).getNumbersVol());
 
                 saveIntoSp(words);
                 inflateLinecharts();
@@ -297,14 +257,13 @@ public class FragmentBitcoinWords extends Fragment {
         String json;
         Type type;
 
-        if(!listTrendsFlat.isEmpty() && !listTrendsVol.isEmpty()){ return;}
+        if(!listTrendsFlat.isEmpty()){ return;}
         json = Utils.getSharedPref("trends_btc", "", context);
         type = new TypeToken<List<word>>(){}.getType();
         List<word> list_words = gson.fromJson(json, type);
 
         if(list_words != null && !list_words.isEmpty()) {
             listTrendsFlat.addAll(list_words.get(0).getNumbers());
-            listTrendsVol.addAll(list_words.get(0).getNumbersVol());
             inflateLinecharts();
         }
     }
@@ -332,7 +291,6 @@ public class FragmentBitcoinWords extends Fragment {
 
     @Override
     public void onPause() {
-
         super.onPause();
     }
 

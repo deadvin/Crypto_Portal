@@ -211,7 +211,7 @@ public class Settings extends Fragment {
 
                 if (editTextMessage.getText().toString().equals("") || editTextMessage.getText().toString().equals(" ")){
 
-                    Utils.makeToast("Please fill the editTextMessage form.", context);
+                    Utils.makeToast("Please fill the Message form.", context);
 
                 }else {
 
@@ -240,7 +240,7 @@ public class Settings extends Fragment {
                         }
                         @Override
                         public void onFailure(@NotNull Call<RequestBody> call, Throwable t) {
-                            Utils.makeToast("There was problem sending your editTextMessage.", context);
+                            Utils.makeToast("There was problem sending your Message.", context);
                         }
                     });
                 }
